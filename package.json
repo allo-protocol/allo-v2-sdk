@@ -1,0 +1,14 @@
+{
+  "name": "allo-v2-sdk",
+  "version": "1.0.0",
+  "description": "sdk for allo v2",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "viem": "^1.6.0"
+  }
+}
