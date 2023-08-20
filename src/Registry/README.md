@@ -1,10 +1,10 @@
-# Table of Contents
+# Registry Table of Contents
 
 - [Table of Contents](#table-of-contents)
 - [Registry](#registry)
   - [Initialization](#initialization)
     - [Creating a Registry Instance](#creating-a-registry-instance)
-  - [View Functions](#view-functions)
+  - [Read Functions](#view-functions)
     - [Get Allo Owner](#get-allo-owner)
     - [Get Default Admin Role](#get-default-admin-role)
     - [Get Native](#get-native)
@@ -48,11 +48,11 @@ import { Registry } from "../Registry/Registry";
 const registry = new Registry({ chain: chains.goerli });
 ```
 
-This registry instance can then be used to call various view and transactional functions provided by the Registry module. Refer to the sections above for detailed examples on how to use these functions. Remember to replace placeholder values with actual values according to your requirements.
+This registry instance can then be used to call various read and transactional functions provided by the Registry module. Refer to the sections above for detailed examples on how to use these functions. Remember to replace placeholder values with actual values according to your requirements.
 
 ---
 
-## View Functions
+## Read Functions
 
 ### Get Allo Owner
 

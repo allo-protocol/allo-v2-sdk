@@ -5,7 +5,7 @@ import { createWalletClient, http } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { goerli } from "viem/chains";
 import { config } from "dotenv";
-import { TransactionData } from "../types";
+import { TransactionData } from "../Common/types";
 import { CreateProfileArgs, Profile } from "../Registry/types";
 config();
 

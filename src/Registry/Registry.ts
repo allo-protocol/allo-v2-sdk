@@ -7,9 +7,8 @@ import {
 } from "viem";
 import { create } from "../Client/Client";
 import { abi, address } from "./registry.config";
-import { TransactionData } from "../types";
+import { ConstructorArgs, TransactionData } from "../Common/types";
 import {
-  ConstructorArgs,
   CreateProfileArgs,
   HasRoleArgs,
   MemberArgs,

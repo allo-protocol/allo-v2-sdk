@@ -1,10 +1,4 @@
-import { Chain } from "viem";
-import { Metadata } from "../types";
-
-export type ConstructorArgs = {
-  chain: Chain;
-  rpc?: string;
-};
+import { Metadata } from "../Common/types";
 
 export type Profile = {
   id: string;
