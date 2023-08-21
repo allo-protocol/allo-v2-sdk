@@ -1,12 +1,12 @@
-import { chains } from "../Client/chains";
-import { Registry } from "../Registry/Registry";
+import { chains } from "../../Client/chains";
+import { Registry } from "../../Registry/Registry";
 
 import { createWalletClient, http } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { goerli } from "viem/chains";
 import { config } from "dotenv";
-import { TransactionData } from "../Common/types";
-import { CreateProfileArgs, Profile } from "../Registry/types";
+import { TransactionData } from "../../Common/types";
+import { CreateProfileArgs, Profile } from "../../Registry/types";
 config();
 
 const client = createWalletClient({
