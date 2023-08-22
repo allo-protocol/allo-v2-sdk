@@ -11,9 +11,9 @@ jest.mock("viem", () => ({
         ALLO_OWNER: jest.fn(() => makeAddress("ALLO_OWNER")),
         DEFAULT_ADMIN_ROLE: jest.fn(() => makeBytes32("DEFAULT_ADMIN_ROLE")),
         NATIVE: jest.fn(() => NATIVE()),
-        anchorToProfileId: jest.fn(([anchor]: string[]) => makeBytes32(anchor[0])),
-        getProfileByAnchor: jest.fn((anchor: string) => makeBytes32(anchor)),
-        getProfileById: jest.fn((profileId: string) => makeBytes32(profileId)),
+        anchorToProfileId: jest.fn(([anchor]: string[]) => makeBytes32(anchor)),
+        getProfileByAnchor: jest.fn(([anchor]: string) => makeBytes32(anchor)),
+        getProfileById: jest.fn(([profileId]: string) => makeBytes32(profileId)),
       },
     };
   }),
@@ -44,8 +44,6 @@ describe("Registry", () => {
 
     it("should get anchorToProfileId", async () => {
       const anchor = makeAddress("anchor");
-      console.log(anchor, makeBytes32(anchor));
-      const shhit = makeBytes32(anchor);
       const anchorToProfileId = await registry.getAnchorToProfileId(anchor);
       expect(anchorToProfileId).toEqual(makeBytes32(anchor));
     });
