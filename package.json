@@ -4,6 +4,9 @@
   "description": "sdk for allo v2",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "test": "jest test"
+  },
   "devDependencies": {
     "@types/jest": "^29.5.3",
     "jest": "^29.6.2",

@@ -14,7 +14,7 @@ const client = createWalletClient({
   transport: http(),
 });
 
-const account = privateKeyToAccount(process.env.PRIVATE_KEY! as `0x${string}`);
+const account = privateKeyToAccount(process.env.PRIVATE_KEY as `0x${string}`);
 
 const testGetAlloOwner = async () => {
   const registry = new Registry({ chain: chains.goerli });
