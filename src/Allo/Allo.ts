@@ -116,10 +116,8 @@ export class Allo {
   }: CreatePoolArgs): TransactionData {
     const data = encodeFunctionData({
       abi: abi,
-      // fixme: not sure why this is not working
       functionName: "createPool",
       args: [profileId, strategy, initStrategyData, token, amount, metadata, managers],
-      
     });
 
     return {
