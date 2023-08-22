@@ -2,7 +2,7 @@ import { Metadata } from "../Common/types";
 
 export type CreatePoolArgs = {
   profileId: string;
-  strategy: unknown;
+  strategy: any;
   initStrategyData: string;
   token: string;
   amount: number;
@@ -17,7 +17,7 @@ export type UpdateMetaDataArgs = {
 
 export type Pool = {
   profileId: string; // bytes32
-  strategy: unknown; // IStrategy type
+  strategy: any; // IStrategy type
   token: string; // Address
   metadata: Metadata;
   managerRole: string; // bytes32
