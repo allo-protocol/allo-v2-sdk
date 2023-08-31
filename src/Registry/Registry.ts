@@ -108,14 +108,14 @@ export class Registry {
   }
 
   public async getProfileIdToPendingOwner(profileId: string): Promise<string> {
-    const pendingOwner = await this.contract.read.profileIdToPendingOwner([
+    const pendingOwner = await this.contract.read.profileIdToPendingOwner(
       profileId,
-    ]);
+    );
     return pendingOwner;
   }
 
   public async getProfilesById(profileId: string): Promise<any> {
-    const profile = await this.contract.read.profilesById([profileId]);
+    const profile = await this.contract.read.profilesById(profileId);
     return profile;
   }
 
