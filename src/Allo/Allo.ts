@@ -1,9 +1,9 @@
-import { Chain, PublicClient, Transport } from "viem";
-import { ConstructorArgs } from "../Registry/types";
+// import { Chain, PublicClient, Transport } from "viem";
+// import { ConstructorArgs } from "../Common/types";
 
-export class Allo {
-    private client: PublicClient<Transport, Chain>;
-    private contract: any;
+// export class Allo {
+//   private client: PublicClient<Transport, Chain>;
+//   private contract: any;
 
-    constructor({ chain, rpc }: ConstructorArgs)
-}
+//   constructor({ chain, rpc }: ConstructorArgs);
+// }
