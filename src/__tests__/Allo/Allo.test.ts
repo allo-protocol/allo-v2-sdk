@@ -265,8 +265,64 @@ describe("Allo", () => {
 
   // Test cases for strategy functions
   describe("Strategy Functions", () => {
-    it("should ", async () => {});
+    it("should register a recipient", async () => {
+      const tx = allo.registerRecipient(1, makeBytes32("STRATEGY_DATA"));
 
-    it("should ", async () => {});
+      expect(tx).toEqual({
+        to: address,
+        data: tx.data,
+        value: "0",
+      });
+    });
+
+    it("should batch register multiple recipients", async () => {
+      const tx = allo.batchRegisterRecipient([1, 1], [makeBytes32("STRATEGY_DATA"), makeBytes32("STRATEGY_DATA")]);
+
+      expect(tx).toEqual({
+        to: address,
+        data: tx.data,
+        value: "0",
+      });
+    });
+
+    it("should fund a pool", async () => {
+      const tx = allo.fundPool(1, 100e18);
+
+      expect(tx).toEqual({
+        to: address,
+        data: tx.data,
+        value: "0",
+      });
+    });
+
+    it("should allocate to a recipient", async () => {
+      const tx = allo.allocate(1, makeBytes32("STRATEGY_ALLOCATE_DATA"));
+
+      expect(tx).toEqual({
+        to: address,
+        data: tx.data,
+        value: "0",
+      });
+    });
+
+    it("should batch allocate to multiple recipients", async () => {
+      const tx = allo.batchAllocate([1, 1], [makeBytes32("STRATEGY_ALLOCATE_DATA"), makeBytes32("STRATEGY_ALLOCATE_DATA")]);
+
+      expect(tx).toEqual({
+        to: address,
+        data: tx.data,
+        value: "0",
+      });
+    });
+
+    it("should distribute funds", async () => {
+      const tx = allo.distribute(1, [makeAddress("RECIPIENT1"), makeAddress("RECIPIENT2")], makeBytes32("STRATEGY_DISTRIBUTE_DATA"));
+
+      expect(tx).toEqual({
+        to: address,
+        data: tx.data,
+        value: "0",
+      });
+    });
   });
 });
