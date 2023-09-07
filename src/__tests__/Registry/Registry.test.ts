@@ -1,9 +1,8 @@
 import { Address, encodeFunctionData } from "viem";
 import { chains } from "../../Client/chains";
-import { Metadata } from "../../Common/types";
+import { FunctionDataParams, Metadata } from "../../Common/types";
 import { Registry } from "../../Registry/Registry";
 import { abi } from "../../Registry/registry.config";
-import { FunctionDataParams } from "../../Registry/types";
 import { NATIVE, makeAddress, makeBytes32 } from "../utils/utils";
 
 const address: Address = "0xAEc621EC8D9dE4B524f4864791171045d6BBBe27";
@@ -75,6 +74,7 @@ describe("Registry", () => {
     registry = new Registry({ chain: chains.goerli });
   });
 
+  // Test cases for view functions
   describe("View Functions", () => {
     it("should get ALLO_OWNER", async () => {
       const allowOwner = await registry.getAlloOwner();
@@ -157,6 +157,7 @@ describe("Registry", () => {
     });
   });
 
+  // Test cases for write functions
   describe("Write Functions", () => {
     // Test cases for write functions
     it("should create a profile", async () => {
@@ -190,8 +191,6 @@ describe("Registry", () => {
       const profileId = makeBytes32("profileId");
 
       const receipt = await registry.acceptProfileOwnership(profileId);
-
-      console.log(receipt);
     });
 
     it("should accept profile ownership", async () => {
