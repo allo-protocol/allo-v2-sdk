@@ -14,8 +14,9 @@
 //   transport: http(),
 // });
 
+const account = privateKeyToAccount(process.env.PRIVATE_KEY as `0x${string}`);
+
+const allo = new Allo({ chain: chains.goerli });
 // if(!process.env.PRIVATE_KEY) {
 //   throw new Error("No private key found in .env file");
 // }
-
-// // const account = privateKeyToAccount(process.env.PRIVATE_KEY! as `0x${string}`);

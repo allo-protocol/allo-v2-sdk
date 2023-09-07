@@ -32,7 +32,7 @@ export class Registry {
     });
   }
 
-  // View Functions
+  // Read only Functions
 
   public async getAlloOwner(): Promise<string> {
     const owner = await this.contract.read.ALLO_OWNER();
