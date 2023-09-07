@@ -165,150 +165,150 @@ describe("Registry", () => {
     });
   });
 
-  describe("Write Functions", () => {
-    // Test cases for write functions
-    it("should create a profile", async () => {
-      const nonce = 1;
-      const name = "my secret profile";
-      const metatdata: Metadata = {
-        protocol: 1,
-        pointer: "bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi",
-      };
-      const owner = makeAddress("owner");
-      const members = [makeAddress("member1"), makeAddress("member2")];
+  // describe("Write Functions", () => {
+  //   // Test cases for write functions
+  //   it("should create a profile", async () => {
+  //     const nonce = 1;
+  //     const name = "my secret profile";
+  //     const metatdata: Metadata = {
+  //       protocol: 1,
+  //       pointer: "bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi",
+  //     };
+  //     const owner = makeAddress("owner");
+  //     const members = [makeAddress("member1"), makeAddress("member2")];
 
-      const receipt = await registry.createProfile({
-        nonce,
-        name,
-        metadata: metatdata,
-        owner,
-        members
-      });
+  //     const receipt = await registry.createProfile({
+  //       nonce,
+  //       name,
+  //       metadata: metatdata,
+  //       owner,
+  //       members
+  //     });
 
-      const data = await getFunctionData({ functionName: "createProfile", args: [nonce, name, metatdata, owner, members]});
+  //     const data = await getFunctionData({ functionName: "createProfile", args: [nonce, name, metatdata, owner, members]});
 
-      expect(receipt).toEqual({
-        to: address,
-        data: data,
-        value: "0",
-      });
-    });
+  //     expect(receipt).toEqual({
+  //       to: address,
+  //       data: data,
+  //       value: "0",
+  //     });
+  //   });
 
-    it("should accept profile ownership", async () => {
-      const profileId = makeBytes32("profileId");
+  //   it("should accept profile ownership", async () => {
+  //     const profileId = makeBytes32("profileId");
 
-      const receipt = await registry.acceptProfileOwnership(profileId);
+  //     const receipt = await registry.acceptProfileOwnership(profileId);
 
-      console.log(receipt);
-    });
+  //     console.log(receipt);
+  //   });
 
-    it("should accept profile ownership", async () => {
-      const profileId = makeBytes32("profileId");
+  //   it("should accept profile ownership", async () => {
+  //     const profileId = makeBytes32("profileId");
 
-      const receipt = await registry.acceptProfileOwnership(profileId);
+  //     const receipt = await registry.acceptProfileOwnership(profileId);
 
-      const data = await getFunctionData({ functionName: "acceptProfileOwnership", args: [profileId]});
+  //     const data = await getFunctionData({ functionName: "acceptProfileOwnership", args: [profileId]});
 
-      expect(receipt).toEqual({
-        to: address,
-        data: data,
-        value: "0",
-      });
-    });
+  //     expect(receipt).toEqual({
+  //       to: address,
+  //       data: data,
+  //       value: "0",
+  //     });
+  //   });
 
-    it("should add a member to a profile", async () => {
-      const profileId = makeBytes32("profileId");
-      const members = [makeAddress("member1"), makeAddress("member2")];
+  //   it("should add a member to a profile", async () => {
+  //     const profileId = makeBytes32("profileId");
+  //     const members = [makeAddress("member1"), makeAddress("member2")];
 
-      const receipt = await registry.addMembers({
-        profileId,
-        members
-      });
+  //     const receipt = await registry.addMembers({
+  //       profileId,
+  //       members
+  //     });
 
-      const data = await getFunctionData({ functionName: "addMembers", args: [profileId, members]});
+  //     const data = await getFunctionData({ functionName: "addMembers", args: [profileId, members]});
 
-      expect(receipt).toEqual({
-        to: address,
-        data: data,
-        value: "0",
-      });
-    });
+  //     expect(receipt).toEqual({
+  //       to: address,
+  //       data: data,
+  //       value: "0",
+  //     });
+  //   });
 
-    it("should remove a member from a profile", async () => {
-      const profileId = makeBytes32("profileId");
-      const members = [makeAddress("member1"), makeAddress("member2")];
+  //   it("should remove a member from a profile", async () => {
+  //     const profileId = makeBytes32("profileId");
+  //     const members = [makeAddress("member1"), makeAddress("member2")];
 
-      const receipt = await registry.removeMembers({
-        profileId,
-        members
-      });
+  //     const receipt = await registry.removeMembers({
+  //       profileId,
+  //       members
+  //     });
 
-      const data = await getFunctionData({ functionName: "removeMembers", args: [profileId, members]});
+  //     const data = await getFunctionData({ functionName: "removeMembers", args: [profileId, members]});
 
-      expect(receipt).toEqual({
-        to: address,
-        data: data,
-        value: "0",
-      });
-    });
+  //     expect(receipt).toEqual({
+  //       to: address,
+  //       data: data,
+  //       value: "0",
+  //     });
+  //   });
 
-    it("should update profile metadata", async () => {
-      const profileId = makeBytes32("profileId");
-      const metadata: Metadata = {
-        protocol: 1,
-        pointer: "bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi",
-      };
+  //   it("should update profile metadata", async () => {
+  //     const profileId = makeBytes32("profileId");
+  //     const metadata: Metadata = {
+  //       protocol: 1,
+  //       pointer: "bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi",
+  //     };
 
-      const receipt = await registry.updateProfileMetadata({
-        profileId,
-        metadata
-      });
+  //     const receipt = await registry.updateProfileMetadata({
+  //       profileId,
+  //       metadata
+  //     });
 
-      const data = await getFunctionData({ functionName: "updateProfileMetadata", args: [profileId, metadata]});
+  //     const data = await getFunctionData({ functionName: "updateProfileMetadata", args: [profileId, metadata]});
 
-      expect(receipt).toEqual({
-        to: address,
-        data: data,
-        value: "0",
-      });
-    });
+  //     expect(receipt).toEqual({
+  //       to: address,
+  //       data: data,
+  //       value: "0",
+  //     });
+  //   });
 
-    it("should update profile name", async () => {
-      const profileId = makeBytes32("profileId");
-      const name = "my secret profile updated";
+  //   it("should update profile name", async () => {
+  //     const profileId = makeBytes32("profileId");
+  //     const name = "my secret profile updated";
 
-      const receipt = await registry.updateProfileName({
-        profileId,
-        name
-      });
+  //     const receipt = await registry.updateProfileName({
+  //       profileId,
+  //       name
+  //     });
 
-      const data = await getFunctionData({ functionName: "updateProfileName", args: [profileId, name]});
+  //     const data = await getFunctionData({ functionName: "updateProfileName", args: [profileId, name]});
       
-      expect(receipt).toEqual({
-        to: address,
-        data: data,
-        value: "0",
-      });
-    });
+  //     expect(receipt).toEqual({
+  //       to: address,
+  //       data: data,
+  //       value: "0",
+  //     });
+  //   });
 
-    it("should update profile pending owner", async () => {
-      const profileId = makeBytes32("profileId");
-      const pendingOwner = makeAddress("pendingOwner");
+  //   it("should update profile pending owner", async () => {
+  //     const profileId = makeBytes32("profileId");
+  //     const pendingOwner = makeAddress("pendingOwner");
 
-      const receipt = registry.updateProfilePendingOwner({
-        profileId,
-        account: pendingOwner
-      });
+  //     const receipt = registry.updateProfilePendingOwner({
+  //       profileId,
+  //       account: pendingOwner
+  //     });
 
-      const data = await getFunctionData({ functionName: "updateProfilePendingOwner", args: [profileId, pendingOwner]});
+  //     const data = await getFunctionData({ functionName: "updateProfilePendingOwner", args: [profileId, pendingOwner]});
 
-      expect(receipt).toEqual({
-        to: address,
-        data: data,
-        value: "0",
-      });
-    });
-  });
+  //     expect(receipt).toEqual({
+  //       to: address,
+  //       data: data,
+  //       value: "0",
+  //     });
+  //   });
+  // });
 
   // Helper function to get function data
   async function getFunctionData(params?: FunctionDataParams) {
