@@ -1,9 +1,7 @@
-import { Address, encodeFunctionData } from "viem";
 import { Allo } from "../../Allo/Allo";
 import { chains } from "../../Client/chains";
 import { makeAddress, makeBytes32 } from "../utils/utils";
-import { abi, address, metadata } from "../../Allo/allo.config";
-import { FunctionDataParams } from "../../Common/types";
+import { address, metadata } from "../../Allo/allo.config";
 
 jest.mock("viem", () => ({
   ...jest.requireActual("viem"),
@@ -133,7 +131,7 @@ describe("Allo", () => {
         metadata: metadata,
         managers: [makeAddress("MANAGER")],
       });
-      
+
       expect(tx).toEqual({
         to: address,
         data: tx.data,
@@ -162,7 +160,11 @@ describe("Allo", () => {
     it("should update the pool metadata", async () => {
       const tx = allo.updatePoolMetadata({
         poolId: 1,
-        metadata: { protocol: 1, pointer: "bafybeia4khbew3r2mkfly23nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi" },
+        metadata: {
+          protocol: 1,
+          pointer:
+            "bafybeia4khbew3r2mkfly23nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi",
+        },
       });
 
       expect(tx).toEqual({
@@ -253,7 +255,10 @@ describe("Allo", () => {
     });
 
     it("should recover funds", async () => {
-      const tx = allo.recoverFunds(makeAddress("TOKEN"), makeAddress("RECIPIENT"));
+      const tx = allo.recoverFunds(
+        makeAddress("TOKEN"),
+        makeAddress("RECIPIENT")
+      );
 
       expect(tx).toEqual({
         to: address,
@@ -276,7 +281,10 @@ describe("Allo", () => {
     });
 
     it("should batch register multiple recipients", async () => {
-      const tx = allo.batchRegisterRecipient([1, 1], [makeBytes32("STRATEGY_DATA"), makeBytes32("STRATEGY_DATA")]);
+      const tx = allo.batchRegisterRecipient(
+        [1, 1],
+        [makeBytes32("STRATEGY_DATA"), makeBytes32("STRATEGY_DATA")]
+      );
 
       expect(tx).toEqual({
         to: address,
@@ -306,7 +314,13 @@ describe("Allo", () => {
     });
 
     it("should batch allocate to multiple recipients", async () => {
-      const tx = allo.batchAllocate([1, 1], [makeBytes32("STRATEGY_ALLOCATE_DATA"), makeBytes32("STRATEGY_ALLOCATE_DATA")]);
+      const tx = allo.batchAllocate(
+        [1, 1],
+        [
+          makeBytes32("STRATEGY_ALLOCATE_DATA"),
+          makeBytes32("STRATEGY_ALLOCATE_DATA"),
+        ]
+      );
 
       expect(tx).toEqual({
         to: address,
@@ -316,7 +330,11 @@ describe("Allo", () => {
     });
 
     it("should distribute funds", async () => {
-      const tx = allo.distribute(1, [makeAddress("RECIPIENT1"), makeAddress("RECIPIENT2")], makeBytes32("STRATEGY_DISTRIBUTE_DATA"));
+      const tx = allo.distribute(
+        1,
+        [makeAddress("RECIPIENT1"), makeAddress("RECIPIENT2")],
+        makeBytes32("STRATEGY_DISTRIBUTE_DATA")
+      );
 
       expect(tx).toEqual({
         to: address,

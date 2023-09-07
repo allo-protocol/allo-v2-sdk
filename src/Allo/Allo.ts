@@ -4,16 +4,11 @@ import {
   Transport,
   encodeFunctionData,
   getContract,
-  stringToBytes,
 } from "viem";
 import { ConstructorArgs, TransactionData } from "../Common/types";
 import { create } from "../Client/Client";
 import { abi, address } from "./allo.config";
 import { CreatePoolArgs, Pool, UpdateMetaDataArgs } from "./types";
-import {
-  StringToBytesOpts,
-  ToBytesParameters,
-} from "viem/dist/types/utils/encoding/toBytes";
 
 export class Allo {
   private client: PublicClient<Transport, Chain>;

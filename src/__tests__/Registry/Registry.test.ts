@@ -1,8 +1,8 @@
-import { Address, encodeFunctionData } from "viem";
+import { Address } from "viem";
 import { chains } from "../../Client/chains";
-import { FunctionDataParams, Metadata } from "../../Common/types";
+import { Metadata } from "../../Common/types";
 import { Registry } from "../../Registry/Registry";
-import { abi, metadata } from "../../Registry/registry.config";
+import { metadata } from "../../Registry/registry.config";
 import { NATIVE, makeAddress, makeBytes32 } from "../utils/utils";
 
 const address: Address = "0xAEc621EC8D9dE4B524f4864791171045d6BBBe27";
@@ -188,7 +188,13 @@ describe("Registry", () => {
     it("should accept profile ownership", async () => {
       const profileId = makeBytes32("profileId");
 
-      const tx = await registry.acceptProfileOwnership(profileId);
+      const tx = registry.acceptProfileOwnership(profileId);
+
+      expect(tx).toEqual({
+        to: address,
+        data: tx.data,
+        value: "0",
+      });
     });
 
     it("should accept profile ownership", async () => {
