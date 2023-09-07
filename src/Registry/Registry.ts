@@ -6,8 +6,8 @@ import {
   getContract,
 } from "viem";
 import { create } from "../Client/Client";
-import { abi, address } from "./registry.config";
 import { ConstructorArgs, TransactionData } from "../Common/types";
+import { abi, address } from "./registry.config";
 import {
   CreateProfileArgs,
   HasRoleArgs,
@@ -107,14 +107,14 @@ export class Registry {
     return isOwnerOrMember;
   }
 
-  public async getProfileIdToPendingOwner(profileId: string): Promise<string> {
-    const pendingOwner = await this.contract.read.profileIdToPendingOwner([
-      profileId,
-    ]);
+  public async profileIdToPendingOwner(profileId: string): Promise<string> {
+    const pendingOwner = await this.contract.read.profileIdToPendingOwner(
+      [profileId]
+    );
     return pendingOwner;
   }
 
-  public async getProfilesById(profileId: string): Promise<any> {
+  public async profilesById(profileId: string): Promise<any> {
     const profile = await this.contract.read.profilesById([profileId]);
     return profile;
   }

@@ -5,7 +5,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "test": "jest test"
+    "test": "jest --no-cache",
+    "test:dev": "jest --watch --no-cache",
+    "build": "tsc"
   },
   "devDependencies": {
     "@types/jest": "^29.5.3",

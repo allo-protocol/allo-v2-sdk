@@ -1,12 +1,12 @@
-import { chains } from "../../Client/chains";
-import { Registry } from "../../Registry/Registry";
+import { chains } from "../Client/chains";
+import { Registry } from "../Registry/Registry";
 
 import { createWalletClient, http } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { goerli } from "viem/chains";
 import { config } from "dotenv";
-import { TransactionData } from "../../Common/types";
-import { CreateProfileArgs, Profile } from "../../Registry/types";
+import { TransactionData } from "../Common/types";
+import { CreateProfileArgs, Profile } from "../Registry/types";
 config();
 
 const client = createWalletClient({
@@ -14,7 +14,10 @@ const client = createWalletClient({
   transport: http(),
 });
 
-const account = privateKeyToAccount(process.env.PRIVATE_KEY as `0x${string}`);
+if(!process.env.PRIVATE_KEY) {
+  throw new Error("No private key found in .env file");
+}
+const account = privateKeyToAccount(process.env.PRIVATE_KEY! as `0x${string}`);
 
 const testGetAlloOwner = async () => {
   const registry = new Registry({ chain: chains.goerli });
