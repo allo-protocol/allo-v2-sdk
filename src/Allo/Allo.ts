@@ -197,4 +197,74 @@ export class Allo {
       value: "0",
     };
   }
+
+  public addToCloneableStrategies(strategy: string): TransactionData {
+    const data = encodeFunctionData({
+      abi: abi,
+      functionName: "addToCloneableStrategies",
+      args: [strategy],
+    });
+
+    return {
+      to: address,
+      data: data,
+      value: "0",
+    };
+  }
+
+  public removeFromCloneableStrategies(strategy: string): TransactionData {
+    const data = encodeFunctionData({
+      abi: abi,
+      functionName: "removeFromCloneableStrategies",
+      args: [strategy],
+    });
+
+    return {
+      to: address,
+      data: data,
+      value: "0",
+    };
+  }
+
+  public addPoolManager(poolId: number, manager: string): TransactionData {
+    const data = encodeFunctionData({
+      abi: abi,
+      functionName: "addPoolManager",
+      args: [poolId, manager],
+    });
+
+    return {
+      to: address,
+      data: data,
+      value: "0",
+    };
+  }
+
+  public removePoolManager(poolId: number, manager: string): TransactionData {
+    const data = encodeFunctionData({
+      abi: abi,
+      functionName: "removePoolManager",
+      args: [poolId, manager],
+    });
+
+    return {
+      to: address,
+      data: data,
+      value: "0",
+    };
+  }
+
+  public recoverFunds(token: string, recipient: string): TransactionData {
+    const data = encodeFunctionData({
+      abi: abi,
+      functionName: "recoverFunds",
+      args: [token, recipient],
+    });
+
+    return {
+      to: address,
+      data: data,
+      value: "0",
+    };
+  }
 }

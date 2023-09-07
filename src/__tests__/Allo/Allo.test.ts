@@ -1,6 +1,9 @@
+import { Address, encodeFunctionData } from "viem";
 import { Allo } from "../../Allo/Allo";
 import { chains } from "../../Client/chains";
-import { makeAddress } from "../utils/utils";
+import { makeAddress, makeBytes32 } from "../utils/utils";
+import { abi, address, metadata } from "../../Allo/allo.config";
+import { FunctionDataParams } from "../../Common/types";
 
 jest.mock("viem", () => ({
   ...jest.requireActual("viem"),
@@ -28,7 +31,13 @@ jest.mock("viem", () => ({
         })),
         getFeeDenominator: jest.fn(() => 100),
       },
-      write: {},
+      write: {
+        createPool: jest.fn(() => ({
+          to: address,
+          data: "data",
+          value: "0",
+        })),
+      },
     };
   }),
 }));
@@ -65,7 +74,7 @@ describe("Allo", () => {
 
       expect(strategy).toEqual(makeAddress("STRATEGY"));
     });
-  
+
     it("should get fee percentage", async () => {
       const percentFee = await allo.getPercentFee();
 
@@ -114,5 +123,150 @@ describe("Allo", () => {
 
   // Test cases for write functions
   describe("Write Functions", () => {
+    it("should create a pool", async () => {
+      const tx = allo.createPool({
+        profileId: makeBytes32("PROFILE"),
+        strategy: makeAddress("STRATEGY"),
+        initStrategyData: "0x",
+        token: makeAddress("TOKEN"),
+        amount: 0,
+        metadata: metadata,
+        managers: [makeAddress("MANAGER")],
+      });
+      
+      expect(tx).toEqual({
+        to: address,
+        data: tx.data,
+        value: "0",
+      });
+    });
+
+    it("should create a pool with custom strategy", async () => {
+      const tx = allo.createPoolWithCustomStrategy({
+        profileId: makeBytes32("PROFILE"),
+        strategy: makeAddress("STRATEGY"),
+        initStrategyData: "0x",
+        token: makeAddress("TOKEN"),
+        amount: 0,
+        metadata,
+        managers: [makeAddress("MANAGER")],
+      });
+
+      expect(tx).toEqual({
+        to: address,
+        data: tx.data,
+        value: "0",
+      });
+    });
+
+    it("should update the pool metadata", async () => {
+      const tx = allo.updatePoolMetadata({
+        poolId: 1,
+        metadata: { protocol: 1, pointer: "bafybeia4khbew3r2mkfly23nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi" },
+      });
+
+      expect(tx).toEqual({
+        to: address,
+        data: tx.data,
+        value: "0",
+      });
+    });
+
+    it("should update the registry address", async () => {
+      const tx = allo.updateRegistry(makeAddress("REGISTRY"));
+
+      expect(tx).toEqual({
+        to: address,
+        data: tx.data,
+        value: "0",
+      });
+    });
+
+    it("should update the treasury address", async () => {
+      const tx = allo.updateTreasury(makeAddress("TREASURY"));
+
+      expect(tx).toEqual({
+        to: address,
+        data: tx.data,
+        value: "0",
+      });
+    });
+
+    it("should update the percent fee", async () => {
+      const tx = allo.updatePercentFee(1);
+
+      expect(tx).toEqual({
+        to: address,
+        data: tx.data,
+        value: "0",
+      });
+    });
+
+    it("should update the base fee", async () => {
+      const tx = allo.updateBaseFee(1);
+
+      expect(tx).toEqual({
+        to: address,
+        data: tx.data,
+        value: "0",
+      });
+    });
+
+    it("should add strategy to cloneable strategies", async () => {
+      const tx = allo.addToCloneableStrategies(makeAddress("STRATEGY2"));
+
+      expect(tx).toEqual({
+        to: address,
+        data: tx.data,
+        value: "0",
+      });
+    });
+
+    it("should remove strategy to cloneable strategies", async () => {
+      const tx = allo.removeFromCloneableStrategies(makeAddress("STRATEGY2"));
+
+      expect(tx).toEqual({
+        to: address,
+        data: tx.data,
+        value: "0",
+      });
+    });
+
+    it("should add pool manager", async () => {
+      const tx = allo.addPoolManager(1, makeAddress("MANAGER2"));
+
+      expect(tx).toEqual({
+        to: address,
+        data: tx.data,
+        value: "0",
+      });
+    });
+
+    it("should remove pool manager", async () => {
+      const tx = allo.removePoolManager(1, makeAddress("MANAGER2"));
+
+      expect(tx).toEqual({
+        to: address,
+        data: tx.data,
+        value: "0",
+      });
+    });
+
+    it("should recover funds", async () => {
+      const tx = allo.recoverFunds(makeAddress("TOKEN"), makeAddress("RECIPIENT"));
+
+      expect(tx).toEqual({
+        to: address,
+        data: tx.data,
+        value: "0",
+      });
+    });
+  });
+
+  // Test cases for strategy functions
+  describe("Strategy Functions", () => {
+    it("should ", async () => {});
+
+    it("should ", async () => {});
   });
 });
