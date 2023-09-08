@@ -232,7 +232,106 @@ export class DonationVotingMerkleDistributionStrategy {
   }
 
   // Write functions
-  // TODO:
+  public claim(
+    claims: { recipientId: string; token: string }[]
+  ): TransactionData {
+    const data = encodeFunctionData({
+      abi: abi,
+      functionName: "claim",
+      args: [claims],
+    });
+
+    return {
+      to: this.strategy,
+      data: data,
+      value: "0",
+    };
+  }
+
+  public multicall(data: string[]): TransactionData {
+    const encodedData = encodeFunctionData({
+      abi: abi,
+      functionName: "multicall",
+      args: [data],
+    });
+
+    return {
+      to: this.strategy,
+      data: encodedData,
+      value: "0",
+    };
+  }
+
+  public reviewRecipients(
+    statuses: { index: number; statusRow: number }[]
+  ): TransactionData {
+    const data = encodeFunctionData({
+      abi: abi,
+      functionName: "reviewRecipients",
+      args: [statuses],
+    });
+
+    return {
+      to: this.strategy,
+      data: data,
+      value: "0",
+    };
+  }
+
+  public updateDistribution(
+    merkleRoot: string,
+    distributionMetadata: Metadata
+  ): TransactionData {
+    const data = encodeFunctionData({
+      abi: abi,
+      functionName: "updateDistribution",
+      args: [merkleRoot, distributionMetadata],
+    });
+
+    return {
+      to: this.strategy,
+      data: data,
+      value: "0",
+    };
+  }
+
+  public updatePoolTimestamps(
+    registrationStartTime: number,
+    registrationEndTime: number,
+    allocationStartTime: number,
+    allocationEndTime: number
+  ): TransactionData {
+    const data = encodeFunctionData({
+      abi: abi,
+      functionName: "updatePoolTimestamps",
+      args: [
+        registrationStartTime,
+        registrationEndTime,
+        allocationStartTime,
+        allocationEndTime,
+      ],
+    });
+
+    return {
+      to: this.strategy,
+      data: data,
+      value: "0",
+    };
+  }
+
+  public withdraw(amount: number): TransactionData {
+    const data = encodeFunctionData({
+      abi: abi,
+      functionName: "withdraw",
+      args: [amount],
+    });
+
+    return {
+      to: this.strategy,
+      data: data,
+      value: "0",
+    };
+  }
 }
 
 // read only
