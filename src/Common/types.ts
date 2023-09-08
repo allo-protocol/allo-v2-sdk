@@ -3,6 +3,7 @@ import { Chain } from "viem";
 export type ConstructorArgs = {
   chain: Chain;
   rpc?: string;
+  address?: `0x${string}`;
 };
 
 export type TransactionData = {
