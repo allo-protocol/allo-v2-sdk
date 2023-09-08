@@ -15,3 +15,8 @@ export type Metadata = {
   protocol: number;
   pointer: string;
 }
+
+export type FunctionDataParams = {
+  functionName: string;
+  args: any[];
+};

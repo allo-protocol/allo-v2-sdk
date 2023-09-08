@@ -61,4 +61,4 @@ const testCreateOwner = async (): Promise<void> => {
 
 }
 
-// testCreateOwner();
+testCreateOwner();

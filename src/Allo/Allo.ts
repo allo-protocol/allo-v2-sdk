@@ -1,4 +1,10 @@
-import { Chain, PublicClient, Transport, encodeFunctionData, getContract } from "viem";
+import {
+  Chain,
+  PublicClient,
+  Transport,
+  encodeFunctionData,
+  getContract,
+} from "viem";
 import { ConstructorArgs, TransactionData } from "../Common/types";
 import { create } from "../Client/Client";
 import { abi, address } from "./allo.config";
@@ -32,7 +38,10 @@ export class Allo {
     return isAdmin;
   }
 
-  public async isPoolManager(poolId: number, address: string): Promise<boolean> {
+  public async isPoolManager(
+    poolId: number,
+    address: string
+  ): Promise<boolean> {
     const isManager = await this.contract.read.isPoolManager([poolId, address]);
 
     return isManager;
@@ -89,13 +98,20 @@ export class Allo {
     token,
     amount,
     metadata,
-    managers
+    managers,
   }: CreatePoolArgs): TransactionData {
     const data = encodeFunctionData({
       abi: abi,
       functionName: "createPoolWithCustomStrategy",
-      args: [profileId, strategy, initStrategyData, token, amount, metadata, managers],
-      
+      args: [
+        profileId,
+        strategy,
+        initStrategyData,
+        token,
+        amount,
+        metadata,
+        managers,
+      ],
     });
 
     return {
@@ -112,12 +128,20 @@ export class Allo {
     token,
     amount,
     metadata,
-    managers
+    managers,
   }: CreatePoolArgs): TransactionData {
     const data = encodeFunctionData({
       abi: abi,
       functionName: "createPool",
-      args: [profileId, strategy, initStrategyData, token, amount, metadata, managers],
+      args: [
+        profileId,
+        strategy,
+        initStrategyData,
+        token,
+        amount,
+        metadata,
+        managers,
+      ],
     });
 
     return {
@@ -128,7 +152,10 @@ export class Allo {
   }
 
   // updatePoolMetadata(uint256 _poolId, Metadata memory _metadata)
-  public updatePoolMetadata({ poolId, metadata }: UpdateMetaDataArgs): TransactionData {
+  public updatePoolMetadata({
+    poolId,
+    metadata,
+  }: UpdateMetaDataArgs): TransactionData {
     const data = encodeFunctionData({
       abi: abi,
       functionName: "updatePoolMetadata",
@@ -189,6 +216,164 @@ export class Allo {
       abi: abi,
       functionName: "updateBaseFee",
       args: [percentage],
+    });
+
+    return {
+      to: address,
+      data: data,
+      value: "0",
+    };
+  }
+
+  public addToCloneableStrategies(strategy: string): TransactionData {
+    const data = encodeFunctionData({
+      abi: abi,
+      functionName: "addToCloneableStrategies",
+      args: [strategy],
+    });
+
+    return {
+      to: address,
+      data: data,
+      value: "0",
+    };
+  }
+
+  public removeFromCloneableStrategies(strategy: string): TransactionData {
+    const data = encodeFunctionData({
+      abi: abi,
+      functionName: "removeFromCloneableStrategies",
+      args: [strategy],
+    });
+
+    return {
+      to: address,
+      data: data,
+      value: "0",
+    };
+  }
+
+  public addPoolManager(poolId: number, manager: string): TransactionData {
+    const data = encodeFunctionData({
+      abi: abi,
+      functionName: "addPoolManager",
+      args: [poolId, manager],
+    });
+
+    return {
+      to: address,
+      data: data,
+      value: "0",
+    };
+  }
+
+  public removePoolManager(poolId: number, manager: string): TransactionData {
+    const data = encodeFunctionData({
+      abi: abi,
+      functionName: "removePoolManager",
+      args: [poolId, manager],
+    });
+
+    return {
+      to: address,
+      data: data,
+      value: "0",
+    };
+  }
+
+  public recoverFunds(token: string, recipient: string): TransactionData {
+    const data = encodeFunctionData({
+      abi: abi,
+      functionName: "recoverFunds",
+      args: [token, recipient],
+    });
+
+    return {
+      to: address,
+      data: data,
+      value: "0",
+    };
+  }
+
+  // Strategy functions
+  public registerRecipient(poolId: number, strategyData: string): TransactionData {
+    const data = encodeFunctionData({
+      abi: abi,
+      functionName: "registerRecipient",
+      args: [poolId, strategyData],
+    });
+
+    return {
+      to: address,
+      data: data,
+      value: "0",
+    };
+  }
+
+  public batchRegisterRecipient(
+    poolIds: number[],
+    strategyData: string[]
+  ): TransactionData {
+    const data = encodeFunctionData({
+      abi: abi,
+      functionName: "batchRegisterRecipient",
+      args: [poolIds, strategyData],
+    });
+
+    return {
+      to: address,
+      data: data,
+      value: "0",
+    };
+  }
+
+  public fundPool(poolId: number, amount: number): TransactionData {
+    const data = encodeFunctionData({
+      abi: abi,
+      functionName: "fundPool",
+      args: [poolId, amount],
+    });
+
+    return {
+      to: address,
+      data: data,
+      value: "0",
+    };
+  }
+
+  public allocate(poolId: number, strategyData: string): TransactionData {
+    const data = encodeFunctionData({
+      abi: abi,
+      functionName: "allocate",
+      args: [poolId, strategyData],
+    });
+
+    return {
+      to: address,
+      data: data,
+      value: "0",
+    };
+  }
+
+  public batchAllocate(poolIds: number[], strategyData: string[]): TransactionData {
+    const data = encodeFunctionData({
+      abi: abi,
+      functionName: "batchAllocate",
+      args: [poolIds, strategyData],
+    });
+
+    return {
+      to: address,
+      data: data,
+      value: "0",
+    };
+  }
+
+  public distribute(poolId: number, recipientId: string[], strategyData: string): TransactionData {
+    const data = encodeFunctionData({
+      abi: abi,
+      functionName: "distribute",
+      args: [poolId, recipientId, strategyData],
     });
 
     return {

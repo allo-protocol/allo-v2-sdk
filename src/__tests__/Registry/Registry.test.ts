@@ -1,9 +1,8 @@
-import { Address, encodeFunctionData } from "viem";
+import { Address } from "viem";
 import { chains } from "../../Client/chains";
 import { Metadata } from "../../Common/types";
 import { Registry } from "../../Registry/Registry";
-import { abi } from "../../Registry/registry.config";
-import { FunctionDataParams } from "../../Registry/types";
+import { metadata } from "../../Registry/registry.config";
 import { NATIVE, makeAddress, makeBytes32 } from "../utils/utils";
 
 const address: Address = "0xAEc621EC8D9dE4B524f4864791171045d6BBBe27";
@@ -75,6 +74,7 @@ describe("Registry", () => {
     registry = new Registry({ chain: chains.goerli });
   });
 
+  // Test cases for view functions
   describe("View Functions", () => {
     it("should get ALLO_OWNER", async () => {
       const allowOwner = await registry.getAlloOwner();
@@ -157,6 +157,7 @@ describe("Registry", () => {
     });
   });
 
+  // Test cases for write functions
   describe("Write Functions", () => {
     // Test cases for write functions
     it("should create a profile", async () => {
@@ -169,7 +170,7 @@ describe("Registry", () => {
       const owner = makeAddress("owner");
       const members = [makeAddress("member1"), makeAddress("member2")];
 
-      const receipt = await registry.createProfile({
+      const tx = await registry.createProfile({
         nonce,
         name,
         metadata: metatdata,
@@ -177,11 +178,9 @@ describe("Registry", () => {
         members
       });
 
-      const data = await getFunctionData({ functionName: "createProfile", args: [nonce, name, metatdata, owner, members]});
-
-      expect(receipt).toEqual({
+      expect(tx).toEqual({
         to: address,
-        data: data,
+        data: tx.data,
         value: "0",
       });
     });
@@ -189,21 +188,23 @@ describe("Registry", () => {
     it("should accept profile ownership", async () => {
       const profileId = makeBytes32("profileId");
 
-      const receipt = await registry.acceptProfileOwnership(profileId);
+      const tx = registry.acceptProfileOwnership(profileId);
 
-      console.log(receipt);
+      expect(tx).toEqual({
+        to: address,
+        data: tx.data,
+        value: "0",
+      });
     });
 
     it("should accept profile ownership", async () => {
       const profileId = makeBytes32("profileId");
 
-      const receipt = await registry.acceptProfileOwnership(profileId);
+      const tx = await registry.acceptProfileOwnership(profileId);
 
-      const data = await getFunctionData({ functionName: "acceptProfileOwnership", args: [profileId]});
-
-      expect(receipt).toEqual({
+      expect(tx).toEqual({
         to: address,
-        data: data,
+        data: tx.data,
         value: "0",
       });
     });
@@ -212,16 +213,14 @@ describe("Registry", () => {
       const profileId = makeBytes32("profileId");
       const members = [makeAddress("member1"), makeAddress("member2")];
 
-      const receipt = await registry.addMembers({
+      const tx = await registry.addMembers({
         profileId,
         members
       });
 
-      const data = await getFunctionData({ functionName: "addMembers", args: [profileId, members]});
-
-      expect(receipt).toEqual({
+      expect(tx).toEqual({
         to: address,
-        data: data,
+        data: tx.data,
         value: "0",
       });
     });
@@ -230,37 +229,28 @@ describe("Registry", () => {
       const profileId = makeBytes32("profileId");
       const members = [makeAddress("member1"), makeAddress("member2")];
 
-      const receipt = await registry.removeMembers({
+      const tx = registry.removeMembers({
         profileId,
         members
       });
 
-      const data = await getFunctionData({ functionName: "removeMembers", args: [profileId, members]});
-
-      expect(receipt).toEqual({
+      expect(tx).toEqual({
         to: address,
-        data: data,
+        data: tx.data,
         value: "0",
       });
     });
 
     it("should update profile metadata", async () => {
       const profileId = makeBytes32("profileId");
-      const metadata: Metadata = {
-        protocol: 1,
-        pointer: "bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi",
-      };
-
-      const receipt = await registry.updateProfileMetadata({
+      const tx = registry.updateProfileMetadata({
         profileId,
         metadata
       });
 
-      const data = await getFunctionData({ functionName: "updateProfileMetadata", args: [profileId, metadata]});
-
-      expect(receipt).toEqual({
+      expect(tx).toEqual({
         to: address,
-        data: data,
+        data: tx.data,
         value: "0",
       });
     });
@@ -269,16 +259,14 @@ describe("Registry", () => {
       const profileId = makeBytes32("profileId");
       const name = "my secret profile updated";
 
-      const receipt = await registry.updateProfileName({
+      const tx = registry.updateProfileName({
         profileId,
         name
       });
 
-      const data = await getFunctionData({ functionName: "updateProfileName", args: [profileId, name]});
-      
-      expect(receipt).toEqual({
+      expect(tx).toEqual({
         to: address,
-        data: data,
+        data: tx.data,
         value: "0",
       });
     });
@@ -287,29 +275,16 @@ describe("Registry", () => {
       const profileId = makeBytes32("profileId");
       const pendingOwner = makeAddress("pendingOwner");
 
-      const receipt = registry.updateProfilePendingOwner({
+      const tx = registry.updateProfilePendingOwner({
         profileId,
         account: pendingOwner
       });
 
-      const data = await getFunctionData({ functionName: "updateProfilePendingOwner", args: [profileId, pendingOwner]});
-
-      expect(receipt).toEqual({
+      expect(tx).toEqual({
         to: address,
-        data: data,
+        data: tx.data,
         value: "0",
       });
     });
   });
-
-  // Helper function to get function data
-  async function getFunctionData(params?: FunctionDataParams) {
-    const data : `0x${string}` = encodeFunctionData({
-      abi: abi,
-      functionName: params?.functionName,
-      args: params?.args,
-    });
-
-    return data;
-  }
 });

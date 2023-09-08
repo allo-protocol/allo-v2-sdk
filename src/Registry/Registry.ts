@@ -128,7 +128,7 @@ export class Registry {
     owner,
     members,
   }: CreateProfileArgs): TransactionData {
-    const data: `0x${string}` = encodeFunctionData({
+    const data = encodeFunctionData({
       abi: abi,
       functionName: "createProfile",
       args: [nonce, name, metadata, owner, members],
@@ -142,7 +142,7 @@ export class Registry {
   }
 
   public acceptProfileOwnership(profileId: string): TransactionData {
-    const data: `0x${string}` = encodeFunctionData({
+    const data = encodeFunctionData({
       abi: abi,
       functionName: "acceptProfileOwnership",
       args: [profileId],
@@ -156,7 +156,7 @@ export class Registry {
   }
 
   public addMembers({ profileId, members }: MemberArgs): TransactionData {
-    const data: `0x${string}` = encodeFunctionData({
+    const data = encodeFunctionData({
       abi: abi,
       functionName: "addMembers",
       args: [profileId, members],
@@ -170,7 +170,7 @@ export class Registry {
   }
 
   public removeMembers({ profileId, members }: MemberArgs): TransactionData {
-    const data: `0x${string}` = encodeFunctionData({
+    const data = encodeFunctionData({
       abi: abi,
       functionName: "removeMembers",
       args: [profileId, members],
@@ -187,7 +187,7 @@ export class Registry {
     profileId,
     metadata,
   }: ProfileMetadataArgs): TransactionData {
-    const data: `0x${string}` = encodeFunctionData({
+    const data = encodeFunctionData({
       abi: abi,
       functionName: "updateProfileMetadata",
       args: [profileId, metadata],
@@ -204,7 +204,7 @@ export class Registry {
     profileId,
     name,
   }: ProfileNameArgs): TransactionData {
-    const data: `0x${string}` = encodeFunctionData({
+    const data = encodeFunctionData({
       abi: abi,
       functionName: "updateProfileName",
       args: [profileId, name],
@@ -221,7 +221,7 @@ export class Registry {
     profileId,
     account,
   }: ProfileAndAddressArgs): TransactionData {
-    const data: `0x${string}` = encodeFunctionData({
+    const data = encodeFunctionData({
       abi: abi,
       functionName: "updateProfilePendingOwner",
       args: [profileId, account],

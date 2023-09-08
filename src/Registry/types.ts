@@ -44,8 +44,3 @@ export type ProfileNameArgs = {
   profileId: string;
   name: string;
 }
-
-export type FunctionDataParams = {
-  functionName: string;
-  args: any[];
-};

@@ -13,5 +13,3 @@ const test = async () => {
 }
 
 test();
-
-console.log('Shit!')
