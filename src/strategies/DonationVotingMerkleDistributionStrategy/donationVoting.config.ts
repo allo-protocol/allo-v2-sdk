@@ -1,5 +1,3 @@
-import { Address } from "viem";
-
 // uses Vault abi, since it's the same like direct transfer + an additional claim function
 export const abi = [
   {
