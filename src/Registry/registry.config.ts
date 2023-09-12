@@ -1,12 +1,6 @@
 import { Address } from "viem";
-import { Metadata } from "../Common/types";
 
 export const address: Address = "0xAEc621EC8D9dE4B524f4864791171045d6BBBe27";
-
-export const metadata: Metadata = {
-  protocol: 1,
-  pointer: "bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi",
-};
 
 export const abi = [
   {

@@ -1,7 +1,15 @@
 import { Allo } from "../../Allo/Allo";
 import { chains } from "../../Client/chains";
 import { makeAddress, makeBytes32 } from "../utils/utils";
-import { address, metadata } from "../../Allo/allo.config";
+import { Metadata } from "../../Common/types";
+import { Address } from "viem";
+
+const address: Address = "0x79536CC062EE8FAFA7A19a5fa07783BD7F792206";
+
+const metadata: Metadata = {
+  protocol: 1,
+  pointer: "bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi",
+};
 
 jest.mock("viem", () => ({
   ...jest.requireActual("viem"),
@@ -28,13 +36,6 @@ jest.mock("viem", () => ({
           treasury: makeAddress("TREASURY"),
         })),
         getFeeDenominator: jest.fn(() => 100),
-      },
-      write: {
-        createPool: jest.fn(() => ({
-          to: address,
-          data: "data",
-          value: "0",
-        })),
       },
     };
   }),
