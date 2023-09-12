@@ -16,13 +16,14 @@ jest.mock("viem", () => ({
         PERMIT2: jest.fn(() => makeBytes32("PERMIT2")),
         allocationEndTime: jest.fn(() => 1),
         allocationStartTime: jest.fn(() => 1),
-        isAllowedTokens: jest.fn(() => true),
+        allowedTokens: jest.fn(() => true),
+        claims: jest.fn(() => 0),
         getClaims: jest.fn(() => 0),
-        getDistributionMetadata: jest.fn(() => ({
+        distributionMetadata: jest.fn(() => ({
           protocol: 1,
           pointer: "unt93847nwg[u7456w7shn56",
         })),
-        getDistributionStarted: jest.fn(() => true),
+        distributionStarted: jest.fn(() => true),
         getAllo: jest.fn(() => alloAddress),
         getPayouts: jest.fn(() => []),
         getPoolAmount: jest.fn(() => 0),
@@ -86,34 +87,29 @@ describe("DonationVotingMerkleDistributionStrategy", () => {
       expect(startTime).toEqual(1);
     });
 
-    // FIXME: this is failing
     it("should get the allowed tokens", async () => {
-      // const allowed = await strategy.isAllowedTokens(NATIVE());
-
-      // expect(allowed).toEqual(true);
+      const allowed = await strategy.isAllowedTokens(NATIVE())
+      expect(allowed).toEqual(true);
     });
 
-    // FIXME: this is failing
     it("should return the claims", async () => {
-      // const claims = await strategy.getClaims(address, NATIVE());
+      const claims = await strategy.getClaims(address, NATIVE());
 
-      // expect(claims).toEqual(0);
+      expect(claims).toEqual(0);
     });
 
-    // FIXME: this is failing
     it("should return distribution metadata", async () => {
-      // const metadata = await strategy.getDistributionMetadata();
-      // expect(metadata).toEqual({
-      //   protocol: 1,
-      //   pointer: "unt93847nwg[u7456w7shn56",
-      // });
+      const metadata = await strategy.getDistributionMetadata();
+      expect(metadata).toEqual({
+        protocol: 1,
+        pointer: "unt93847nwg[u7456w7shn56",
+      });
     });
 
-    // FIXME:
     it("should return if the distribution has started", async () => {
-      // const isStarted = strategy.getDistributionStarted();
+      const isStarted = await strategy.getDistributionStarted();
 
-      // expect(isStarted).toEqual(true);
+      expect(isStarted).toEqual(true);
     });
 
     it("should return the allo address", async () => {
@@ -123,11 +119,11 @@ describe("DonationVotingMerkleDistributionStrategy", () => {
     });
 
     it("should get the payouts", async () => {
-      // const recipientIds: string[] = [makeAddress("RECIPIENT1"), makeAddress("RECIPIENT2")];
-      // const payoutData = [makeBytes32("PAYOUT_DATA"), makeBytes32("PAYOUT_DATA2")];
-      // const payouts = await strategy.getPayouts(recipientIds, payoutData);
+      const recipientIds: string[] = [makeAddress("RECIPIENT1"), makeAddress("RECIPIENT2")];
+      const payoutData = [makeBytes32("PAYOUT_DATA"), makeBytes32("PAYOUT_DATA2")];
+      const payouts = await strategy.getPayouts(recipientIds, payoutData);
 
-      // expect(payouts).toEqual([]);
+      expect(payouts).toEqual([]);
     });
 
     it("should get the pool amount", async () => {
@@ -143,12 +139,12 @@ describe("DonationVotingMerkleDistributionStrategy", () => {
     });
 
     it("should get the recipient", async () => {
-      // const recipientId: string = makeAddress("RECIPIENT1");
-      // const recipient = await strategy.getRecipient(recipientId);
+      const recipientId: string = makeAddress("RECIPIENT1");
+      const recipient = await strategy.getRecipient(recipientId);
 
-      // expect(recipient).toEqual({
-      //   recipientId: makeAddress("RECIPIENT1")
-      // });
+      expect(recipient).toEqual({
+        recipientId: makeAddress("RECIPIENT1")
+      });
     });
 
     it("should get the recipient status", async () => {

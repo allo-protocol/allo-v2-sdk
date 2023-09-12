@@ -78,7 +78,7 @@ export class DonationVotingMerkleDistributionStrategy {
   }
 
   public async getDistributionMetadata(): Promise<Metadata> {
-    const metadata: Metadata = await this.contract.read.distributionMetadata.get();
+    const metadata: Metadata = await this.contract.read.distributionMetadata();
 
     return metadata;
   }
@@ -124,7 +124,7 @@ export class DonationVotingMerkleDistributionStrategy {
   }
 
   public async getRecipient(recipientId: string): Promise<Recipient> {
-    const recipient = await this.contract.getRecipient([recipientId]);
+    const recipient = await this.contract.read.getRecipient([recipientId]);
 
     return recipient;
   }
