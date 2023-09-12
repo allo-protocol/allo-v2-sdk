@@ -84,20 +84,3 @@ export async function _updateStatuses(
 }
 
 // 0x0000000000000000000000000000000000000000000000000000000000000000
-// \const results = await publicClient.multicall({
-//   contracts: [
-//     {
-//       ...wagmiContract,
-//       functionName: 'totalSupply',
-//     },
-//     {
-//       ...wagmiContract,
-//       functionName: 'ownerOf',
-//       args: [69420n]
-//     },
-//     {
-//       ...wagmiContract,
-//       functionName: 'mint'
-//     }
-//   ]
-// })
