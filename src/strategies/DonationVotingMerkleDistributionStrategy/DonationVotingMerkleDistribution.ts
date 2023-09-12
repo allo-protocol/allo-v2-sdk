@@ -10,7 +10,8 @@ import { abi } from "./donationVoting.config";
 import { Allo } from "../../Allo/Allo";
 import { ConstructorArgs, Metadata, TransactionData } from "../../Common/types";
 import { PayoutSummary, Status } from "../types";
-import { Recipient } from "./types";
+import { ApplicationStatus, Recipient, ReviewRecipient } from "./types";
+import { _updateStatuses } from "./bitmap";
 
 export class DonationVotingMerkleDistributionStrategy {
   private client: PublicClient<Transport, Chain>;
@@ -26,7 +27,7 @@ export class DonationVotingMerkleDistributionStrategy {
 
     if (!address)
       throw new Error(
-        "DonationVotingMerkleDistributionStrategy: No strategy address provided"
+        "DonationVotingMerkleDistributionStrategy: No strategy address provided",
       );
     this.strategy = address;
 
@@ -97,7 +98,7 @@ export class DonationVotingMerkleDistributionStrategy {
 
   public async getPayouts(
     recipientIds: string[],
-    data: string[]
+    data: string[],
   ): Promise<PayoutSummary[]> {
     const payouts = await this.contract.read.getPayouts([recipientIds, data]);
 
@@ -251,7 +252,7 @@ export class DonationVotingMerkleDistributionStrategy {
 
   // Write functions
   public claim(
-    claims: { recipientId: string; token: string }[]
+    claims: { recipientId: string; token: string }[],
   ): TransactionData {
     const data = encodeFunctionData({
       abi: abi,
@@ -280,13 +281,18 @@ export class DonationVotingMerkleDistributionStrategy {
     };
   }
 
-  public reviewRecipients(
-    statuses: { index: number; statusRow: number }[]
-  ): TransactionData {
+
+  public async reviewRecipients(recipients: ReviewRecipient[]) {
+    const updatedRows: ApplicationStatus[] = await _updateStatuses(
+      this.client,
+      this.contract,
+      recipients,
+    );
+
     const data = encodeFunctionData({
       abi: abi,
       functionName: "reviewRecipients",
-      args: [statuses],
+      args: [updatedRows],
     });
 
     return {
@@ -298,7 +304,7 @@ export class DonationVotingMerkleDistributionStrategy {
 
   public updateDistribution(
     merkleRoot: string,
-    distributionMetadata: Metadata
+    distributionMetadata: Metadata,
   ): TransactionData {
     const data = encodeFunctionData({
       abi: abi,
@@ -317,7 +323,7 @@ export class DonationVotingMerkleDistributionStrategy {
     registrationStartTime: number,
     registrationEndTime: number,
     allocationStartTime: number,
-    allocationEndTime: number
+    allocationEndTime: number,
   ): TransactionData {
     const data = encodeFunctionData({
       abi: abi,

@@ -1,10 +1,5 @@
 import { Metadata } from "../../Common/types";
 
-export type ApplicationStatus = {
-  index: number;
-  statusRow: number; // todo: Big number?
-};
-
 export type Recipient = {
   useRegistryAnchor: boolean;
   recipientAddress: `0x${string}`;
@@ -32,3 +27,23 @@ export type Permit2Data = {
   permit: any;
   signature: string;
 };
+
+export enum Status {
+  None,
+  Pending,
+  Accepted,
+  Rejected,
+  Appealed,
+  // InReview,
+  // Canceled,
+}
+
+export type ApplicationStatus = {
+  index: BigInt;
+  statusRow: BigInt;
+};
+
+export type ReviewRecipient = {
+  recipientId: `0x${string}`;
+  status: Status;
+}
