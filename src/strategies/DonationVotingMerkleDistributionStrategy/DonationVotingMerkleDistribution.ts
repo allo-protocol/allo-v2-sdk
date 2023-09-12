@@ -66,12 +66,11 @@ export class DonationVotingMerkleDistributionStrategy {
   }
 
   public async isAllowedTokens(token: string): Promise<boolean> {
-    const allowed = await this.contract.read.allowedTokens([token]);
+    const allowed = await this.contract.read.allowedTokens(token);
 
     return allowed;
   }
 
-  // FIXME: this is failing
   public async getClaims(recipient: string, token: string): Promise<number> {
     const claims = await this.contract.read.claims([recipient, token]);
 
@@ -79,7 +78,7 @@ export class DonationVotingMerkleDistributionStrategy {
   }
 
   public async getDistributionMetadata(): Promise<Metadata> {
-    const metadata: Metadata = await this.contract.read.distributionMetadata();
+    const metadata: Metadata = await this.contract.read.distributionMetadata.get();
 
     return metadata;
   }
@@ -125,7 +124,7 @@ export class DonationVotingMerkleDistributionStrategy {
   }
 
   public async getRecipient(recipientId: string): Promise<Recipient> {
-    const recipient = await this.contract.read.getRecipient([recipientId]);
+    const recipient = await this.contract.getRecipient([recipientId]);
 
     return recipient;
   }

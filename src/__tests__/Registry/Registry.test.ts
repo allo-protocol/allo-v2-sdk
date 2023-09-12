@@ -2,10 +2,14 @@ import { Address } from "viem";
 import { chains } from "../../Client/chains";
 import { Metadata } from "../../Common/types";
 import { Registry } from "../../Registry/Registry";
-import { metadata } from "../../Registry/registry.config";
 import { NATIVE, makeAddress, makeBytes32 } from "../utils/utils";
 
 const address: Address = "0xAEc621EC8D9dE4B524f4864791171045d6BBBe27";
+
+export const metadata: Metadata = {
+  protocol: 1,
+  pointer: "bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi",
+};
 
 jest.mock("viem", () => ({
   ...jest.requireActual("viem"),
@@ -25,43 +29,6 @@ jest.mock("viem", () => ({
         isOwnerOfProfile: jest.fn(() => true),
         isOwnerOrMemberOfProfile: jest.fn(() => true),
         profileIdToPendingOwner: jest.fn(() => makeBytes32("profileId")),
-      },
-      write: {
-        createProfile: jest.fn(() => ({
-          to: address,
-          data: "data",
-          value: "0",
-        })),
-        acceptProfileOwnership: jest.fn(() => ({
-          to: address,
-          data: "data",
-          value: "0",
-        })),
-        addMembers: jest.fn(() => ({
-          to: address,
-          data: "data",
-          value: "0",
-        })),
-        removeMembers: jest.fn(() => ({
-          to: address,
-          data: "data",
-          value: "0",
-        })),
-        updateProfileMetadata: jest.fn(() => ({
-          to: address,
-          data: "data",
-          value: "0",
-        })),
-        updateProfileName: jest.fn(() => ({
-          to: address,
-          data: "data",
-          value: "0",
-        })),
-        updateProfilePendingOwner: jest.fn(() => ({
-          to: address,
-          data: "data",
-          value: "0",
-        })),
       },
     };
   }),
