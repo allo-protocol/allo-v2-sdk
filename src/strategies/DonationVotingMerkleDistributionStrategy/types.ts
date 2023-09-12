@@ -39,8 +39,8 @@ export enum Status {
 }
 
 export type ApplicationStatus = {
-  index: BigInt;
-  statusRow: BigInt;
+  index: bigint;
+  statusRow: bigint;
 };
 
 export type ReviewRecipient = {

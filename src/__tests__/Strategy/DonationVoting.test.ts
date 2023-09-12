@@ -2,6 +2,7 @@ import { Address } from "viem";
 import { NATIVE, makeAddress, makeBytes32 } from "../utils/utils";
 import { chains } from "../../Client/chains";
 import { DonationVotingMerkleDistributionStrategy } from "../../strategies/DonationVotingMerkleDistributionStrategy/DonationVotingMerkleDistribution";
+import { ReviewRecipient } from "../../strategies/DonationVotingMerkleDistributionStrategy/types";
 
 const alloAddress: Address = "0x79536CC062EE8FAFA7A19a5fa07783BD7F792206";
 const address: Address = "0xAEc621EC8D9dE4B524f4864791171045d6BBBe27";
@@ -19,6 +20,7 @@ jest.mock("viem", () => ({
         allowedTokens: jest.fn(() => true),
         claims: jest.fn(() => 0),
         getClaims: jest.fn(() => 0),
+        multicall: jest.fn(() => makeBytes32("MULTICALL_DATA")),
         distributionMetadata: jest.fn(() => ({
           protocol: 1,
           pointer: "unt93847nwg[u7456w7shn56",
@@ -88,7 +90,7 @@ describe("DonationVotingMerkleDistributionStrategy", () => {
     });
 
     it("should get the allowed tokens", async () => {
-      const allowed = await strategy.isAllowedTokens(NATIVE())
+      const allowed = await strategy.isAllowedTokens(NATIVE());
       expect(allowed).toEqual(true);
     });
 
@@ -119,8 +121,14 @@ describe("DonationVotingMerkleDistributionStrategy", () => {
     });
 
     it("should get the payouts", async () => {
-      const recipientIds: string[] = [makeAddress("RECIPIENT1"), makeAddress("RECIPIENT2")];
-      const payoutData = [makeBytes32("PAYOUT_DATA"), makeBytes32("PAYOUT_DATA2")];
+      const recipientIds: string[] = [
+        makeAddress("RECIPIENT1"),
+        makeAddress("RECIPIENT2"),
+      ];
+      const payoutData = [
+        makeBytes32("PAYOUT_DATA"),
+        makeBytes32("PAYOUT_DATA2"),
+      ];
       const payouts = await strategy.getPayouts(recipientIds, payoutData);
 
       expect(payouts).toEqual([]);
@@ -143,7 +151,7 @@ describe("DonationVotingMerkleDistributionStrategy", () => {
       const recipient = await strategy.getRecipient(recipientId);
 
       expect(recipient).toEqual({
-        recipientId: makeAddress("RECIPIENT1")
+        recipientId: makeAddress("RECIPIENT1"),
       });
     });
 
@@ -197,7 +205,9 @@ describe("DonationVotingMerkleDistributionStrategy", () => {
     });
 
     it("should return the recipient to status index", async () => {
-      const indexes = await strategy.recipientToStatusIndexes(makeAddress("RECIPIENT1"));
+      const indexes = await strategy.recipientToStatusIndexes(
+        makeAddress("RECIPIENT1")
+      );
 
       expect(indexes).toEqual([]);
     });
@@ -341,11 +351,13 @@ describe("DonationVotingMerkleDistributionStrategy", () => {
     });
 
     it("should review recipients", async () => {
-      const data = [
-        { index: 1, statusRow: 1 },
-        { index: 2, statusRow: 2 },
+      const recipients: ReviewRecipient[] = [
+        {
+          recipientId: "0xcBf407C33d68a55CB594Ffc8f4fD1416Bba39DA5",
+          status: 1,
+        },
       ];
-      const tx = strategy.reviewRecipients(data);
+      const tx = await strategy.reviewRecipients(recipients);
 
       expect(tx).toEqual({
         to: address,
