@@ -239,13 +239,12 @@ export class MicroGrantsStrategy {
     return allocations;
   }
 
-  public async maxRequestedAmountAllowed(): Promise<number> {
+  public async maxRequestedAmount(): Promise<number> {
     this.checkStrategy();
 
-    const maxRequestedAmountAllowed =
-      await this.contract.read.maxRequestedAmountAllowed();
+    const maxRequestedAmount = await this.contract.read.maxRequestedAmount();
 
-    return maxRequestedAmountAllowed;
+    return maxRequestedAmount;
   }
 
   public async useRegistryAnchor(): Promise<boolean> {
@@ -266,7 +265,7 @@ export class MicroGrantsStrategy {
         params.allocationStartTime,
         params.allocationEndTime,
         params.approvalThreshold,
-        params.maxRequestedAmountAllowed,
+        params.maxRequestedAmount,
       ],
     );
 
@@ -396,9 +395,7 @@ export class MicroGrantsStrategy {
     };
   }
 
-  public getIncreasemaxRequestedAmountAllowedData(
-    amount: bigint,
-  ): TransactionData {
+  public getIncreasemaxRequestedAmountData(amount: bigint): TransactionData {
     this.checkStrategy();
 
     const encoded: `0x${string}` = encodeAbiParameters(
@@ -408,7 +405,7 @@ export class MicroGrantsStrategy {
 
     const encodedData = encodeFunctionData({
       abi: abi,
-      functionName: "increasemaxRequestedAmountAllowed",
+      functionName: "increasemaxRequestedAmount",
       args: [encoded],
     });
 

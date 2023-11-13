@@ -16,7 +16,6 @@ export class Allo {
   private contract: any;
 
   constructor({ chain, rpc }: ConstructorArgs) {
-
     const usedChain = extractChain({
       chains: supportedChains,
       id: chain as any,
@@ -120,7 +119,7 @@ export class Allo {
         initStrategyData,
         token,
         amount,
-        metadata,
+        [metadata.protocol, metadata.pointer],
         managers,
       ],
     });

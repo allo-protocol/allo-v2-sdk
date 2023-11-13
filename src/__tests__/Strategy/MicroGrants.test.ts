@@ -56,10 +56,9 @@ describe("Micro Grants Strategy", () => {
     });
 
     it("should return the max requested amount", async () => {
-      const maxRequestedAmountAllowed =
-        await strategy.maxRequestedAmountAllowed();
+      const maxRequestedAmount = await strategy.maxRequestedAmount();
 
-      expect(maxRequestedAmountAllowed).toEqual(0);
+      expect(maxRequestedAmount).toEqual(0);
     });
 
     it("should return the approval threshold", async () => {

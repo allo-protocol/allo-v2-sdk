@@ -5,10 +5,10 @@ export type CreatePoolArgs = {
   strategy: any;
   initStrategyData: string;
   token: string;
-  amount: number;
+  amount: bigint;
   metadata: Metadata;
   managers: string[];
-}
+};
 
 export type UpdateMetaDataArgs = {
   poolId: number;

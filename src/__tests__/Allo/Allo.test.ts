@@ -127,7 +127,7 @@ describe("Allo", () => {
         strategy: makeAddress("STRATEGY"),
         initStrategyData: "0x",
         token: makeAddress("TOKEN"),
-        amount: 0,
+        amount: BigInt(0),
         metadata: metadata,
         managers: [makeAddress("MANAGER")],
       });
@@ -145,7 +145,7 @@ describe("Allo", () => {
         strategy: makeAddress("STRATEGY"),
         initStrategyData: "0x",
         token: makeAddress("TOKEN"),
-        amount: 0,
+        amount: BigInt(0),
         metadata,
         managers: [makeAddress("MANAGER")],
       });
