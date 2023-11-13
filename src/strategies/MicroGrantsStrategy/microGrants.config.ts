@@ -321,11 +321,11 @@ export const abi = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "maxRequestedAmount",
+        name: "maxRequestedAmountAllowed",
         type: "uint256",
       },
     ],
-    name: "MaxRequestedAmountIncreased",
+    name: "maxRequestedAmountAllowedIncreased",
     type: "event",
   },
   {
@@ -739,11 +739,11 @@ export const abi = [
     inputs: [
       {
         internalType: "uint256",
-        name: "_maxRequestedAmount",
+        name: "_maxRequestedAmountAllowed",
         type: "uint256",
       },
     ],
-    name: "increaseMaxRequestedAmount",
+    name: "increasemaxRequestedAmountAllowed",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -813,7 +813,7 @@ export const abi = [
   },
   {
     inputs: [],
-    name: "maxRequestedAmount",
+    name: "maxRequestedAmountAllowed",
     outputs: [
       {
         internalType: "uint256",

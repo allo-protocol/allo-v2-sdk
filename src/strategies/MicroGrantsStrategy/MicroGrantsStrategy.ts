@@ -8,20 +8,19 @@ import {
   parseAbiParameters,
 } from "viem";
 
+import { Allo } from "../../Allo/Allo";
 import { create } from "../../Client/Client";
 import { abi, bytecode } from "./microGrants.config";
-import { Allo } from "../../Allo/Allo";
 
 import {
   ConstructorArgs,
   DeployParams,
-  Metadata,
   TransactionData,
-  ZERO_ADDRESS,
+  ZERO_ADDRESS
 } from "../../Common/types";
 import { PayoutSummary, Status } from "../types";
 
-import { Recipient, InitializeParams, Allocation, RegisterData } from "./types";
+import { Allocation, InitializeParams, Recipient, RegisterData } from "./types";
 
 export class MicroGrantsStrategy {
   private client: PublicClient<Transport, Chain>;
@@ -62,13 +61,19 @@ export class MicroGrantsStrategy {
     return native;
   }
 
+  public async allocator(allocatorAddress: string): Promise<boolean> {
+    const allocator = await this.contract.read.allocators(allocatorAddress);
+
+    return allocator;
+  }
+
   public async allocated(
     allocatorAddress: string,
-    recipientAddress: string,
+    recipientAddress: string
   ): Promise<boolean> {
     const allocated = await this.contract.read.allocated(
       allocatorAddress,
-      recipientAddress,
+      recipientAddress
     );
 
     return allocated;
@@ -158,14 +163,20 @@ export class MicroGrantsStrategy {
 
   public async recipientAllocations(
     recipientId: string,
-    status: Status,
+    status: Status
   ): Promise<string> {
     const allocations = await this.contract.read.recipientAllocations(
       recipientId,
-      status,
+      status
     );
 
     return allocations;
+  }
+
+  public async maxRequestedAmountAllowed(): Promise<number> {
+    const maxRequestedAmountAllowed = await this.contract.read.maxRequestedAmountAllowed();
+
+    return maxRequestedAmountAllowed;
   }
 
   public async useRegistryAnchor(): Promise<boolean> {
@@ -176,13 +187,13 @@ export class MicroGrantsStrategy {
 
   // write: allocate(bytes data, address sender)
   // batchSetAllocator(address[] allocatorAddresses, bool[] flags)
-  // increaseMaxRequestedAmount(uint256 amount)
+  // increasemaxRequestedAmountAllowed(uint256 amount)
   // registerRecipient
   // setAllocator(address allocatorAddress, bool flag)
   // updatePoolTimestamps(uint64 allocationStartTime, uint64 allocationEndTime)
 
   public async getInitializeData(
-    params: InitializeParams,
+    params: InitializeParams
   ): Promise<`0x${string}`> {
     const encoded: `0x${string}` = encodeAbiParameters(
       parseAbiParameters("bool, uint64, uint64, uint256, uint256"),
@@ -191,8 +202,8 @@ export class MicroGrantsStrategy {
         params.allocationStartTime,
         params.allocationEndTime,
         params.approvalThreshold,
-        params.maxRequestedAmount,
-      ],
+        params.maxRequestedAmountAllowed,
+      ]
     );
 
     return encoded;
@@ -201,7 +212,7 @@ export class MicroGrantsStrategy {
   public getDeployParams(): DeployParams {
     const constructorArgs: `0x${string}` = encodeAbiParameters(
       parseAbiParameters("address, string"),
-      [this.allo.address(), "MicroGrantsv1"],
+      [this.allo.address(), "MicroGrantsv1"]
     );
     const constructorArgsNo0x = constructorArgs.slice(2);
 
@@ -217,7 +228,7 @@ export class MicroGrantsStrategy {
     allocations.forEach((allocation) => {
       const encoded: `0x${string}` = encodeAbiParameters(
         parseAbiParameters("address, enum"),
-        [allocation.recipientId, allocation.status],
+        [allocation.recipientId, allocation.status]
       );
 
       encodedParams.push(encoded);
@@ -240,11 +251,11 @@ export class MicroGrantsStrategy {
 
   public getAllocationData(
     recipientId: `0x${string}`,
-    status: Status,
+    status: Status
   ): TransactionData {
     const encoded: `0x${string}` = encodeAbiParameters(
       parseAbiParameters("address, enum"),
-      [recipientId, status],
+      [recipientId, status]
     );
 
     const encodedData = encodeFunctionData({
@@ -268,7 +279,7 @@ export class MicroGrantsStrategy {
         data.recipientAddress,
         data.requestedAmount,
         data.metadata,
-      ],
+      ]
     );
 
     const encodedData = encodeFunctionData({

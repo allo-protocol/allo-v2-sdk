@@ -17,7 +17,7 @@ import { Status } from "../types";
 //     uint64 allocationStartTime;
 //     uint64 allocationEndTime;
 //     uint256 approvalThreshold;
-//     uint256 maxRequestedAmount;
+//     uint256 maxRequestedAmountAllowed;
 // }
 
 export type Recipient = {
@@ -40,7 +40,7 @@ export type InitializeParams = {
   allocationStartTime: bigint;
   allocationEndTime: bigint;
   approvalThreshold: bigint;
-  maxRequestedAmount: bigint;
+  maxRequestedAmountAllowed: bigint;
 };
 
 export type Allocation = {
