@@ -31,8 +31,6 @@ export class DonationVotingMerkleDistributionStrategy {
 
         this.client = create(usedChain, rpc);
 
-        this.client = create(usedChain, rpc);
-
     if (!address)
       throw new Error(
         "DonationVotingMerkleDistributionStrategy: No strategy address provided"
