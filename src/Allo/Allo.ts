@@ -24,6 +24,10 @@ export class Allo {
     });
   }
 
+  public address(): `0x${string}` {
+    return address;
+  }
+
   // Read only funcitons
 
   public async getFeeDenominator(): Promise<number> {
@@ -40,7 +44,7 @@ export class Allo {
 
   public async isPoolManager(
     poolId: number,
-    address: string
+    address: string,
   ): Promise<boolean> {
     const isManager = await this.contract.read.isPoolManager([poolId, address]);
 
@@ -296,7 +300,10 @@ export class Allo {
   }
 
   // Strategy functions
-  public registerRecipient(poolId: number, strategyData: string): TransactionData {
+  public registerRecipient(
+    poolId: number,
+    strategyData: string,
+  ): TransactionData {
     const data = encodeFunctionData({
       abi: abi,
       functionName: "registerRecipient",
@@ -312,7 +319,7 @@ export class Allo {
 
   public batchRegisterRecipient(
     poolIds: number[],
-    strategyData: string[]
+    strategyData: string[],
   ): TransactionData {
     const data = encodeFunctionData({
       abi: abi,
@@ -355,7 +362,10 @@ export class Allo {
     };
   }
 
-  public batchAllocate(poolIds: number[], strategyData: string[]): TransactionData {
+  public batchAllocate(
+    poolIds: number[],
+    strategyData: string[],
+  ): TransactionData {
     const data = encodeFunctionData({
       abi: abi,
       functionName: "batchAllocate",
@@ -369,7 +379,11 @@ export class Allo {
     };
   }
 
-  public distribute(poolId: number, recipientId: string[], strategyData: string): TransactionData {
+  public distribute(
+    poolId: number,
+    recipientId: string[],
+    strategyData: string,
+  ): TransactionData {
     const data = encodeFunctionData({
       abi: abi,
       functionName: "distribute",
