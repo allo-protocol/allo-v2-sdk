@@ -1,5 +1,5 @@
 {
-  "name": "allo-v2-sdk",
+  "name": "@allo-protocol/allo-v2-sdk",
   "version": "1.0.0",
   "description": "sdk for allo v2",
   "main": "index.js",
@@ -25,5 +25,23 @@
     "dotenv": "^16.3.1",
     "events": "^3.3.0",
     "viem": "^1.6.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/allo-protocol/allo-v2-sdk.git"
+  },
+  "keywords": [
+    "allo",
+    "funding",
+    "public",
+    "goods",
+    "community",
+    "sdk",
+    "web3"
+  ],
+  "author": "allo team",
+  "bugs": {
+    "url": "https://github.com/allo-protocol/allo-v2-sdk/issues"
+  },
+  "homepage": "https://github.com/allo-protocol/allo-v2-sdk#readme"
 }
