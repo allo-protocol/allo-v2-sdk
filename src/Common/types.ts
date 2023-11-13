@@ -1,7 +1,5 @@
-import { Chain } from "viem";
-
 export type ConstructorArgs = {
-  chain: Chain;
+  chain: number;
   rpc?: string;
   address?: `0x${string}`;
   poolId?: number;

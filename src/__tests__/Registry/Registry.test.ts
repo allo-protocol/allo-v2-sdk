@@ -1,5 +1,4 @@
 import { Address } from "viem";
-import { chains } from "../../Client/chains";
 import { Metadata } from "../../Common/types";
 import { Registry } from "../../Registry/Registry";
 import { NATIVE, makeAddress, makeBytes32 } from "../utils/utils";
@@ -22,7 +21,9 @@ jest.mock("viem", () => ({
         NATIVE: jest.fn(() => NATIVE()),
         anchorToProfileId: jest.fn(([anchor]: string[]) => makeBytes32(anchor)),
         getProfileByAnchor: jest.fn(([anchor]: string) => makeBytes32(anchor)),
-        getProfileById: jest.fn(([profileId]: string) => makeBytes32(profileId)),
+        getProfileById: jest.fn(([profileId]: string) =>
+          makeBytes32(profileId),
+        ),
         getRoleAdmin: jest.fn(([role]: string) => makeBytes32(role)),
         hasRole: jest.fn(() => true),
         isMemberOfProfile: jest.fn(() => true),
@@ -38,7 +39,7 @@ describe("Registry", () => {
   let registry: Registry;
 
   beforeEach(() => {
-    registry = new Registry({ chain: chains.goerli });
+    registry = new Registry({ chain: 5 });
   });
 
   // Test cases for view functions
@@ -115,9 +116,9 @@ describe("Registry", () => {
       expect(isOwnerOrMember).toEqual(true);
     });
 
-    it("should get the pending owner for a profile id", async() => {
+    it("should get the pending owner for a profile id", async () => {
       const profileId = await registry.profileIdToPendingOwner(
-        makeBytes32("pendingOwner")
+        makeBytes32("pendingOwner"),
       );
 
       expect(profileId).toEqual(makeBytes32("profileId"));
@@ -142,7 +143,7 @@ describe("Registry", () => {
         name,
         metadata: metatdata,
         owner,
-        members
+        members,
       });
 
       expect(tx).toEqual({
@@ -182,7 +183,7 @@ describe("Registry", () => {
 
       const tx = await registry.addMembers({
         profileId,
-        members
+        members,
       });
 
       expect(tx).toEqual({
@@ -198,7 +199,7 @@ describe("Registry", () => {
 
       const tx = registry.removeMembers({
         profileId,
-        members
+        members,
       });
 
       expect(tx).toEqual({
@@ -212,7 +213,7 @@ describe("Registry", () => {
       const profileId = makeBytes32("profileId");
       const tx = registry.updateProfileMetadata({
         profileId,
-        metadata
+        metadata,
       });
 
       expect(tx).toEqual({
@@ -228,7 +229,7 @@ describe("Registry", () => {
 
       const tx = registry.updateProfileName({
         profileId,
-        name
+        name,
       });
 
       expect(tx).toEqual({
@@ -244,7 +245,7 @@ describe("Registry", () => {
 
       const tx = registry.updateProfilePendingOwner({
         profileId,
-        account: pendingOwner
+        account: pendingOwner,
       });
 
       expect(tx).toEqual({

@@ -3,6 +3,7 @@ import {
   PublicClient,
   Transport,
   encodeFunctionData,
+  extractChain,
   getContract,
 } from "viem";
 import { create } from "../Client/Client";
@@ -17,13 +18,21 @@ import {
   ProfileMetadataArgs,
   ProfileNameArgs,
 } from "./types";
+import { supportedChains } from "../chains.config";
 
 export class Registry {
   private client: PublicClient<Transport, Chain>;
   private contract: any;
 
   constructor({ chain, rpc }: ConstructorArgs) {
-    this.client = create(chain, rpc);
+    const usedChain = extractChain({
+      chains: supportedChains,
+      id: chain as any,
+    });
+
+    this.client = create(usedChain, rpc);
+
+    this.client = create(usedChain, rpc);
 
     this.contract = getContract({
       address: address,
@@ -108,9 +117,9 @@ export class Registry {
   }
 
   public async profileIdToPendingOwner(profileId: string): Promise<string> {
-    const pendingOwner = await this.contract.read.profileIdToPendingOwner(
-      [profileId]
-    );
+    const pendingOwner = await this.contract.read.profileIdToPendingOwner([
+      profileId,
+    ]);
     return pendingOwner;
   }
 

@@ -1,6 +1,6 @@
 {
   "name": "@allo-protocol/allo-v2-sdk",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "sdk for allo v2",
   "main": "index.js",
   "license": "MIT",
@@ -24,7 +24,7 @@
   "dependencies": {
     "dotenv": "^16.3.1",
     "events": "^3.3.0",
-    "viem": "^1.6.0"
+    "viem": "^1.19.0"
   },
   "repository": {
     "type": "git",

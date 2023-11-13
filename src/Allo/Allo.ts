@@ -4,18 +4,25 @@ import {
   Transport,
   encodeFunctionData,
   getContract,
+  extractChain,
 } from "viem";
 import { ConstructorArgs, TransactionData } from "../Common/types";
 import { create } from "../Client/Client";
 import { abi, address } from "./allo.config";
 import { CreatePoolArgs, Pool, UpdateMetaDataArgs } from "./types";
-
+import { supportedChains } from "../chains.config";
 export class Allo {
   private client: PublicClient<Transport, Chain>;
   private contract: any;
 
   constructor({ chain, rpc }: ConstructorArgs) {
-    this.client = create(chain, rpc);
+
+    const usedChain = extractChain({
+      chains: supportedChains,
+      id: chain as any,
+    });
+
+    this.client = create(usedChain, rpc);
 
     this.contract = getContract({
       address: address,

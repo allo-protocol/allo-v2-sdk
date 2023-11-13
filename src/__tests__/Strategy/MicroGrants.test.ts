@@ -1,5 +1,4 @@
 import { Address } from "viem";
-import { chains } from "../../Client/chains";
 import { MicroGrantsStrategy } from "../../strategies/MicroGrantsStrategy/MicroGrantsStrategy";
 import { NATIVE } from "../utils/utils";
 
@@ -30,7 +29,7 @@ describe("Micro Grants Strategy", () => {
 
   beforeEach(() => {
     strategy = new MicroGrantsStrategy({
-      chain: chains.sepolia,
+      chain: 5,
       rpc: "rpc",
       address,
       poolId: 0,
@@ -84,7 +83,7 @@ describe("Micro Grants Strategy", () => {
     it("should return the recipient allocations", async () => {
       const recipientAllocations = await strategy.recipientAllocations(
         "recipient",
-        0
+        0,
       );
 
       expect(recipientAllocations).toEqual(0);

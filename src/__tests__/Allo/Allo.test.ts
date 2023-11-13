@@ -1,5 +1,4 @@
 import { Allo } from "../../Allo/Allo";
-import { chains } from "../../Client/chains";
 import { makeAddress, makeBytes32 } from "../utils/utils";
 import { Metadata } from "../../Common/types";
 import { Address } from "viem";
@@ -45,7 +44,7 @@ describe("Allo", () => {
   let allo: Allo;
 
   beforeEach(() => {
-    allo = new Allo({ chain: chains.goerli });
+    allo = new Allo({ chain: 5 });
   });
 
   // Test cases for view functions
@@ -258,7 +257,7 @@ describe("Allo", () => {
     it("should recover funds", async () => {
       const tx = allo.recoverFunds(
         makeAddress("TOKEN"),
-        makeAddress("RECIPIENT")
+        makeAddress("RECIPIENT"),
       );
 
       expect(tx).toEqual({
@@ -284,7 +283,7 @@ describe("Allo", () => {
     it("should batch register multiple recipients", async () => {
       const tx = allo.batchRegisterRecipient(
         [1, 1],
-        [makeBytes32("STRATEGY_DATA"), makeBytes32("STRATEGY_DATA")]
+        [makeBytes32("STRATEGY_DATA"), makeBytes32("STRATEGY_DATA")],
       );
 
       expect(tx).toEqual({
@@ -320,7 +319,7 @@ describe("Allo", () => {
         [
           makeBytes32("STRATEGY_ALLOCATE_DATA"),
           makeBytes32("STRATEGY_ALLOCATE_DATA"),
-        ]
+        ],
       );
 
       expect(tx).toEqual({
@@ -334,7 +333,7 @@ describe("Allo", () => {
       const tx = allo.distribute(
         1,
         [makeAddress("RECIPIENT1"), makeAddress("RECIPIENT2")],
-        makeBytes32("STRATEGY_DISTRIBUTE_DATA")
+        makeBytes32("STRATEGY_DISTRIBUTE_DATA"),
       );
 
       expect(tx).toEqual({
