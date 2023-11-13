@@ -16,11 +16,17 @@ import {
   ConstructorArgs,
   DeployParams,
   TransactionData,
-  ZERO_ADDRESS
+  ZERO_ADDRESS,
 } from "../../Common/types";
 import { PayoutSummary, Status } from "../types";
 
-import { Allocation, InitializeParams, Recipient, RegisterData } from "./types";
+import {
+  Allocation,
+  InitializeParams,
+  Recipient,
+  RegisterData,
+  SetAllocatorData,
+} from "./types";
 
 export class MicroGrantsStrategy {
   private client: PublicClient<Transport, Chain>;
@@ -46,14 +52,19 @@ export class MicroGrantsStrategy {
       publicClient: this.client,
     });
 
-    this.poolId = poolId!;
+    this.poolId = poolId || -1;
   }
 
   public setPoolId(poolId: number): void {
     this.poolId = poolId;
   }
 
-  // Read only functions
+  private checkPoolId(): void {
+    if (this.poolId === -1)
+      throw new Error(
+        "MicroGrantsStrategy: No poolId provided. Please call `setPoolId` first.",
+      );
+  }
 
   public async getNative(): Promise<string> {
     const native = await this.contract.read.NATIVE();
@@ -69,11 +80,11 @@ export class MicroGrantsStrategy {
 
   public async allocated(
     allocatorAddress: string,
-    recipientAddress: string
+    recipientAddress: string,
   ): Promise<boolean> {
     const allocated = await this.contract.read.allocated(
       allocatorAddress,
-      recipientAddress
+      recipientAddress,
     );
 
     return allocated;
@@ -163,18 +174,19 @@ export class MicroGrantsStrategy {
 
   public async recipientAllocations(
     recipientId: string,
-    status: Status
+    status: Status,
   ): Promise<string> {
     const allocations = await this.contract.read.recipientAllocations(
       recipientId,
-      status
+      status,
     );
 
     return allocations;
   }
 
   public async maxRequestedAmountAllowed(): Promise<number> {
-    const maxRequestedAmountAllowed = await this.contract.read.maxRequestedAmountAllowed();
+    const maxRequestedAmountAllowed =
+      await this.contract.read.maxRequestedAmountAllowed();
 
     return maxRequestedAmountAllowed;
   }
@@ -185,15 +197,8 @@ export class MicroGrantsStrategy {
     return useRegistryAnchor;
   }
 
-  // write: allocate(bytes data, address sender)
-  // batchSetAllocator(address[] allocatorAddresses, bool[] flags)
-  // increasemaxRequestedAmountAllowed(uint256 amount)
-  // registerRecipient
-  // setAllocator(address allocatorAddress, bool flag)
-  // updatePoolTimestamps(uint64 allocationStartTime, uint64 allocationEndTime)
-
   public async getInitializeData(
-    params: InitializeParams
+    params: InitializeParams,
   ): Promise<`0x${string}`> {
     const encoded: `0x${string}` = encodeAbiParameters(
       parseAbiParameters("bool, uint64, uint64, uint256, uint256"),
@@ -203,7 +208,7 @@ export class MicroGrantsStrategy {
         params.allocationEndTime,
         params.approvalThreshold,
         params.maxRequestedAmountAllowed,
-      ]
+      ],
     );
 
     return encoded;
@@ -212,7 +217,7 @@ export class MicroGrantsStrategy {
   public getDeployParams(): DeployParams {
     const constructorArgs: `0x${string}` = encodeAbiParameters(
       parseAbiParameters("address, string"),
-      [this.allo.address(), "MicroGrantsv1"]
+      [this.allo.address(), "MicroGrantsv1"],
     );
     const constructorArgsNo0x = constructorArgs.slice(2);
 
@@ -223,12 +228,14 @@ export class MicroGrantsStrategy {
   }
 
   public getBatchAllocationData(allocations: Allocation[]): TransactionData {
+    this.checkPoolId();
+
     const encodedParams: `0x${string}`[] = [];
 
     allocations.forEach((allocation) => {
       const encoded: `0x${string}` = encodeAbiParameters(
         parseAbiParameters("address, enum"),
-        [allocation.recipientId, allocation.status]
+        [allocation.recipientId, allocation.status],
       );
 
       encodedParams.push(encoded);
@@ -251,11 +258,12 @@ export class MicroGrantsStrategy {
 
   public getAllocationData(
     recipientId: `0x${string}`,
-    status: Status
+    status: Status,
   ): TransactionData {
+    this.checkPoolId();
     const encoded: `0x${string}` = encodeAbiParameters(
       parseAbiParameters("address, enum"),
-      [recipientId, status]
+      [recipientId, status],
     );
 
     const encodedData = encodeFunctionData({
@@ -272,6 +280,7 @@ export class MicroGrantsStrategy {
   }
 
   public getRegisterRecipientData(data: RegisterData): TransactionData {
+    this.checkPoolId();
     const encoded: `0x${string}` = encodeAbiParameters(
       parseAbiParameters("address, address, uint256, Metadata"),
       [
@@ -279,7 +288,7 @@ export class MicroGrantsStrategy {
         data.recipientAddress,
         data.requestedAmount,
         data.metadata,
-      ]
+      ],
     );
 
     const encodedData = encodeFunctionData({
@@ -290,6 +299,126 @@ export class MicroGrantsStrategy {
 
     return {
       to: this.allo.address(),
+      data: encodedData,
+      value: "0",
+    };
+  }
+
+  public getBatchRegisterRecipientData(data: RegisterData[]): TransactionData {
+    this.checkPoolId();
+    const encodedParams: `0x${string}`[] = [];
+
+    data.forEach((registerData) => {
+      const encoded: `0x${string}` = encodeAbiParameters(
+        parseAbiParameters("address, address, uint256, Metadata"),
+        [
+          registerData.registryAnchor || ZERO_ADDRESS,
+          registerData.recipientAddress,
+          registerData.requestedAmount,
+          registerData.metadata,
+        ],
+      );
+
+      encodedParams.push(encoded);
+    });
+
+    const poolIds: bigint[] = Array(encodedParams.length).fill(this.poolId);
+
+    const encodedData = encodeFunctionData({
+      abi: abi,
+      functionName: "batchRegisterRecipient",
+      args: [poolIds, encodedParams],
+    });
+
+    return {
+      to: this.allo.address(),
+      data: encodedData,
+      value: "0",
+    };
+  }
+
+  public getIncreasemaxRequestedAmountAllowedData(
+    amount: bigint,
+  ): TransactionData {
+    const encoded: `0x${string}` = encodeAbiParameters(
+      parseAbiParameters("uint256"),
+      [amount],
+    );
+
+    const encodedData = encodeFunctionData({
+      abi: abi,
+      functionName: "increasemaxRequestedAmountAllowed",
+      args: [encoded],
+    });
+
+    return {
+      to: this.strategy,
+      data: encodedData,
+      value: "0",
+    };
+  }
+
+  public getSetAllocatorData(data: SetAllocatorData): TransactionData {
+    const encoded: `0x${string}` = encodeAbiParameters(
+      parseAbiParameters("address, bool"),
+      [data.allocatorAddress, data.flag],
+    );
+
+    const encodedData = encodeFunctionData({
+      abi: abi,
+      functionName: "setAllocator",
+      args: [encoded],
+    });
+
+    return {
+      to: this.strategy,
+      data: encodedData,
+      value: "0",
+    };
+  }
+
+  public getBatchSetAllocatorData(data: SetAllocatorData[]): TransactionData {
+    const encodedParams: `0x${string}`[] = [];
+
+    data.forEach((setAllocatorData) => {
+      const encoded: `0x${string}` = encodeAbiParameters(
+        parseAbiParameters("address, bool"),
+        [setAllocatorData.allocatorAddress, setAllocatorData.flag],
+      );
+
+      encodedParams.push(encoded);
+    });
+
+    const encodedData = encodeFunctionData({
+      abi: abi,
+      functionName: "batchSetAllocator",
+      args: [encodedParams],
+    });
+
+    return {
+      to: this.strategy,
+      data: encodedData,
+      value: "0",
+    };
+  }
+
+  public getUpdatePoolTimestampsData(
+    allocationStartTime: bigint,
+    allocationEndTime: bigint,
+  ): TransactionData {
+    const encoded: `0x${string}` = encodeAbiParameters(
+      parseAbiParameters("uint64, uint64"),
+      [allocationStartTime, allocationEndTime],
+    );
+
+    const encodedData = encodeFunctionData({
+      abi: abi,
+      functionName: "updatePoolTimestamps",
+      args: [encoded],
+    });
+
+    return {
+      to: this.strategy,
       data: encodedData,
       value: "0",
     };

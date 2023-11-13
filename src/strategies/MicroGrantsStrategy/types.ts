@@ -47,3 +47,8 @@ export type Allocation = {
   recipientId: `0x${string}`;
   status: Status;
 };
+
+export type SetAllocatorData = {
+  allocatorAddress: `0x${string}`;
+  flag: boolean;
+};
