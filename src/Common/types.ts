@@ -12,7 +12,7 @@ export type TransactionData = {
 };
 
 export type Metadata = {
-  protocol: number;
+  protocol: bigint;
   pointer: string;
 };
 

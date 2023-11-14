@@ -229,7 +229,7 @@ const createProfileArgs: CreateProfileArgs = {
   nonce: 3,
   name: "Module Test 1",
   metadata: {
-    protocol: 1,
+    protocol: BigInt(1),
     pointer: "bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi",
   },
   owner: "0xE7eB5D2b5b188777df902e89c54570E7Ef4F59CE",

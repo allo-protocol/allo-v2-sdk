@@ -1,0 +1,57 @@
+import { ConstructorArgs, Metadata, TransactionData } from "../../Common/types";
+import { PayoutSummary, Status } from "../types";
+import { Recipient } from "./types";
+export declare class DonationVotingMerkleDistributionStrategy {
+    private client;
+    private contract;
+    private strategy;
+    private poolId;
+    private allo;
+    constructor({ chain, rpc, address }: ConstructorArgs);
+    getNative(): Promise<string>;
+    getPermit2(): Promise<string>;
+    getAllocationEndTime(): Promise<number>;
+    getAllocationStartTime(): Promise<number>;
+    isAllowedTokens(token: string): Promise<boolean>;
+    getClaims(recipient: string, token: string): Promise<number>;
+    getDistributionMetadata(): Promise<Metadata>;
+    getDistributionStarted(): Promise<boolean>;
+    getAllo(): Promise<string>;
+    getPayouts(recipientIds: string[], data: string[]): Promise<PayoutSummary[]>;
+    getPoolAmount(): Promise<number>;
+    getPoolId(): Promise<number>;
+    getRecipient(recipientId: string): Promise<Recipient>;
+    getRecipientStatus(recipientId: string): Promise<Status>;
+    getStrategyId(): Promise<string>;
+    hasBeenDistributed(index: number): Promise<boolean>;
+    isDistributionSet(): Promise<boolean>;
+    isPoolActive(): Promise<boolean>;
+    isValidAllocator(allocator: `0x${string}`): Promise<boolean>;
+    getMerkleRoot(): Promise<string>;
+    metadataRequired(): Promise<boolean>;
+    recipientToStatusIndexes(recipient: string): Promise<number[]>;
+    recipientsCounter(): Promise<number>;
+    registrationEndTime(): Promise<number>;
+    registrationStartTime(): Promise<number>;
+    statusesBitMap(index: number): Promise<number>;
+    totalPayoutAmount(): Promise<number>;
+    useRegistryAnchor(): Promise<boolean>;
+    allocate(strategyData: string): TransactionData;
+    batchAllocate(strategyData: string[]): TransactionData;
+    registerRecipient(strategyData: string): TransactionData;
+    batchRegisterRecipient(strategyData: string[]): TransactionData;
+    fundPool(amount: number): TransactionData;
+    distribute(recipientIds: string[], data: string): TransactionData;
+    claim(claims: {
+        recipientId: string;
+        token: string;
+    }[]): TransactionData;
+    multicall(data: string[]): TransactionData;
+    reviewRecipients(statuses: {
+        index: number;
+        statusRow: number;
+    }[]): TransactionData;
+    updateDistribution(merkleRoot: string, distributionMetadata: Metadata): TransactionData;
+    updatePoolTimestamps(registrationStartTime: number, registrationEndTime: number, allocationStartTime: number, allocationEndTime: number): TransactionData;
+    withdraw(amount: number): TransactionData;
+}

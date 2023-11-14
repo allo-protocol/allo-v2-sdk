@@ -4,6 +4,7 @@ import {
   Transport,
   encodeAbiParameters,
   encodeFunctionData,
+  encodePacked,
   extractChain,
   getContract,
   parseAbiParameters,
@@ -12,6 +13,7 @@ import {
 import { Allo } from "../../Allo/Allo";
 import { create } from "../../Client/Client";
 import { abi, bytecode } from "./microGrants.config";
+import { abi as alloAbi } from "../../Allo/allo.config";
 
 import {
   ConstructorArgs,
@@ -302,7 +304,7 @@ export class MicroGrantsStrategy {
     const poolIds: bigint[] = Array(encodedParams.length).fill(this.poolId);
 
     const encodedData = encodeFunctionData({
-      abi: abi,
+      abi: alloAbi,
       functionName: "batchAllocate",
       args: [poolIds, encodedParams],
     });
@@ -325,7 +327,7 @@ export class MicroGrantsStrategy {
     );
 
     const encodedData = encodeFunctionData({
-      abi: abi,
+      abi: alloAbi,
       functionName: "allocate",
       args: [this.poolId, encoded],
     });
@@ -340,17 +342,17 @@ export class MicroGrantsStrategy {
   public getRegisterRecipientData(data: RegisterData): TransactionData {
     this.checkPoolId();
     const encoded: `0x${string}` = encodeAbiParameters(
-      parseAbiParameters("address, address, uint256, Metadata"),
+      parseAbiParameters("address, address, uint256, (uint256, string)"),
       [
         data.registryAnchor || ZERO_ADDRESS,
         data.recipientAddress,
         data.requestedAmount,
-        data.metadata,
+        [data.metadata.protocol, data.metadata.pointer],
       ],
     );
 
     const encodedData = encodeFunctionData({
-      abi: abi,
+      abi: alloAbi,
       functionName: "registerRecipient",
       args: [this.poolId, encoded],
     });
@@ -368,12 +370,12 @@ export class MicroGrantsStrategy {
 
     data.forEach((registerData) => {
       const encoded: `0x${string}` = encodeAbiParameters(
-        parseAbiParameters("address, address, uint256, Metadata"),
+        parseAbiParameters("address, address, uint256, (uit256, string)"),
         [
           registerData.registryAnchor || ZERO_ADDRESS,
           registerData.recipientAddress,
           registerData.requestedAmount,
-          registerData.metadata,
+          [registerData.metadata.protocol, registerData.metadata.pointer],
         ],
       );
 
@@ -383,7 +385,7 @@ export class MicroGrantsStrategy {
     const poolIds: bigint[] = Array(encodedParams.length).fill(this.poolId);
 
     const encodedData = encodeFunctionData({
-      abi: abi,
+      abi: alloAbi,
       functionName: "batchRegisterRecipient",
       args: [poolIds, encodedParams],
     });

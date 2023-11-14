@@ -2,7 +2,7 @@ import { Address } from "viem";
 import { NATIVE, makeAddress, makeBytes32 } from "../utils/utils";
 import { DonationVotingMerkleDistributionStrategy } from "../../strategies/DonationVotingMerkleDistributionStrategy/DonationVotingMerkleDistribution";
 
-const alloAddress: Address = "0x79536CC062EE8FAFA7A19a5fa07783BD7F792206";
+const alloAddress: Address = "0x1133eA7Af70876e64665ecD07C0A0476d09465a1";
 const address: Address = "0xAEc621EC8D9dE4B524f4864791171045d6BBBe27";
 
 jest.mock("viem", () => ({
@@ -19,7 +19,7 @@ jest.mock("viem", () => ({
         claims: jest.fn(() => 0),
         getClaims: jest.fn(() => 0),
         distributionMetadata: jest.fn(() => ({
-          protocol: 1,
+          protocol: BigInt(1),
           pointer: "unt93847nwg[u7456w7shn56",
         })),
         distributionStarted: jest.fn(() => true),
@@ -100,7 +100,7 @@ describe("DonationVotingMerkleDistributionStrategy", () => {
     it("should return distribution metadata", async () => {
       const metadata = await strategy.getDistributionMetadata();
       expect(metadata).toEqual({
-        protocol: 1,
+        protocol: BigInt(1),
         pointer: "unt93847nwg[u7456w7shn56",
       });
     });
@@ -363,7 +363,7 @@ describe("DonationVotingMerkleDistributionStrategy", () => {
 
     it("should update the distribution", async () => {
       const distributeMetadata = {
-        protocol: 1,
+        protocol: BigInt(1),
         pointer: "unt93847nwg[u7456w7shn56",
       };
       const tx = strategy.updateDistribution(

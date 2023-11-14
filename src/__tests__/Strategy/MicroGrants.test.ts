@@ -2,7 +2,7 @@ import { Address } from "viem";
 import { MicroGrantsStrategy } from "../../strategies/MicroGrantsStrategy/MicroGrantsStrategy";
 import { NATIVE } from "../utils/utils";
 
-// const alloAddress: Address = "0x79536CC062EE8FAFA7A19a5fa07783BD7F792206";
+// const alloAddress: Address = "0x1133eA7Af70876e64665ecD07C0A0476d09465a1";
 const address: Address = "0xAEc621EC8D9dE4B524f4864791171045d6BBBe27";
 
 jest.mock("viem", () => ({

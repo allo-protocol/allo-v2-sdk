@@ -3,10 +3,10 @@ import { makeAddress, makeBytes32 } from "../utils/utils";
 import { Metadata } from "../../Common/types";
 import { Address } from "viem";
 
-const address: Address = "0x79536CC062EE8FAFA7A19a5fa07783BD7F792206";
+const address: Address = "0x1133eA7Af70876e64665ecD07C0A0476d09465a1";
 
 const metadata: Metadata = {
-  protocol: 1,
+  protocol: BigInt(1),
   pointer: "bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi",
 };
 
@@ -161,7 +161,7 @@ describe("Allo", () => {
       const tx = allo.updatePoolMetadata({
         poolId: 1,
         metadata: {
-          protocol: 1,
+          protocol: BigInt(1),
           pointer:
             "bafybeia4khbew3r2mkfly23nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi",
         },

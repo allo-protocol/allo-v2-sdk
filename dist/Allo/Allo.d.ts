@@ -1,0 +1,36 @@
+import { ConstructorArgs, TransactionData } from "../Common/types";
+import { CreatePoolArgs, Pool, UpdateMetaDataArgs } from "./types";
+export declare class Allo {
+    private client;
+    private contract;
+    constructor({ chain, rpc }: ConstructorArgs);
+    address(): `0x${string}`;
+    getFeeDenominator(): Promise<number>;
+    isPoolAdmin(poolId: number, address: string): Promise<boolean>;
+    isPoolManager(poolId: number, address: string): Promise<boolean>;
+    getStrategy(poolId: number): Promise<string>;
+    getPercentFee(): Promise<number>;
+    getBaseFee(): Promise<number>;
+    getTreasury(): Promise<string>;
+    getRegistry(): Promise<string>;
+    isCloneableStrategy(): Promise<boolean>;
+    getPool(poolId: number): Promise<Pool>;
+    createPoolWithCustomStrategy({ profileId, strategy, initStrategyData, token, amount, metadata, managers, }: CreatePoolArgs): TransactionData;
+    createPool({ profileId, strategy, initStrategyData, token, amount, metadata, managers, }: CreatePoolArgs): TransactionData;
+    updatePoolMetadata({ poolId, metadata, }: UpdateMetaDataArgs): TransactionData;
+    updateRegistry(registry: string): TransactionData;
+    updateTreasury(registry: string): TransactionData;
+    updatePercentFee(percentage: number): TransactionData;
+    updateBaseFee(percentage: number): TransactionData;
+    addToCloneableStrategies(strategy: string): TransactionData;
+    removeFromCloneableStrategies(strategy: string): TransactionData;
+    addPoolManager(poolId: number, manager: string): TransactionData;
+    removePoolManager(poolId: number, manager: string): TransactionData;
+    recoverFunds(token: string, recipient: string): TransactionData;
+    registerRecipient(poolId: number, strategyData: string): TransactionData;
+    batchRegisterRecipient(poolIds: number[], strategyData: string[]): TransactionData;
+    fundPool(poolId: number, amount: number): TransactionData;
+    allocate(poolId: number, strategyData: string): TransactionData;
+    batchAllocate(poolIds: number[], strategyData: string[]): TransactionData;
+    distribute(poolId: number, recipientId: string[], strategyData: string): TransactionData;
+}
