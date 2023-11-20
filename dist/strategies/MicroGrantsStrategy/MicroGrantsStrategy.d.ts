@@ -9,7 +9,7 @@ export declare class MicroGrantsStrategy {
     private poolId;
     private allo;
     constructor({ chain, rpc, address, poolId }: ConstructorArgs);
-    setPoolId(poolId: number): void;
+    setPoolId(poolId: number): Promise<void>;
     setContract(address: `0x${string}`): void;
     private checkPoolId;
     private checkStrategy;

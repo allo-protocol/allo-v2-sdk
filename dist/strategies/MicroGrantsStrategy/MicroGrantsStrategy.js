@@ -37,7 +37,11 @@ class MicroGrantsStrategy {
         this.poolId = poolId || -1;
     }
     setPoolId(poolId) {
-        this.poolId = poolId;
+        return __awaiter(this, void 0, void 0, function* () {
+            this.poolId = poolId;
+            const strategyAddress = yield this.allo.getStrategy(poolId);
+            this.setContract(strategyAddress);
+        });
     }
     setContract(address) {
         this.contract = (0, viem_1.getContract)({
@@ -65,14 +69,17 @@ class MicroGrantsStrategy {
     allocator(allocatorAddress) {
         return __awaiter(this, void 0, void 0, function* () {
             this.checkStrategy();
-            const allocator = yield this.contract.read.allocators(allocatorAddress);
+            const allocator = yield this.contract.read.allocators([allocatorAddress]);
             return allocator;
         });
     }
     allocated(allocatorAddress, recipientAddress) {
         return __awaiter(this, void 0, void 0, function* () {
             this.checkStrategy();
-            const allocated = yield this.contract.read.allocated(allocatorAddress, recipientAddress);
+            const allocated = yield this.contract.read.allocated([
+                allocatorAddress,
+                recipientAddress,
+            ]);
             return allocated;
         });
     }
@@ -137,14 +144,14 @@ class MicroGrantsStrategy {
     getRecipient(recipientId) {
         return __awaiter(this, void 0, void 0, function* () {
             this.checkStrategy();
-            const recipient = yield this.contract.read.getRecipient(recipientId);
+            const recipient = yield this.contract.read.getRecipient([recipientId]);
             return recipient;
         });
     }
     getRecipientStatus(recipientId) {
         return __awaiter(this, void 0, void 0, function* () {
             this.checkStrategy();
-            const status = yield this.contract.read.getRecipientStatus(recipientId);
+            const status = yield this.contract.read.getRecipientStatus([recipientId]);
             return status;
         });
     }
@@ -165,14 +172,17 @@ class MicroGrantsStrategy {
     isValidAllocator(allocatorAddress) {
         return __awaiter(this, void 0, void 0, function* () {
             this.checkStrategy();
-            const valid = yield this.contract.read.isValidAllocator(allocatorAddress);
+            const valid = yield this.contract.read.isValidAllocator([allocatorAddress]);
             return valid;
         });
     }
     recipientAllocations(recipientId, status) {
         return __awaiter(this, void 0, void 0, function* () {
             this.checkStrategy();
-            const allocations = yield this.contract.read.recipientAllocations(recipientId, status);
+            const allocations = yield this.contract.read.recipientAllocations([
+                recipientId,
+                status,
+            ]);
             return allocations;
         });
     }
