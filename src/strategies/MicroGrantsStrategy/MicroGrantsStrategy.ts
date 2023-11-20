@@ -65,8 +65,10 @@ export class MicroGrantsStrategy {
     this.poolId = poolId || -1;
   }
 
-  public setPoolId(poolId: number): void {
+  public async setPoolId(poolId: number): Promise<void> {
     this.poolId = poolId;
+    const strategyAddress = await this.allo.getStrategy(poolId);
+    this.setContract(strategyAddress as `0x${string}`);
   }
 
   public setContract(address: `0x${string}`): void {
@@ -102,7 +104,7 @@ export class MicroGrantsStrategy {
 
   public async allocator(allocatorAddress: string): Promise<boolean> {
     this.checkStrategy();
-    const allocator = await this.contract.read.allocators(allocatorAddress);
+    const allocator = await this.contract.read.allocators([allocatorAddress]);
 
     return allocator;
   }
@@ -113,10 +115,10 @@ export class MicroGrantsStrategy {
   ): Promise<boolean> {
     this.checkStrategy();
 
-    const allocated = await this.contract.read.allocated(
+    const allocated = await this.contract.read.allocated([
       allocatorAddress,
       recipientAddress,
-    );
+    ]);
 
     return allocated;
   }
@@ -190,7 +192,7 @@ export class MicroGrantsStrategy {
   public async getRecipient(recipientId: string): Promise<Recipient> {
     this.checkStrategy();
 
-    const recipient = await this.contract.read.getRecipient(recipientId);
+    const recipient = await this.contract.read.getRecipient([recipientId]);
 
     return recipient;
   }
@@ -198,7 +200,7 @@ export class MicroGrantsStrategy {
   public async getRecipientStatus(recipientId: string): Promise<Status> {
     this.checkStrategy();
 
-    const status = await this.contract.read.getRecipientStatus(recipientId);
+    const status = await this.contract.read.getRecipientStatus([recipientId]);
 
     return status;
   }
@@ -222,7 +224,7 @@ export class MicroGrantsStrategy {
   public async isValidAllocator(allocatorAddress: string): Promise<boolean> {
     this.checkStrategy();
 
-    const valid = await this.contract.read.isValidAllocator(allocatorAddress);
+    const valid = await this.contract.read.isValidAllocator([allocatorAddress]);
 
     return valid;
   }
@@ -233,10 +235,10 @@ export class MicroGrantsStrategy {
   ): Promise<string> {
     this.checkStrategy();
 
-    const allocations = await this.contract.read.recipientAllocations(
+    const allocations = await this.contract.read.recipientAllocations([
       recipientId,
       status,
-    );
+    ]);
 
     return allocations;
   }

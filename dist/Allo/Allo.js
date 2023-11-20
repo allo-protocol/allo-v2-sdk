@@ -106,10 +106,14 @@ class Allo {
                 managers,
             ],
         });
+        const value = token.toLocaleLowerCase() ===
+            "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE".toLocaleLowerCase()
+            ? amount.toString()
+            : "0";
         return {
             to: allo_config_1.address,
             data: data,
-            value: "0",
+            value: value,
         };
     }
     createPool({ profileId, strategy, initStrategyData, token, amount, metadata, managers, }) {
@@ -126,10 +130,14 @@ class Allo {
                 managers,
             ],
         });
+        const value = token.toLocaleLowerCase() ===
+            "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE".toLocaleLowerCase()
+            ? amount.toString()
+            : "0";
         return {
             to: allo_config_1.address,
             data: data,
-            value: "0",
+            value: value,
         };
     }
     // updatePoolMetadata(uint256 _poolId, Metadata memory _metadata)
