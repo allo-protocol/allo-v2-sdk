@@ -312,11 +312,10 @@ class MicroGrantsStrategy {
     }
     getSetAllocatorData(data) {
         this.checkStrategy();
-        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, bool"), [data.allocatorAddress, data.flag]);
         const encodedData = (0, viem_1.encodeFunctionData)({
             abi: microGrants_config_1.abi,
             functionName: "setAllocator",
-            args: [encoded],
+            args: [data],
         });
         return {
             to: this.strategy,
@@ -326,15 +325,10 @@ class MicroGrantsStrategy {
     }
     getBatchSetAllocatorData(data) {
         this.checkStrategy();
-        const encodedParams = [];
-        data.forEach((setAllocatorData) => {
-            const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, bool"), [setAllocatorData.allocatorAddress, setAllocatorData.flag]);
-            encodedParams.push(encoded);
-        });
         const encodedData = (0, viem_1.encodeFunctionData)({
             abi: microGrants_config_1.abi,
             functionName: "batchSetAllocator",
-            args: [encodedParams],
+            args: [data],
         });
         return {
             to: this.strategy,

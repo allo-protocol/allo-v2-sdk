@@ -423,15 +423,10 @@ export class MicroGrantsStrategy {
   public getSetAllocatorData(data: SetAllocatorData): TransactionData {
     this.checkStrategy();
 
-    const encoded: `0x${string}` = encodeAbiParameters(
-      parseAbiParameters("address, bool"),
-      [data.allocatorAddress, data.flag],
-    );
-
     const encodedData = encodeFunctionData({
       abi: abi,
       functionName: "setAllocator",
-      args: [encoded],
+      args: [data],
     });
 
     return {
@@ -444,21 +439,10 @@ export class MicroGrantsStrategy {
   public getBatchSetAllocatorData(data: SetAllocatorData[]): TransactionData {
     this.checkStrategy();
 
-    const encodedParams: `0x${string}`[] = [];
-
-    data.forEach((setAllocatorData) => {
-      const encoded: `0x${string}` = encodeAbiParameters(
-        parseAbiParameters("address, bool"),
-        [setAllocatorData.allocatorAddress, setAllocatorData.flag],
-      );
-
-      encodedParams.push(encoded);
-    });
-
     const encodedData = encodeFunctionData({
       abi: abi,
       functionName: "batchSetAllocator",
-      args: [encodedParams],
+      args: [data],
     });
 
     return {
