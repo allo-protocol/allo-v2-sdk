@@ -224,7 +224,7 @@ class MicroGrantsStrategy {
         this.checkPoolId();
         const encodedParams = [];
         allocations.forEach((allocation) => {
-            const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, enum"), [allocation.recipientId, allocation.status]);
+            const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, uint8"), [allocation.recipientId, allocation.status]);
             encodedParams.push(encoded);
         });
         const poolIds = Array(encodedParams.length).fill(this.poolId);
@@ -241,7 +241,7 @@ class MicroGrantsStrategy {
     }
     getAllocationData(recipientId, status) {
         this.checkPoolId();
-        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, enum"), [recipientId, status]);
+        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, uint8"), [recipientId, status]);
         const encodedData = (0, viem_1.encodeFunctionData)({
             abi: allo_config_1.abi,
             functionName: "allocate",
@@ -325,10 +325,16 @@ class MicroGrantsStrategy {
     }
     getBatchSetAllocatorData(data) {
         this.checkStrategy();
+        const allocatorArray = [];
+        const flagArray = [];
+        data.map((allocator) => {
+            allocatorArray.push(allocator.allocatorAddress);
+            flagArray.push(allocator.flag);
+        });
         const encodedData = (0, viem_1.encodeFunctionData)({
             abi: microGrants_config_1.abi,
             functionName: "batchSetAllocator",
-            args: [data],
+            args: [allocatorArray, flagArray],
         });
         return {
             to: this.strategy,

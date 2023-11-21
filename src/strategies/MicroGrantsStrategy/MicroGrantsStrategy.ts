@@ -296,7 +296,7 @@ export class MicroGrantsStrategy {
 
     allocations.forEach((allocation) => {
       const encoded: `0x${string}` = encodeAbiParameters(
-        parseAbiParameters("address, enum"),
+        parseAbiParameters("address, uint8"),
         [allocation.recipientId, allocation.status],
       );
 
@@ -324,7 +324,7 @@ export class MicroGrantsStrategy {
   ): TransactionData {
     this.checkPoolId();
     const encoded: `0x${string}` = encodeAbiParameters(
-      parseAbiParameters("address, enum"),
+      parseAbiParameters("address, uint8"),
       [recipientId, status],
     );
 
@@ -439,10 +439,18 @@ export class MicroGrantsStrategy {
   public getBatchSetAllocatorData(data: SetAllocatorData[]): TransactionData {
     this.checkStrategy();
 
+    const allocatorArray: `0x${string}`[] = [];
+    const flagArray: boolean[] = [];
+
+    data.map((allocator) => {
+      allocatorArray.push(allocator.allocatorAddress);
+      flagArray.push(allocator.flag);
+    });
+
     const encodedData = encodeFunctionData({
       abi: abi,
       functionName: "batchSetAllocator",
-      args: [data],
+      args: [allocatorArray, flagArray],
     });
 
     return {
