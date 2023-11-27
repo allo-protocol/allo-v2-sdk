@@ -1,6 +1,6 @@
 import { Address } from "viem";
 import { chains } from "../../Client/chains";
-import { MicroGrantsStrategy } from "../../strategies/MicroGrantsStrategy/MicroGrantsStrategy";
+import { SeaGrantsStrategy } from "../../strategies/SeaGrantsStrategy/SeaGrantsStrategy";
 import { NATIVE } from "../utils/utils";
 
 // const alloAddress: Address = "0x79536CC062EE8FAFA7A19a5fa07783BD7F792206";
@@ -25,11 +25,11 @@ jest.mock("viem", () => ({
   }),
 }));
 
-describe("Micro Grants Strategy", () => {
-  let strategy: MicroGrantsStrategy;
+describe("Sea Grants Strategy", () => {
+  let strategy: SeaGrantsStrategy;
 
   beforeEach(() => {
-    strategy = new MicroGrantsStrategy({
+    strategy = new SeaGrantsStrategy({
       chain: chains.sepolia,
       rpc: "rpc",
       address,

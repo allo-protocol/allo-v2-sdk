@@ -10,7 +10,7 @@ import {
 
 import { Allo } from "../../Allo/Allo";
 import { create } from "../../Client/Client";
-import { abi, bytecode } from "./microGrants.config";
+import { abi, bytecode } from "./seaGrants.config";
 
 import {
   ConstructorArgs,
@@ -28,7 +28,7 @@ import {
   SetAllocatorData,
 } from "./types";
 
-export class MicroGrantsStrategy {
+export class SeaGrantsStrategy {
   private client: PublicClient<Transport, Chain>;
   private contract: any;
 
@@ -41,7 +41,7 @@ export class MicroGrantsStrategy {
     this.client = create(chain, rpc);
 
     if (!address)
-      throw new Error("MicroGrantsStrategy: No strategy address provided");
+      throw new Error("SeaGrantsStrategy: No strategy address provided");
     this.strategy = address;
 
     this.allo = new Allo({ chain, rpc }); // to call allocate
@@ -62,7 +62,7 @@ export class MicroGrantsStrategy {
   private checkPoolId(): void {
     if (this.poolId === -1)
       throw new Error(
-        "MicroGrantsStrategy: No poolId provided. Please call `setPoolId` first.",
+        "SeaGrantsStrategy: No poolId provided. Please call `setPoolId` first."
       );
   }
 
@@ -80,11 +80,11 @@ export class MicroGrantsStrategy {
 
   public async allocated(
     allocatorAddress: string,
-    recipientAddress: string,
+    recipientAddress: string
   ): Promise<boolean> {
     const allocated = await this.contract.read.allocated(
       allocatorAddress,
-      recipientAddress,
+      recipientAddress
     );
 
     return allocated;
@@ -174,11 +174,11 @@ export class MicroGrantsStrategy {
 
   public async recipientAllocations(
     recipientId: string,
-    status: Status,
+    status: Status
   ): Promise<string> {
     const allocations = await this.contract.read.recipientAllocations(
       recipientId,
-      status,
+      status
     );
 
     return allocations;
@@ -198,7 +198,7 @@ export class MicroGrantsStrategy {
   }
 
   public async getInitializeData(
-    params: InitializeParams,
+    params: InitializeParams
   ): Promise<`0x${string}`> {
     const encoded: `0x${string}` = encodeAbiParameters(
       parseAbiParameters("bool, uint64, uint64, uint256, uint256"),
@@ -208,7 +208,7 @@ export class MicroGrantsStrategy {
         params.allocationEndTime,
         params.approvalThreshold,
         params.maxRequestedAmountAllowed,
-      ],
+      ]
     );
 
     return encoded;
@@ -217,7 +217,7 @@ export class MicroGrantsStrategy {
   public getDeployParams(): DeployParams {
     const constructorArgs: `0x${string}` = encodeAbiParameters(
       parseAbiParameters("address, string"),
-      [this.allo.address(), "MicroGrantsv1"],
+      [this.allo.address(), "SeaGrantsv1"]
     );
     const constructorArgsNo0x = constructorArgs.slice(2);
 
@@ -235,7 +235,7 @@ export class MicroGrantsStrategy {
     allocations.forEach((allocation) => {
       const encoded: `0x${string}` = encodeAbiParameters(
         parseAbiParameters("address, enum"),
-        [allocation.recipientId, allocation.status],
+        [allocation.recipientId, allocation.status]
       );
 
       encodedParams.push(encoded);
@@ -258,12 +258,12 @@ export class MicroGrantsStrategy {
 
   public getAllocationData(
     recipientId: `0x${string}`,
-    status: Status,
+    status: Status
   ): TransactionData {
     this.checkPoolId();
     const encoded: `0x${string}` = encodeAbiParameters(
       parseAbiParameters("address, enum"),
-      [recipientId, status],
+      [recipientId, status]
     );
 
     const encodedData = encodeFunctionData({
@@ -288,7 +288,7 @@ export class MicroGrantsStrategy {
         data.recipientAddress,
         data.requestedAmount,
         data.metadata,
-      ],
+      ]
     );
 
     const encodedData = encodeFunctionData({
@@ -316,7 +316,7 @@ export class MicroGrantsStrategy {
           registerData.recipientAddress,
           registerData.requestedAmount,
           registerData.metadata,
-        ],
+        ]
       );
 
       encodedParams.push(encoded);
@@ -338,11 +338,11 @@ export class MicroGrantsStrategy {
   }
 
   public getIncreasemaxRequestedAmountAllowedData(
-    amount: bigint,
+    amount: bigint
   ): TransactionData {
     const encoded: `0x${string}` = encodeAbiParameters(
       parseAbiParameters("uint256"),
-      [amount],
+      [amount]
     );
 
     const encodedData = encodeFunctionData({
@@ -361,7 +361,7 @@ export class MicroGrantsStrategy {
   public getSetAllocatorData(data: SetAllocatorData): TransactionData {
     const encoded: `0x${string}` = encodeAbiParameters(
       parseAbiParameters("address, bool"),
-      [data.allocatorAddress, data.flag],
+      [data.allocatorAddress, data.flag]
     );
 
     const encodedData = encodeFunctionData({
@@ -383,7 +383,7 @@ export class MicroGrantsStrategy {
     data.forEach((setAllocatorData) => {
       const encoded: `0x${string}` = encodeAbiParameters(
         parseAbiParameters("address, bool"),
-        [setAllocatorData.allocatorAddress, setAllocatorData.flag],
+        [setAllocatorData.allocatorAddress, setAllocatorData.flag]
       );
 
       encodedParams.push(encoded);
@@ -404,11 +404,11 @@ export class MicroGrantsStrategy {
 
   public getUpdatePoolTimestampsData(
     allocationStartTime: bigint,
-    allocationEndTime: bigint,
+    allocationEndTime: bigint
   ): TransactionData {
     const encoded: `0x${string}` = encodeAbiParameters(
       parseAbiParameters("uint64, uint64"),
-      [allocationStartTime, allocationEndTime],
+      [allocationStartTime, allocationEndTime]
     );
 
     const encodedData = encodeFunctionData({

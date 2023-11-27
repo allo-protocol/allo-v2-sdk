@@ -695,7 +695,7 @@ export const abi = [
             type: "tuple",
           },
         ],
-        internalType: "struct MicroGrantsStrategy.Recipient",
+        internalType: "struct SeaGrantsStrategy.Recipient",
         name: "",
         type: "tuple",
       },
