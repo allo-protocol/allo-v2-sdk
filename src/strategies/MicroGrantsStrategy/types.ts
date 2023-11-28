@@ -1,24 +1,11 @@
-// create types for
-// /// @notice Stores the details of the recipients.
-// struct Recipient {
-//     bool useRegistryAnchor;
-//     address recipientAddress;
-//     uint256 requestedAmount;
-//     Status recipientStatus;
-//     Metadata metadata;
-// }
-
 import { Metadata } from "../../Common/types";
 import { Status } from "../types";
 
-// /// @notice Stores the details needed for initializing strategy
-// struct InitializeParams {
-//     bool useRegistryAnchor;
-//     uint64 allocationStartTime;
-//     uint64 allocationEndTime;
-//     uint256 approvalThreshold;
-//     uint256 maxRequestedAmountAllowed;
-// }
+export enum StrategyType {
+  MicroGrants = "MicroGrantsv1",
+  Hats = "MicroGrantsHatsv1",
+  Gov = "MicroGrantsGovv1",
+}
 
 export type Recipient = {
   useRegistryAnchor: boolean;
@@ -41,6 +28,17 @@ export type InitializeParams = {
   allocationEndTime: bigint;
   approvalThreshold: bigint;
   maxRequestedAmount: bigint;
+};
+
+export type InitializeParamsHats = InitializeParams & {
+  hats: `0x${string}`;
+  hatId: bigint;
+};
+
+export type InitializeParamsGov = InitializeParams & {
+  universalGov: `0x${string}`;
+  snapshotReference: bigint;
+  minimumVotePower: bigint;
 };
 
 export type Allocation = {
