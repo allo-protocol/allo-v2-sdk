@@ -4,7 +4,6 @@ import {
   Transport,
   encodeAbiParameters,
   encodeFunctionData,
-  encodePacked,
   extractChain,
   getContract,
   parseAbiParameters,
@@ -12,7 +11,18 @@ import {
 
 import { Allo } from "../../Allo/Allo";
 import { create } from "../../Client/Client";
-import { abi, bytecode } from "./microGrants.config";
+import {
+  abi as microGrantsAbi,
+  bytecode as microGrantsBytecode,
+} from "./microGrants.config";
+import {
+  abi as microGrantsHatsAbi,
+  bytecode as microGrantsHatsBytecode,
+} from "./microGrantsHats.config";
+import {
+  abi as microGrantsGovAbi,
+  bytecode as microGrantsGovBytecode,
+} from "./microGrantsGov.config";
 import { abi as alloAbi } from "../../Allo/allo.config";
 
 import {
@@ -26,9 +36,12 @@ import { PayoutSummary, Status } from "../types";
 import {
   Allocation,
   InitializeParams,
+  InitializeParamsGov,
+  InitializeParamsHats,
   Recipient,
   RegisterData,
   SetAllocatorData,
+  StrategyType,
 } from "./types";
 import { supportedChains } from "../../chains.config";
 
@@ -49,14 +62,12 @@ export class MicroGrantsStrategy {
 
     this.client = create(usedChain, rpc);
 
-    this.client = create(usedChain, rpc);
-
     this.allo = new Allo({ chain, rpc }); // to call allocate
 
     if (address) {
       this.contract = getContract({
         address: address,
-        abi: abi,
+        abi: microGrantsAbi,
         publicClient: this.client,
       });
       this.strategy = address;
@@ -74,7 +85,7 @@ export class MicroGrantsStrategy {
   public setContract(address: `0x${string}`): void {
     this.contract = getContract({
       address: address,
-      abi: abi,
+      abi: microGrantsAbi,
       publicClient: this.client,
     });
 
@@ -84,14 +95,14 @@ export class MicroGrantsStrategy {
   private checkPoolId(): void {
     if (this.poolId === -1)
       throw new Error(
-        "MicroGrantsStrategy: No poolId provided. Please call `setPoolId` first.",
+        "MicroGrantsStrategy: No poolId provided. Please call `setPoolId` first."
       );
   }
 
   private checkStrategy(): void {
     if (!this.strategy)
       throw new Error(
-        "MicroGrantsStrategy: No strategy address provided. Please call `setContract` first.",
+        "MicroGrantsStrategy: No strategy address provided. Please call `setContract` first."
       );
   }
 
@@ -111,7 +122,7 @@ export class MicroGrantsStrategy {
 
   public async allocated(
     allocatorAddress: string,
-    recipientAddress: string,
+    recipientAddress: string
   ): Promise<boolean> {
     this.checkStrategy();
 
@@ -231,7 +242,7 @@ export class MicroGrantsStrategy {
 
   public async recipientAllocations(
     recipientId: string,
-    status: Status,
+    status: Status
   ): Promise<string> {
     this.checkStrategy();
 
@@ -259,8 +270,82 @@ export class MicroGrantsStrategy {
     return useRegistryAnchor;
   }
 
+  public async getHatsAddress(): Promise<`0x${string}`> {
+    this.checkStrategy();
+
+    const contractReader = getContract({
+      address: this.strategy!,
+      abi: microGrantsHatsAbi,
+      publicClient: this.client,
+    });
+
+    const hatsAddress: `0x${string}` =
+      (await contractReader.read.HATS_PROTOCOL()) as `0x${string}`;
+
+    return hatsAddress;
+  }
+
+  public async getHatId(): Promise<bigint> {
+    this.checkStrategy();
+
+    const contractReader = getContract({
+      address: this.strategy!,
+      abi: microGrantsHatsAbi,
+      publicClient: this.client,
+    });
+
+    const hatId: bigint = (await contractReader.read.hatId()) as bigint;
+
+    return hatId;
+  }
+
+  public async getGovAddress(): Promise<`0x${string}`> {
+    this.checkStrategy();
+
+    const contractReader = getContract({
+      address: this.strategy!,
+      abi: microGrantsGovAbi,
+      publicClient: this.client,
+    });
+
+    const govAddress: `0x${string}` =
+      (await contractReader.read.gov()) as `0x${string}`;
+
+    return govAddress;
+  }
+
+  public async getSnapshotReference(): Promise<bigint> {
+    this.checkStrategy();
+
+    const contractReader = getContract({
+      address: this.strategy!,
+      abi: microGrantsGovAbi,
+      publicClient: this.client,
+    });
+
+    const reference: bigint =
+      (await contractReader.read.snapshotReference()) as bigint;
+
+    return reference;
+  }
+
+  public async getMinimumVotePower(): Promise<bigint> {
+    this.checkStrategy();
+
+    const contractReader = getContract({
+      address: this.strategy!,
+      abi: microGrantsGovAbi,
+      publicClient: this.client,
+    });
+
+    const votePower: bigint =
+      (await contractReader.read.minVotePower()) as bigint;
+
+    return votePower;
+  }
+
   public async getInitializeData(
-    params: InitializeParams,
+    params: InitializeParams
   ): Promise<`0x${string}`> {
     const encoded: `0x${string}` = encodeAbiParameters(
       parseAbiParameters("bool, uint64, uint64, uint256, uint256"),
@@ -270,18 +355,75 @@ export class MicroGrantsStrategy {
         params.allocationEndTime,
         params.approvalThreshold,
         params.maxRequestedAmount,
-      ],
+      ]
     );
 
     return encoded;
   }
 
-  public getDeployParams(): DeployParams {
+  public async getInitializeDataHats(
+    params: InitializeParamsHats
+  ): Promise<`0x${string}`> {
+    const encoded: `0x${string}` = encodeAbiParameters(
+      parseAbiParameters(
+        "bool, uint64, uint64, uint256, uint256, address, uint256"
+      ),
+      [
+        params.useRegistryAnchor,
+        params.allocationStartTime,
+        params.allocationEndTime,
+        params.approvalThreshold,
+        params.maxRequestedAmount,
+        params.hats,
+        params.hatId,
+      ]
+    );
+
+    return encoded;
+  }
+
+  public async getInitializeDataGov(
+    params: InitializeParamsGov
+  ): Promise<`0x${string}`> {
+    const encoded: `0x${string}` = encodeAbiParameters(
+      parseAbiParameters(
+        "bool, uint64, uint64, uint256, uint256, address, uint256, uint256"
+      ),
+      [
+        params.useRegistryAnchor,
+        params.allocationStartTime,
+        params.allocationEndTime,
+        params.approvalThreshold,
+        params.maxRequestedAmount,
+        params.universalGov,
+        params.snapshotReference,
+        params.minimumVotePower,
+      ]
+    );
+
+    return encoded;
+  }
+
+  public getDeployParams(strategyType: StrategyType): DeployParams {
     const constructorArgs: `0x${string}` = encodeAbiParameters(
       parseAbiParameters("address, string"),
-      [this.allo.address(), "MicroGrantsv1"],
+      [this.allo.address(), strategyType.toString()]
     );
     const constructorArgsNo0x = constructorArgs.slice(2);
+
+    // create the proper bytecode
+    const bytecode =
+      strategyType == StrategyType.Gov
+        ? microGrantsGovBytecode
+        : strategyType == StrategyType.Hats
+        ? microGrantsHatsBytecode
+        : microGrantsBytecode;
+    const abi =
+      strategyType == StrategyType.Gov
+        ? microGrantsGovAbi
+        : strategyType == StrategyType.Hats
+        ? microGrantsHatsAbi
+        : microGrantsAbi;
 
     return {
       abi: abi,
@@ -297,7 +439,7 @@ export class MicroGrantsStrategy {
     allocations.forEach((allocation) => {
       const encoded: `0x${string}` = encodeAbiParameters(
         parseAbiParameters("address, uint8"),
-        [allocation.recipientId, allocation.status],
+        [allocation.recipientId, allocation.status]
       );
 
       encodedParams.push(encoded);
@@ -320,12 +462,12 @@ export class MicroGrantsStrategy {
 
   public getAllocationData(
     recipientId: `0x${string}`,
-    status: Status,
+    status: Status
   ): TransactionData {
     this.checkPoolId();
     const encoded: `0x${string}` = encodeAbiParameters(
       parseAbiParameters("address, uint8"),
-      [recipientId, status],
+      [recipientId, status]
     );
 
     const encodedData = encodeFunctionData({
@@ -350,7 +492,7 @@ export class MicroGrantsStrategy {
         data.recipientAddress,
         data.requestedAmount,
         [data.metadata.protocol, data.metadata.pointer],
-      ],
+      ]
     );
 
     const encodedData = encodeFunctionData({
@@ -378,7 +520,7 @@ export class MicroGrantsStrategy {
           registerData.recipientAddress,
           registerData.requestedAmount,
           [registerData.metadata.protocol, registerData.metadata.pointer],
-        ],
+        ]
       );
 
       encodedParams.push(encoded);
@@ -404,11 +546,11 @@ export class MicroGrantsStrategy {
 
     const encoded: `0x${string}` = encodeAbiParameters(
       parseAbiParameters("uint256"),
-      [amount],
+      [amount]
     );
 
     const encodedData = encodeFunctionData({
-      abi: abi,
+      abi: microGrantsAbi,
       functionName: "increasemaxRequestedAmount",
       args: [encoded],
     });
@@ -424,7 +566,7 @@ export class MicroGrantsStrategy {
     this.checkStrategy();
 
     const encodedData = encodeFunctionData({
-      abi: abi,
+      abi: microGrantsAbi,
       functionName: "setAllocator",
       args: [data],
     });
@@ -448,7 +590,7 @@ export class MicroGrantsStrategy {
     });
 
     const encodedData = encodeFunctionData({
-      abi: abi,
+      abi: microGrantsAbi,
       functionName: "batchSetAllocator",
       args: [allocatorArray, flagArray],
     });
@@ -462,17 +604,17 @@ export class MicroGrantsStrategy {
 
   public getUpdatePoolTimestampsData(
     allocationStartTime: bigint,
-    allocationEndTime: bigint,
+    allocationEndTime: bigint
   ): TransactionData {
     this.checkStrategy();
 
     const encoded: `0x${string}` = encodeAbiParameters(
       parseAbiParameters("uint64, uint64"),
-      [allocationStartTime, allocationEndTime],
+      [allocationStartTime, allocationEndTime]
     );
 
     const encodedData = encodeFunctionData({
-      abi: abi,
+      abi: microGrantsAbi,
       functionName: "updatePoolTimestamps",
       args: [encoded],
     });
