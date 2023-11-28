@@ -1,9 +1,8 @@
 import { Address } from "viem";
 import { NATIVE, makeAddress, makeBytes32 } from "../utils/utils";
-import { chains } from "../../Client/chains";
 import { DonationVotingMerkleDistributionStrategy } from "../../strategies/DonationVotingMerkleDistributionStrategy/DonationVotingMerkleDistribution";
 
-const alloAddress: Address = "0x79536CC062EE8FAFA7A19a5fa07783BD7F792206";
+const alloAddress: Address = "0x1133eA7Af70876e64665ecD07C0A0476d09465a1";
 const address: Address = "0xAEc621EC8D9dE4B524f4864791171045d6BBBe27";
 
 jest.mock("viem", () => ({
@@ -20,7 +19,7 @@ jest.mock("viem", () => ({
         claims: jest.fn(() => 0),
         getClaims: jest.fn(() => 0),
         distributionMetadata: jest.fn(() => ({
-          protocol: 1,
+          protocol: BigInt(1),
           pointer: "unt93847nwg[u7456w7shn56",
         })),
         distributionStarted: jest.fn(() => true),
@@ -56,7 +55,7 @@ describe("DonationVotingMerkleDistributionStrategy", () => {
 
   beforeEach(() => {
     strategy = new DonationVotingMerkleDistributionStrategy({
-      chain: chains.goerli,
+      chain: 5,
       rpc: "rpc",
       address: address,
     });
@@ -88,7 +87,7 @@ describe("DonationVotingMerkleDistributionStrategy", () => {
     });
 
     it("should get the allowed tokens", async () => {
-      const allowed = await strategy.isAllowedTokens(NATIVE())
+      const allowed = await strategy.isAllowedTokens(NATIVE());
       expect(allowed).toEqual(true);
     });
 
@@ -101,7 +100,7 @@ describe("DonationVotingMerkleDistributionStrategy", () => {
     it("should return distribution metadata", async () => {
       const metadata = await strategy.getDistributionMetadata();
       expect(metadata).toEqual({
-        protocol: 1,
+        protocol: BigInt(1),
         pointer: "unt93847nwg[u7456w7shn56",
       });
     });
@@ -119,8 +118,14 @@ describe("DonationVotingMerkleDistributionStrategy", () => {
     });
 
     it("should get the payouts", async () => {
-      const recipientIds: string[] = [makeAddress("RECIPIENT1"), makeAddress("RECIPIENT2")];
-      const payoutData = [makeBytes32("PAYOUT_DATA"), makeBytes32("PAYOUT_DATA2")];
+      const recipientIds: string[] = [
+        makeAddress("RECIPIENT1"),
+        makeAddress("RECIPIENT2"),
+      ];
+      const payoutData = [
+        makeBytes32("PAYOUT_DATA"),
+        makeBytes32("PAYOUT_DATA2"),
+      ];
       const payouts = await strategy.getPayouts(recipientIds, payoutData);
 
       expect(payouts).toEqual([]);
@@ -143,7 +148,7 @@ describe("DonationVotingMerkleDistributionStrategy", () => {
       const recipient = await strategy.getRecipient(recipientId);
 
       expect(recipient).toEqual({
-        recipientId: makeAddress("RECIPIENT1")
+        recipientId: makeAddress("RECIPIENT1"),
       });
     });
 
@@ -197,7 +202,9 @@ describe("DonationVotingMerkleDistributionStrategy", () => {
     });
 
     it("should return the recipient to status index", async () => {
-      const indexes = await strategy.recipientToStatusIndexes(makeAddress("RECIPIENT1"));
+      const indexes = await strategy.recipientToStatusIndexes(
+        makeAddress("RECIPIENT1"),
+      );
 
       expect(indexes).toEqual([]);
     });
@@ -302,7 +309,7 @@ describe("DonationVotingMerkleDistributionStrategy", () => {
     it("should distribute funds to recipients", async () => {
       const tx = strategy.distribute(
         [address, address],
-        makeBytes32("DISTRIBUTE_DATA")
+        makeBytes32("DISTRIBUTE_DATA"),
       );
 
       expect(tx).toEqual({
@@ -356,12 +363,12 @@ describe("DonationVotingMerkleDistributionStrategy", () => {
 
     it("should update the distribution", async () => {
       const distributeMetadata = {
-        protocol: 1,
+        protocol: BigInt(1),
         pointer: "unt93847nwg[u7456w7shn56",
       };
       const tx = strategy.updateDistribution(
         makeBytes32("MERKLE_ROOT"),
-        distributeMetadata
+        distributeMetadata,
       );
 
       expect(tx).toEqual({

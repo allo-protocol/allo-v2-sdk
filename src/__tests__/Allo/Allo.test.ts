@@ -1,13 +1,12 @@
 import { Allo } from "../../Allo/Allo";
-import { chains } from "../../Client/chains";
 import { makeAddress, makeBytes32 } from "../utils/utils";
 import { Metadata } from "../../Common/types";
 import { Address } from "viem";
 
-const address: Address = "0x79536CC062EE8FAFA7A19a5fa07783BD7F792206";
+const address: Address = "0x1133eA7Af70876e64665ecD07C0A0476d09465a1";
 
 const metadata: Metadata = {
-  protocol: 1,
+  protocol: BigInt(1),
   pointer: "bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi",
 };
 
@@ -45,7 +44,7 @@ describe("Allo", () => {
   let allo: Allo;
 
   beforeEach(() => {
-    allo = new Allo({ chain: chains.goerli });
+    allo = new Allo({ chain: 5 });
   });
 
   // Test cases for view functions
@@ -128,7 +127,7 @@ describe("Allo", () => {
         strategy: makeAddress("STRATEGY"),
         initStrategyData: "0x",
         token: makeAddress("TOKEN"),
-        amount: 0,
+        amount: BigInt(0),
         metadata: metadata,
         managers: [makeAddress("MANAGER")],
       });
@@ -146,7 +145,7 @@ describe("Allo", () => {
         strategy: makeAddress("STRATEGY"),
         initStrategyData: "0x",
         token: makeAddress("TOKEN"),
-        amount: 0,
+        amount: BigInt(0),
         metadata,
         managers: [makeAddress("MANAGER")],
       });
@@ -162,7 +161,7 @@ describe("Allo", () => {
       const tx = allo.updatePoolMetadata({
         poolId: 1,
         metadata: {
-          protocol: 1,
+          protocol: BigInt(1),
           pointer:
             "bafybeia4khbew3r2mkfly23nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi",
         },
@@ -258,7 +257,7 @@ describe("Allo", () => {
     it("should recover funds", async () => {
       const tx = allo.recoverFunds(
         makeAddress("TOKEN"),
-        makeAddress("RECIPIENT")
+        makeAddress("RECIPIENT"),
       );
 
       expect(tx).toEqual({
@@ -284,7 +283,7 @@ describe("Allo", () => {
     it("should batch register multiple recipients", async () => {
       const tx = allo.batchRegisterRecipient(
         [1, 1],
-        [makeBytes32("STRATEGY_DATA"), makeBytes32("STRATEGY_DATA")]
+        [makeBytes32("STRATEGY_DATA"), makeBytes32("STRATEGY_DATA")],
       );
 
       expect(tx).toEqual({
@@ -320,7 +319,7 @@ describe("Allo", () => {
         [
           makeBytes32("STRATEGY_ALLOCATE_DATA"),
           makeBytes32("STRATEGY_ALLOCATE_DATA"),
-        ]
+        ],
       );
 
       expect(tx).toEqual({
@@ -334,7 +333,7 @@ describe("Allo", () => {
       const tx = allo.distribute(
         1,
         [makeAddress("RECIPIENT1"), makeAddress("RECIPIENT2")],
-        makeBytes32("STRATEGY_DISTRIBUTE_DATA")
+        makeBytes32("STRATEGY_DISTRIBUTE_DATA"),
       );
 
       expect(tx).toEqual({

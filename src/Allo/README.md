@@ -17,13 +17,13 @@ Before using the functions provided by the Registry module, you need to create a
 
 ### Creating an Allo Insatance
 
-To create a new Registry instance, you need to provide the chain information. In this example, we're using the chains.goerli chain information.
+To create a new Registry instance, you need to provide the chain information. In this example, we're using the 5 chain information.
 
 ```javascript
 import { chains } from "../Client/chains";
 import { Allo } from "../Allo/Allo";
 
-const allo = new Allo({ chain: chains.goerli });
+const allo = new Allo({ chain: 5 });
 ```
 
 This allo instance can then be used to call various read and transactional functions provided by the Allo module. Refer to the sections above for detailed examples on how to use these functions. Remember to replace placeholder values with actual values according to your requirements.

@@ -1,15 +1,5 @@
-import { createPublicClient, http } from 'viem'
-import { mainnet } from 'viem/chains'
+import { Allo } from "./Allo/Allo";
+import { Registry } from "./Registry/Registry";
+import { MicroGrantsStrategy } from "./strategies/MicroGrantsStrategy/MicroGrantsStrategy";
 
-const client = createPublicClient({
-  chain: mainnet,
-  transport: http(),
-})
-
-
-const test = async () => {
-    const blockNumber = await client.getBlockNumber();
-    console.log(`Block number: ${blockNumber}`);
-}
-
-test();
+export { Allo, Registry, MicroGrantsStrategy };

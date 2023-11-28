@@ -39,13 +39,13 @@ Before using the functions provided by the Registry module, you need to create a
 
 ### Creating a Registry Instance
 
-To create a new Registry instance, you need to provide the chain information. In this example, we're using the chains.goerli chain information.
+To create a new Registry instance, you need to provide the chain information. In this example, we're using the 5 chain information.
 
 ```javascript
 import { chains } from "../Client/chains";
 import { Registry } from "../Registry/Registry";
 
-const registry = new Registry({ chain: chains.goerli });
+const registry = new Registry({ chain: 5 });
 ```
 
 This registry instance can then be used to call various read and transactional functions provided by the Registry module. Refer to the sections above for detailed examples on how to use these functions. Remember to replace placeholder values with actual values according to your requirements.
@@ -229,7 +229,7 @@ const createProfileArgs: CreateProfileArgs = {
   nonce: 3,
   name: "Module Test 1",
   metadata: {
-    protocol: 1,
+    protocol: BigInt(1),
     pointer: "bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi",
   },
   owner: "0xE7eB5D2b5b188777df902e89c54570E7Ef4F59CE",

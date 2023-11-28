@@ -3,6 +3,7 @@ import {
   PublicClient,
   Transport,
   encodeFunctionData,
+  extractChain,
   getContract,
 } from "viem";
 import { create } from "../../Client/Client";
@@ -11,6 +12,7 @@ import { Allo } from "../../Allo/Allo";
 import { ConstructorArgs, Metadata, TransactionData } from "../../Common/types";
 import { PayoutSummary, Status } from "../types";
 import { Recipient } from "./types";
+import { supportedChains } from "../../chains.config";
 
 export class DonationVotingMerkleDistributionStrategy {
   private client: PublicClient<Transport, Chain>;
@@ -22,7 +24,12 @@ export class DonationVotingMerkleDistributionStrategy {
   private allo: Allo;
 
   constructor({ chain, rpc, address }: ConstructorArgs) {
-    this.client = create(chain, rpc);
+        const usedChain = extractChain({
+          chains: supportedChains,
+          id: chain as any,
+        });
+
+        this.client = create(usedChain, rpc);
 
     if (!address)
       throw new Error(

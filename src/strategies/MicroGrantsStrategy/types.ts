@@ -40,7 +40,7 @@ export type InitializeParams = {
   allocationStartTime: bigint;
   allocationEndTime: bigint;
   approvalThreshold: bigint;
-  maxRequestedAmountAllowed: bigint;
+  maxRequestedAmount: bigint;
 };
 
 export type Allocation = {

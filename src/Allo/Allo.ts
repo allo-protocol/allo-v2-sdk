@@ -4,18 +4,25 @@ import {
   Transport,
   encodeFunctionData,
   getContract,
+  extractChain,
 } from "viem";
 import { ConstructorArgs, TransactionData } from "../Common/types";
 import { create } from "../Client/Client";
 import { abi, address } from "./allo.config";
 import { CreatePoolArgs, Pool, UpdateMetaDataArgs } from "./types";
-
+import { supportedChains } from "../chains.config";
+import { NATIVE } from "../__tests__/utils/utils";
 export class Allo {
   private client: PublicClient<Transport, Chain>;
   private contract: any;
 
   constructor({ chain, rpc }: ConstructorArgs) {
-    this.client = create(chain, rpc);
+    const usedChain = extractChain({
+      chains: supportedChains,
+      id: chain as any,
+    });
+
+    this.client = create(usedChain, rpc);
 
     this.contract = getContract({
       address: address,
@@ -113,15 +120,21 @@ export class Allo {
         initStrategyData,
         token,
         amount,
-        metadata,
+        [metadata.protocol, metadata.pointer],
         managers,
       ],
     });
 
+    const value =
+      token.toLocaleLowerCase() ===
+      "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE".toLocaleLowerCase()
+        ? amount.toString()
+        : "0";
+
     return {
       to: address,
       data: data,
-      value: "0",
+      value: value,
     };
   }
 
@@ -148,10 +161,16 @@ export class Allo {
       ],
     });
 
+    const value =
+      token.toLocaleLowerCase() ===
+      "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE".toLocaleLowerCase()
+        ? amount.toString()
+        : "0";
+
     return {
       to: address,
       data: data,
-      value: "0",
+      value: value,
     };
   }
 
