@@ -1,6 +1,6 @@
 import { Address } from "viem";
 
-export const address: Address = "0xAEc621EC8D9dE4B524f4864791171045d6BBBe27";
+export const address: Address = "0x4AAcca72145e1dF2aeC137E1f3C5E3D75DB8b5f3";
 
 export const abi = [
   {

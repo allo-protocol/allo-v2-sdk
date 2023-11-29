@@ -1,4 +1,6 @@
 "use strict";
+// NOTE: The following types are shared by all strategies, so they are defined
+//       here. Each strategy will also have its own types.ts file.
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Status = void 0;
 var Status;

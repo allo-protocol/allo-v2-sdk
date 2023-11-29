@@ -1,5 +1,10 @@
 import { Metadata } from "../../Common/types";
 import { Status } from "../types";
+export declare enum StrategyType {
+    MicroGrants = "MicroGrantsv1",
+    Hats = "MicroGrantsHatsv1",
+    Gov = "MicroGrantsGovv1"
+}
 export type Recipient = {
     useRegistryAnchor: boolean;
     recipientAddress: string;
@@ -19,6 +24,15 @@ export type InitializeParams = {
     allocationEndTime: bigint;
     approvalThreshold: bigint;
     maxRequestedAmount: bigint;
+};
+export type InitializeParamsHats = InitializeParams & {
+    hats: `0x${string}`;
+    hatId: bigint;
+};
+export type InitializeParamsGov = InitializeParams & {
+    universalGov: `0x${string}`;
+    snapshotReference: bigint;
+    minimumVotePower: bigint;
 };
 export type Allocation = {
     recipientId: `0x${string}`;

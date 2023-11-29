@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.abi = exports.address = void 0;
-exports.address = "0xAEc621EC8D9dE4B524f4864791171045d6BBBe27";
+exports.address = "0x4AAcca72145e1dF2aeC137E1f3C5E3D75DB8b5f3";
 exports.abi = [
     {
         inputs: [

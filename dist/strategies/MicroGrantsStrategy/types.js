@@ -1,11 +1,9 @@
 "use strict";
-// create types for
-// /// @notice Stores the details of the recipients.
-// struct Recipient {
-//     bool useRegistryAnchor;
-//     address recipientAddress;
-//     uint256 requestedAmount;
-//     Status recipientStatus;
-//     Metadata metadata;
-// }
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.StrategyType = void 0;
+var StrategyType;
+(function (StrategyType) {
+    StrategyType["MicroGrants"] = "MicroGrantsv1";
+    StrategyType["Hats"] = "MicroGrantsHatsv1";
+    StrategyType["Gov"] = "MicroGrantsGovv1";
+})(StrategyType || (exports.StrategyType = StrategyType = {}));

@@ -14,8 +14,11 @@ const viem_1 = require("viem");
 const Allo_1 = require("../../Allo/Allo");
 const Client_1 = require("../../Client/Client");
 const microGrants_config_1 = require("./microGrants.config");
+const microGrantsHats_config_1 = require("./microGrantsHats.config");
+const microGrantsGov_config_1 = require("./microGrantsGov.config");
 const allo_config_1 = require("../../Allo/allo.config");
 const types_1 = require("../../Common/types");
+const types_2 = require("./types");
 const chains_config_1 = require("../../chains.config");
 class MicroGrantsStrategy {
     constructor({ chain, rpc, address, poolId }) {
@@ -23,7 +26,6 @@ class MicroGrantsStrategy {
             chains: chains_config_1.supportedChains,
             id: chain,
         });
-        this.client = (0, Client_1.create)(usedChain, rpc);
         this.client = (0, Client_1.create)(usedChain, rpc);
         this.allo = new Allo_1.Allo({ chain, rpc }); // to call allocate
         if (address) {
@@ -200,6 +202,66 @@ class MicroGrantsStrategy {
             return useRegistryAnchor;
         });
     }
+    getHatsAddress() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.checkStrategy();
+            const contractReader = (0, viem_1.getContract)({
+                address: this.strategy,
+                abi: microGrantsHats_config_1.abi,
+                publicClient: this.client,
+            });
+            const hatsAddress = (yield contractReader.read.HATS_PROTOCOL());
+            return hatsAddress;
+        });
+    }
+    getHatId() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.checkStrategy();
+            const contractReader = (0, viem_1.getContract)({
+                address: this.strategy,
+                abi: microGrantsHats_config_1.abi,
+                publicClient: this.client,
+            });
+            const hatId = (yield contractReader.read.hatId());
+            return hatId;
+        });
+    }
+    getGovAddress() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.checkStrategy();
+            const contractReader = (0, viem_1.getContract)({
+                address: this.strategy,
+                abi: microGrantsGov_config_1.abi,
+                publicClient: this.client,
+            });
+            const govAddress = (yield contractReader.read.gov());
+            return govAddress;
+        });
+    }
+    getSnapshotReference() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.checkStrategy();
+            const contractReader = (0, viem_1.getContract)({
+                address: this.strategy,
+                abi: microGrantsGov_config_1.abi,
+                publicClient: this.client,
+            });
+            const reference = (yield contractReader.read.snapshotReference());
+            return reference;
+        });
+    }
+    getMinimumVotePower() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.checkStrategy();
+            const contractReader = (0, viem_1.getContract)({
+                address: this.strategy,
+                abi: microGrantsGov_config_1.abi,
+                publicClient: this.client,
+            });
+            const votePower = (yield contractReader.read.minVotePower());
+            return votePower;
+        });
+    }
     getInitializeData(params) {
         return __awaiter(this, void 0, void 0, function* () {
             const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("bool, uint64, uint64, uint256, uint256"), [
@@ -212,12 +274,52 @@ class MicroGrantsStrategy {
             return encoded;
         });
     }
-    getDeployParams() {
-        const constructorArgs = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, string"), [this.allo.address(), "MicroGrantsv1"]);
+    getInitializeDataHats(params) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("bool, uint64, uint64, uint256, uint256, address, uint256"), [
+                params.useRegistryAnchor,
+                params.allocationStartTime,
+                params.allocationEndTime,
+                params.approvalThreshold,
+                params.maxRequestedAmount,
+                params.hats,
+                params.hatId,
+            ]);
+            return encoded;
+        });
+    }
+    getInitializeDataGov(params) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("bool, uint64, uint64, uint256, uint256, address, uint256, uint256"), [
+                params.useRegistryAnchor,
+                params.allocationStartTime,
+                params.allocationEndTime,
+                params.approvalThreshold,
+                params.maxRequestedAmount,
+                params.universalGov,
+                params.snapshotReference,
+                params.minimumVotePower,
+            ]);
+            return encoded;
+        });
+    }
+    getDeployParams(strategyType) {
+        const constructorArgs = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, string"), [this.allo.address(), strategyType.toString()]);
         const constructorArgsNo0x = constructorArgs.slice(2);
+        // create the proper bytecode
+        const bytecode = strategyType == types_2.StrategyType.Gov
+            ? microGrantsGov_config_1.bytecode
+            : strategyType == types_2.StrategyType.Hats
+                ? microGrantsHats_config_1.bytecode
+                : microGrants_config_1.bytecode;
+        const abi = strategyType == types_2.StrategyType.Gov
+            ? microGrantsGov_config_1.abi
+            : strategyType == types_2.StrategyType.Hats
+                ? microGrantsHats_config_1.abi
+                : microGrants_config_1.abi;
         return {
-            abi: microGrants_config_1.abi,
-            bytecode: (microGrants_config_1.bytecode + constructorArgsNo0x),
+            abi: abi,
+            bytecode: (bytecode + constructorArgsNo0x),
         };
     }
     getBatchAllocationData(allocations) {
