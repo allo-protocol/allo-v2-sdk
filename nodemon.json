@@ -1,5 +1,5 @@
 {
-    "ext": "ts, js, json",
-    "watch": ["src"],
-    "exec": "tsc -p . && clear && node dist/__live__/RegistryLive.js"
+  "ext": "ts, js, json",
+  "watch": ["src"],
+  "exec": "tsc -p . && clear && node dist/__live__/interaction.js"
 }

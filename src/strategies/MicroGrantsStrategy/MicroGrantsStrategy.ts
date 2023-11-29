@@ -280,7 +280,7 @@ export class MicroGrantsStrategy {
     });
 
     const hatsAddress: `0x${string}` =
-      (await contractReader.read.HATS_PROTOCOL()) as `0x${string}`;
+      (await contractReader.read.hats()) as `0x${string}`;
 
     return hatsAddress;
   }
@@ -389,21 +389,21 @@ export class MicroGrantsStrategy {
   ): Promise<`0x${string}`> {
     const encoded: `0x${string}` = encodeAbiParameters(
       parseAbiParameters(
-        "(bool, uint64, uint64, uint256, uint256), address, uint256, uint256",
+        "bool, uint64, uint64, uint256, uint256, address, uint256, uint256",
       ),
       [
-        [
-          params.useRegistryAnchor,
-          params.allocationStartTime,
-          params.allocationEndTime,
-          params.approvalThreshold,
-          params.maxRequestedAmount,
-        ],
+        params.useRegistryAnchor,
+        params.allocationStartTime,
+        params.allocationEndTime,
+        params.approvalThreshold,
+        params.maxRequestedAmount,
         params.gov,
         params.snapshotReference,
         params.minVotePower,
       ],
     );
+
+    console.log(params);
 
     return encoded;
   }

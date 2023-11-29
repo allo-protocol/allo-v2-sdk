@@ -210,7 +210,7 @@ class MicroGrantsStrategy {
                 abi: microGrantsHats_config_1.abi,
                 publicClient: this.client,
             });
-            const hatsAddress = (yield contractReader.read.HATS_PROTOCOL());
+            const hatsAddress = (yield contractReader.read.hats());
             return hatsAddress;
         });
     }
@@ -292,18 +292,17 @@ class MicroGrantsStrategy {
     }
     getInitializeDataGov(params) {
         return __awaiter(this, void 0, void 0, function* () {
-            const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("(bool, uint64, uint64, uint256, uint256), address, uint256, uint256"), [
-                [
-                    params.useRegistryAnchor,
-                    params.allocationStartTime,
-                    params.allocationEndTime,
-                    params.approvalThreshold,
-                    params.maxRequestedAmount,
-                ],
+            const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("bool, uint64, uint64, uint256, uint256, address, uint256, uint256"), [
+                params.useRegistryAnchor,
+                params.allocationStartTime,
+                params.allocationEndTime,
+                params.approvalThreshold,
+                params.maxRequestedAmount,
                 params.gov,
                 params.snapshotReference,
                 params.minVotePower,
             ]);
+            console.log(params);
             return encoded;
         });
     }
