@@ -1,7 +1,7 @@
 import { Allo } from "../../Allo/Allo";
 import { ConstructorArgs, DeployParams, TransactionData } from "../../Common/types";
 import { PayoutSummary, Status } from "../types";
-import { Allocation, InitializeParams, InitializeParamsGov, InitializeParamsHats, Recipient, RegisterData, SetAllocatorData, StrategyType } from "./types";
+import { Allocation, InitializeParams, InitializeParamsGov, InitializeParamsHats, Recipient, RegisterData, SetAllocatorData } from "./types";
 export declare class MicroGrantsStrategy {
     private client;
     private contract;
@@ -39,7 +39,7 @@ export declare class MicroGrantsStrategy {
     getInitializeData(params: InitializeParams): Promise<`0x${string}`>;
     getInitializeDataHats(params: InitializeParamsHats): Promise<`0x${string}`>;
     getInitializeDataGov(params: InitializeParamsGov): Promise<`0x${string}`>;
-    getDeployParams(strategyType: StrategyType): DeployParams;
+    getDeployParams(strategyType: string): DeployParams;
     getBatchAllocationData(allocations: Allocation[]): TransactionData;
     getAllocationData(recipientId: `0x${string}`, status: Status): TransactionData;
     getRegisterRecipientData(data: RegisterData): TransactionData;

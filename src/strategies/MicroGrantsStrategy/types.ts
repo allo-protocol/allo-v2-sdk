@@ -1,11 +1,13 @@
 import { Metadata } from "../../Common/types";
 import { Status } from "../types";
 
-export enum StrategyType {
-  MicroGrants = "MicroGrantsv1",
-  Hats = "MicroGrantsHatsv1",
-  Gov = "MicroGrantsGovv1",
-}
+export const StrategyType = {
+  MicroGrants: "MicroGrantsv1",
+  Hats: "MicroGrantsHatsv1",
+  Gov: "MicroGrantsGovv1",
+};
+
+// export type TStrategyType = keyof typeof StrategyType;
 
 export type Recipient = {
   useRegistryAnchor: boolean;
@@ -36,9 +38,9 @@ export type InitializeParamsHats = InitializeParams & {
 };
 
 export type InitializeParamsGov = InitializeParams & {
-  universalGov: `0x${string}`;
+  gov: `0x${string}`;
   snapshotReference: bigint;
-  minimumVotePower: bigint;
+  minVotePower: bigint;
 };
 
 export type Allocation = {

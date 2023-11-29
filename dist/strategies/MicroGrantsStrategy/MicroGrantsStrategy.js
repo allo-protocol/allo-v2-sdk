@@ -276,12 +276,14 @@ class MicroGrantsStrategy {
     }
     getInitializeDataHats(params) {
         return __awaiter(this, void 0, void 0, function* () {
-            const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("bool, uint64, uint64, uint256, uint256, address, uint256"), [
-                params.useRegistryAnchor,
-                params.allocationStartTime,
-                params.allocationEndTime,
-                params.approvalThreshold,
-                params.maxRequestedAmount,
+            const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("(bool, uint64, uint64, uint256, uint256), address, uint256"), [
+                [
+                    params.useRegistryAnchor,
+                    params.allocationStartTime,
+                    params.allocationEndTime,
+                    params.approvalThreshold,
+                    params.maxRequestedAmount,
+                ],
                 params.hats,
                 params.hatId,
             ]);
@@ -290,21 +292,23 @@ class MicroGrantsStrategy {
     }
     getInitializeDataGov(params) {
         return __awaiter(this, void 0, void 0, function* () {
-            const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("bool, uint64, uint64, uint256, uint256, address, uint256, uint256"), [
-                params.useRegistryAnchor,
-                params.allocationStartTime,
-                params.allocationEndTime,
-                params.approvalThreshold,
-                params.maxRequestedAmount,
-                params.universalGov,
+            const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("(bool, uint64, uint64, uint256, uint256), address, uint256, uint256"), [
+                [
+                    params.useRegistryAnchor,
+                    params.allocationStartTime,
+                    params.allocationEndTime,
+                    params.approvalThreshold,
+                    params.maxRequestedAmount,
+                ],
+                params.gov,
                 params.snapshotReference,
-                params.minimumVotePower,
+                params.minVotePower,
             ]);
             return encoded;
         });
     }
     getDeployParams(strategyType) {
-        const constructorArgs = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, string"), [this.allo.address(), strategyType.toString()]);
+        const constructorArgs = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, string"), [this.allo.address(), strategyType]);
         const constructorArgsNo0x = constructorArgs.slice(2);
         // create the proper bytecode
         const bytecode = strategyType == types_2.StrategyType.Gov
