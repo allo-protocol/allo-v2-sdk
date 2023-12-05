@@ -36,6 +36,9 @@ export declare class MicroGrantsStrategy {
     getGovAddress(): Promise<`0x${string}`>;
     getSnapshotReference(): Promise<bigint>;
     getMinimumVotePower(): Promise<bigint>;
+    getStrategyContractId(strategyContract: string): Promise<{
+        strategyId: `0x${string}`;
+    }>;
     getInitializeData(params: InitializeParams): Promise<`0x${string}`>;
     getInitializeDataHats(params: InitializeParamsHats): Promise<`0x${string}`>;
     getInitializeDataGov(params: InitializeParamsGov): Promise<`0x${string}`>;

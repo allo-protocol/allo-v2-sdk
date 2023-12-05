@@ -1,6 +1,6 @@
 {
   "name": "@allo-team/allo-v2-sdk",
-  "version": "1.0.30",
+  "version": "1.0.33",
   "description": "sdk for allo v2",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -25,7 +25,7 @@
   "dependencies": {
     "dotenv": "^16.3.1",
     "events": "^3.3.0",
-    "viem": "^1.19.0"
+    "viem": "^1.19.9"
   },
   "repository": {
     "type": "git",
