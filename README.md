@@ -8,7 +8,7 @@ The Allo Protocol V2 SDK is a software development kit designed for developers t
 
 1. Install the SDK in your project using npm:
 ```bash
-npm install @allo/v2-core
+npm install @allo-team/v2-core
 ```
 
 ## Registry
