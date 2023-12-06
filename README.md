@@ -36,7 +36,6 @@ Custom strategies may include functions that are not explicitly defined in the I
 
 **Supported Strategies**
 - [MicroGrants](./src/strategies/MicroGrantsStrategy/README.md)
-- [DonationVotingMerkleDistributionStrategy](./src/strategies/DonationVotingMerkleDistributionStrategy/README.md)
 
 ## Supported Chains
 
