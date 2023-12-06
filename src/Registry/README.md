@@ -1,10 +1,10 @@
 # Registry Table of Contents
 
-- [Table of Contents](#table-of-contents)
+- [Registry Table of Contents](#registry-table-of-contents)
 - [Registry](#registry)
   - [Initialization](#initialization)
     - [Creating a Registry Instance](#creating-a-registry-instance)
-  - [Read Functions](#view-functions)
+  - [Read Functions](#read-functions)
     - [Get Allo Owner](#get-allo-owner)
     - [Get Default Admin Role](#get-default-admin-role)
     - [Get Native](#get-native)
@@ -42,7 +42,6 @@ Before using the functions provided by the Registry module, you need to create a
 To create a new Registry instance, you need to provide the chain information. In this example, we're using the 5 chain information.
 
 ```javascript
-import { chains } from "../Client/chains";
 import { Registry } from "../Registry/Registry";
 
 const registry = new Registry({ chain: 5 });

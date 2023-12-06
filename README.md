@@ -10,6 +10,7 @@ Welcome to the allo-v2-sdk, a powerful software development kit designed to simp
   - [Profile Management](#profile-management)
   - [Pool Management](#pool-management)
   - [Strategy Management](#strategy-management)
+  - [Supported Chains](#supported-chains)
   - [Contribution Guidelines](#contribution-guidelines)
 
 ## Installation
@@ -36,6 +37,10 @@ Custom strategies may include functions that are not explicitly defined in the I
 **Supported Strategies**
 - [MicroGrants](./src/strategies/MicroGrantsStrategy/README.md)
 - [DonationVotingMerkleDistributionStrategy](./src/strategies/DonationVotingMerkleDistributionStrategy/README.md)
+
+## Supported Chains
+
+The SDK seamlessly accommodates all chains where Allo-v2 is deployed, with the network configurations conveniently accessible [here](./src/chains.config.ts).
 
 ## Contribution Guidelines
 
