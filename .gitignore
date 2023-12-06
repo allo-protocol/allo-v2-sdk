@@ -39,4 +39,4 @@ bun.lockb
 
 
 # Ignore doc files for now
-/docs
+# /docs
