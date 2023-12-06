@@ -244,7 +244,6 @@ const txData: TransactionData = registry.createProfile(createProfileArgs);
 const hash = await client.sendTransaction({
   data: txData.data,
   account,
-  to: txData.to,
   value: BigInt(txData.value),
 });
 
