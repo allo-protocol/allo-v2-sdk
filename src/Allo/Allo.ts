@@ -11,7 +11,7 @@ import { create } from "../Client/Client";
 import { abi, address } from "./allo.config";
 import { CreatePoolArgs, Pool, UpdateMetaDataArgs } from "./types";
 import { supportedChains } from "../chains.config";
-import { NATIVE } from "../__tests__/utils/utils";
+
 export class Allo {
   private client: PublicClient<Transport, Chain>;
   private contract: any;
