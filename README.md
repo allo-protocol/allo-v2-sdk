@@ -1,19 +1,42 @@
 # Allo Protocol V2 SDK
 
+Welcome to the allo-v2-sdk, a powerful software development kit designed to simplify and streamline your interactions with the Allo V2 protocol. This SDK provides tools and utilities for managing your profile on the registry, creating and managing pools on Allo, and directly interacting with custom approved strategies. As the Allo V2 protocol evolves and new strategies are added, this SDK will continue to grow and adapt to support them seamlessly.
 
-The Allo Protocol V2 SDK is a software development kit designed for developers to interact with the Allo Protocol V2. It provides a set of tools and libraries that simplify the process of creating, testing, and deploying applications that use the Allo Protocol.
+## Table of Contents
 
-## Developers Start Here
-> Getting Started
+- [Allo Protocol V2 SDK](#allo-protocol-v2-sdk)
+  - [Table of Contents](#table-of-contents)
+  - [Installation](#installation)
+  - [Profile Management](#profile-management)
+  - [Pool Management](#pool-management)
+  - [Strategy Management](#strategy-management)
+  - [Contribution Guidelines](#contribution-guidelines)
 
-1. Install the SDK in your project using npm:
+## Installation
+
+To install the allo-v2-sdk, use the following steps:
+
 ```bash
 npm install @allo-team/v2-core
 ```
 
-## Registry
+## Profile Management
 
-View the Registry [README.md](./src/Registry/README.md) to get started interacting with the Registry contract.
+The allo-v2-sdk provides functions to create and manage your profile on the registry. For detailed instructions, please refer to the Registry [README](./src/Registry/README.md) to learn how to manage your profile on the registry.
 
-## Allo
-View the Allo [README.md](./src/Allo/README.md) to get started interacting with the Allo contract.
+
+## Pool Management
+
+The allo-v2-sdk provides functions to create and manage your pool on the pool. For detailed instructions, please refer to the Allo [README](./src/Allo/README.md) to learn how to manage your pools on Allo.
+
+## Strategy Management
+
+Custom strategies may include functions that are not explicitly defined in the IStrategy interface. The allo-v2-sdk extends its support to a variety of strategies, encompassing a broad range of functionalities.
+
+**Supported Strategies**
+- [MicroGrants](./src/strategies/MicroGrantsStrategy/README.md)
+- [DonationVotingMerkleDistributionStrategy](./src/strategies/DonationVotingMerkleDistributionStrategy/README.md)
+
+## Contribution Guidelines
+
+We welcome contributions to the allo-v2-sdk. If you'd like to contribute, please submit a pull request.
