@@ -1,5 +1,5 @@
 import { keccak256, toHex } from "viem";
-// import { Profile } from "../../Registry/types";
+// import { Profile } from "../@allo-team/allo-v2-sdk/dist/Registry/types";
 
 export const makeAddress = (input: string): string => {
   return keccak256(toHex(input)).slice(0, 42);

@@ -48,8 +48,7 @@ The Allo class provides a set of functions for interacting with the Allo contrac
 To create a new Allo instance, you need to provide the chain information. In this example, we're using the 5 chain information.
 
 ```typescript
-import { Allo } from "../Allo/Allo";
-
+import { Allo } from "@allo-team/allo-v2-sdk/";
 const allo = new Allo({ chain: 5 });
 ```
 
@@ -170,7 +169,7 @@ To create a new pool with a custom strategy:
 
 ```typescript
 import { CreatePoolArgs } from "../Allo/types";
-import { TransactionData } from "../Common/types";
+import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
 
 const createPoolArgs: CreatePoolArgs = {
   profileId: "your_profileId_here", // sender must be a profile member 
