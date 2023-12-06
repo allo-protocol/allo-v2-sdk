@@ -168,7 +168,7 @@ console.log(pool);
 To create a new pool with a custom strategy:
 
 ```typescript
-import { CreatePoolArgs } from "../Allo/types";
+import { CreatePoolArgs } from "@allo-team/allo-v2-sdk/dist/Allo/types";
 import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
 
 const createPoolArgs: CreatePoolArgs = {
@@ -201,8 +201,8 @@ console.log(`Transaction hash: ${hash}`);
 To create a new pool:
 
 ```typescript
-import { CreatePoolArgs } from "../Allo/types";
-import { TransactionData } from "../Common/types";
+import { CreatePoolArgs } from "@allo-team/allo-v2-sdk/dist/Allo/types";
+import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
 
 const createPoolArgs: CreatePoolArgs = {
   profileId: "your_profileId_here", // sender must be a profile member 
@@ -234,8 +234,8 @@ console.log(`Transaction hash: ${hash}`);
 To update pool metadata:
 
 ```typescript
-import { UpdateMetaDataArgs } from "../Allo/types";
-import { TransactionData } from "../Common/types";
+import { UpdateMetaDataArgs } from "@allo-team/allo-v2-sdk/dist/Allo/types";
+import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
 
 const updateMetadataArgs: UpdateMetaDataArgs = {
   poolId = 1,
@@ -262,7 +262,7 @@ console.log(`Transaction hash: ${hash}`);
 To update the Registry address:
 
 ```typescript
-import { TransactionData } from "../Common/types";
+import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
 
 const registryAddress = "new_registry_address_here";
 
@@ -285,7 +285,7 @@ console.log(`Transaction hash: ${hash}`);
 To update the Treasury address:
 
 ```typescript
-import { TransactionData } from "../Common/types";
+import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
 
 const treasuryAddress = "new_treasury_address_here";
 
@@ -306,7 +306,7 @@ console.log(`Transaction hash: ${hash}`);
 To update the Percent Fee:
 
 ```typescript
-import { TransactionData } from "../Common/types";
+import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
 
 const percentage = 1e12; // Replace with the desired percentage
 
@@ -327,7 +327,7 @@ console.log(`Transaction hash: ${hash}`);
 To update the Base Fee:
 
 ```typescript
-import { TransactionData } from "../Common/types";
+import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
 
 const percentage = 1e12; // Replace with the desired percentage
 
@@ -349,7 +349,7 @@ console.log(`Transaction hash: ${hash}`);
 To add a strategy to the list of cloneable strategies:
 
 ```typescript
-import { TransactionData } from "../Common/types";
+import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
 
 const strategyAddress = "strategy_address_here";
 
@@ -370,7 +370,7 @@ console.log(`Transaction hash: ${hash}`);
 To remove a strategy from the list of cloneable strategies:
 
 ```typescript
-import { TransactionData } from "../Common/types";
+import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
 
 const strategyAddress = "strategy_address_here";
 
@@ -391,7 +391,7 @@ console.log(`Transaction hash: ${hash}`);
 To add a manager to a pool:
 
 ```typescript
-import { TransactionData } from "../Common/types";
+import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
 
 const poolId = 1; // Replace with the desired pool ID
 const manager = "manager_address_here";
@@ -413,7 +413,7 @@ console.log(`Transaction hash: ${hash}`);
 To remove a manager from a pool:
 
 ```typescript
-import { TransactionData } from "../Common/types";
+import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
 
 const poolId = 1; // Replace with the desired pool ID
 const manager = "manager_address_here";
@@ -435,7 +435,7 @@ console.log(`Transaction hash: ${hash}`);
 To recover funds:
 
 ```typescript
-import { TransactionData } from "../Common/types";
+import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
 
 const token = "token_address_here";
 const recipient = "recipient_address_here";
@@ -457,7 +457,7 @@ console.log(`Transaction hash: ${hash}`);
 To register a recipient for a specific pool:
 
 ```typescript
-import { TransactionData } from "../Common/types";
+import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
 
 const poolId = 1; // Replace with the desired pool ID
 const strategyData = "strategy_data_here";
@@ -479,7 +479,7 @@ console.log(`Transaction hash: ${hash}`);
 To batch register recipients for multiple pools:
 
 ```typescript
-import { TransactionData } from "../Common/types";
+import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
 
 const poolIds = [1, 2, 3]; // Replace with the desired pool IDs
 const strategyData = ["strategy_data_1", "strategy_data_2", "strategy_data_3"]; // Replace with the corresponding strategy data
@@ -501,7 +501,7 @@ console.log(`Transaction hash: ${hash}`);
 To fund a pool with a specific amount:
 
 ```typescript
-import { TransactionData } from "../Common/types";
+import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
 
 const poolId = 1; // Replace with the desired pool ID
 const amount = 1e18; // Replace with the desired amount
@@ -523,7 +523,7 @@ console.log(`Transaction hash: ${hash}`);
 To allocate funds for a specific pool:
 
 ```typescript
-import { TransactionData } from "../Common/types";
+import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
 
 const poolId = 1; // Replace with the desired pool ID
 const strategyData = "strategy_data_here";
@@ -546,7 +546,7 @@ console.log(`Transaction hash: ${hash}`);
 To batch allocate funds to multiple pools:
 
 ```javascript
-import { TransactionData } from "../Common/types";
+import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
 
 const poolIds = [1, 2, 3]; // Example pool IDs
 const strategyData = ["0xStrategyData1", "0xStrategyData2", "0xStrategyData3"]; // Example strategy data
@@ -568,7 +568,7 @@ console.log(`Transaction hash: ${hash}`);
 To distribute funds to multiple recipients in a pool:
 
 ```javascript
-import { TransactionData } from "../Common/types";
+import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
 
 const poolId = 1;
 const recipientIds = ["0xRecipient1", "0xRecipient2", "0xRecipient3"]; // Example recipient addresses
