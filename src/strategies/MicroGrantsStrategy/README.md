@@ -1,6 +1,6 @@
-<!-- # MicroGrantsStrategy
+# MicroGrantsStrategy
 
-The `MicroGrantsStrategy` class is a powerful tool for interacting with the MicroGrants contract and its associated strategies. It provides methods for reading information from the contract and executing various transactions.
+The `MicroGrantsStrategy` class is a powerful tool for interacting with the MicroGrants contract. It provides methods for reading information from the contract and executing various transactions.
 
 ## Table of Contents
 
@@ -28,11 +28,13 @@ The `MicroGrantsStrategy` class is a powerful tool for interacting with the Micr
     - [Get Recipient Allocations](#get-recipient-allocations)
     - [Get Max Requested Amount](#get-max-requested-amount)
     - [Check Use Registry Anchor](#check-use-registry-anchor)
-    - [Get HATS Contract Address](#get-hats-contract-address)
-    - [Get HAT ID](#get-hat-id)
-    - [Get Governance Contract Address](#get-governance-contract-address)
-    - [Get Snapshot Reference](#get-snapshot-reference)
-    - [Get Minimum Vote Power](#get-minimum-vote-power)
+    - [HATS MicroGrants](#hats-microgrants)
+      - [Get HATS Contract Address](#get-hats-contract-address)
+      - [Get HAT ID](#get-hat-id)
+    - [Governance MicroGrants](#governance-microgrants)
+      - [Get Governance Contract Address](#get-governance-contract-address)
+      - [Get Snapshot Reference](#get-snapshot-reference)
+      - [Get Minimum Vote Power](#get-minimum-vote-power)
     - [Get Strategy Contract ID](#get-strategy-contract-id)
   - [Write Functions](#write-functions)
     - [Deploy Parameters](#deploy-parameters)
@@ -57,7 +59,18 @@ To start interacting with the MicroGrants contract, create a new instance of `Mi
 import { MicroGrantsStrategy } from "@allo-team/allo-v2-sdk/";
 
 const strategy = new MicroGrantsStrategy({
-  chain: 1, // Specify the chain ID
+  chain: 1,
+});
+```
+
+If you are aware of the poolId, you can load that while creating the instance
+
+```javascript
+import { MicroGrantsStrategy } from "@allo-team/allo-v2-sdk/";
+
+const strategy = new MicroGrantsStrategy({
+  chain: 1,
+  poolId: 1, // valid pool Id
 });
 ```
 
@@ -86,7 +99,7 @@ console.log(`Native Token Address: ${nativeToken}`);
 
 ### Check Allocator
 
-Check if a specific allocator is associated with the strategy:
+Check if a specific allocator has already cast their allocation 
 
 ```javascript
 const allocatorAddress = "0xYourAllocatorAddress";
@@ -96,7 +109,7 @@ console.log(`Is Allocator: ${isAllocator}`);
 
 ### Check Allocated Status
 
-Check if funds have been allocated to a specific allocator and recipient:
+Check if a specific allocator has already cast their allocation to a specific recipient
 
 ```javascript
 const allocatorAddress = "0xYourAllocatorAddress";
@@ -248,7 +261,11 @@ const useRegistryAnchor = await strategy.useRegistryAnchor();
 console.log(`Use Registry Anchor: ${useRegistryAnchor}`);
 ```
 
-### Get HATS Contract Address
+### HATS MicroGrants
+
+This set of functions are available if the MicroGrants uses a hats micro grant strategy
+
+#### Get HATS Contract Address
 
 Retrieve the address of the HATS contract associated with the strategy:
 
@@ -257,16 +274,20 @@ const hatsAddress = await strategy.getHatsAddress();
 console.log(`HATS Contract Address: ${hatsAddress}`);
 ```
 
-### Get HAT ID
+#### Get HAT ID
 
-Retrieve the unique identifier for the HAT associated with the strategy:
+Retrieve the hatId used by the strategy:
 
 ```javascript
 const hatId = await strategy.getHatId();
 console.log(`HAT ID: ${hatId}`);
 ```
 
-### Get Governance Contract Address
+### Governance MicroGrants
+
+This set of functions are available if the MicroGrants uses a governance token micro grant strategy
+
+#### Get Governance Contract Address
 
 Retrieve the address of the governance contract associated with the strategy:
 
@@ -275,7 +296,7 @@ const govAddress = await strategy.getGovAddress();
 console.log(`Governance Contract Address: ${govAddress}`);
 ```
 
-### Get Snapshot Reference
+#### Get Snapshot Reference
 
 Retrieve the snapshot reference used by the strategy:
 
@@ -284,7 +305,7 @@ const snapshotReference = await strategy.getSnapshotReference();
 console.log(`Snapshot Reference: ${snapshotReference}`);
 ```
 
-### Get Minimum Vote Power
+#### Get Minimum Vote Power
 
 Retrieve the minimum vote power required by the strategy:
 
@@ -310,9 +331,17 @@ console.log(`Strategy Contract ID: ${strategyContractId}`);
 Generate deployment parameters for deploying a new strategy:
 
 ```javascript
-const strategyType = "Gov"; // Specify the strategy type
+import { StrategyType } from "@allo-team/allo-v2-sdk/dist/strategies/MicroGrantsStrategy/types";
+
+const strategyType = StrategyType.Gov; // Specify the strategy type
 const deployParams = strategy.getDeployParams(strategyType);
-console.log(`Deploy Parameters: ${deployParams}`);
+
+// Client could be from ethers, viem, etc.
+const hash = await walletClient!.deployContract({
+  abi: deployParams.abi,
+  bytecode: deployParams.bytecode as `0x${string}`,
+  args: [],
+});
 ```
 
 ### Batch Allocation Data
@@ -325,8 +354,14 @@ const allocations = [
   { recipientId: "0xRecipient2", status: 1 },
 ];
 
-const batchAllocationData = strategy.getBatchAllocationData(allocations);
-console.log(`Batch Allocation Data: ${batchAllocationData}`);
+const txData = strategy.getBatchAllocationData(allocations);
+
+// Client could be from ethers, viem, etc.
+const tx = await sendTransaction({
+  to: txData.to as string,
+  data: txData.data,
+  value: BigInt(txData.value),
+});
 ```
 
 ### Allocation Data
@@ -337,8 +372,14 @@ Generate transaction data for allocating funds to a specific recipient:
 const recipientId = "0xYourRecipientId";
 const status = 1; // Example status, replace with the actual status value
 
-const allocationData = strategy.getAllocationData(recipientId, status);
-console.log(`Allocation Data: ${allocationData}`);
+const txData = strategy.getAllocationData(recipientId, status);
+
+// Client could be from ethers, viem, etc.
+const tx = await sendTransaction({
+  to: txData.to as string,
+  data: txData.data,
+  value: BigInt(txData.value),
+});
 ```
 
 ### Register Recipient Data
@@ -349,15 +390,21 @@ Generate transaction data for registering a new recipient:
 const registerData = {
   registryAnchor: "0xYourRegistryAnchor", // Optional
   recipientAddress: "0xRecipientAddress",
-  requestedAmount: 100,
+  requestedAmount: BigInt(1),
   metadata: {
-    protocol: "0xYourProtocol",
+    protocol: BigInt(0),
     pointer: "0xYourPointer",
   },
 };
 
-const registerRecipientData = strategy.getRegisterRecipientData(registerData);
-console.log(`Register Recipient Data: ${registerRecipientData}`);
+const txData = strategy.getRegisterRecipientData(registerData);
+
+// Client could be from ethers, viem, etc.
+const tx = await sendTransaction({
+  to: txData.to as string,
+  data: txData.data,
+  value: BigInt(txData.value),
+});
 ```
 
 ### Batch Register Recipient Data
@@ -369,25 +416,31 @@ const batchRegisterData = [
   {
     registryAnchor: "0xYourRegistryAnchor1", // Optional
     recipientAddress: "0xRecipientAddress1",
-    requestedAmount: 100,
+    requestedAmount: BigInt(1),
     metadata: {
-      protocol: "0xYourProtocol1",
+      protocol:  BigInt(1),
       pointer: "0xYourPointer1",
     },
   },
   {
     registryAnchor: "0xYourRegistryAnchor2", // Optional
     recipientAddress: "0xRecipientAddress2",
-    requestedAmount: 150,
+    requestedAmount:  BigInt(2),
     metadata: {
-      protocol: "0xYourProtocol2",
+      protocol: BigInt(1),
       pointer: "0xYourPointer2",
     },
   },
 ];
 
-const batchRegisterRecipientData = strategy.getBatchRegisterRecipientData(batchRegisterData);
-console.log(`Batch Register Recipient Data: ${batchRegisterRecipientData}`);
+const txData = strategy.getBatchRegisterRecipientData(batchRegisterData);
+
+// Client could be from ethers, viem, etc.
+const tx = await sendTransaction({
+  to: txData.to as string,
+  data: txData.data,
+  value: BigInt(txData.value),
+});
 ```
 
 ### Increase Max Requested Amount Data
@@ -397,8 +450,14 @@ Generate transaction data for increasing the maximum requested amount:
 ```javascript
 const amount = 200;
 
-const increaseMaxRequestedAmountData = strategy.getIncreasemaxRequestedAmountData(amount);
-console.log(`Increase Max Requested Amount Data: ${increaseMaxRequestedAmountData}`);
+const txData = strategy.getIncreasemaxRequestedAmountData(amount);
+
+// Client could be from ethers, viem, etc.
+const tx = await sendTransaction({
+  to: txData.to as string,
+  data: txData.data,
+  value: BigInt(txData.value),
+});
 ```
 
 ### Set Allocator Data
@@ -411,8 +470,14 @@ const allocatorData = {
   flag: true,
 };
 
-const setAllocatorData = strategy.getSetAllocatorData(allocatorData);
-console.log(`Set Allocator Data: ${setAllocatorData}`);
+const txData = strategy.getSetAllocatorData(allocatorData);
+
+// Client could be from ethers, viem, etc.
+const tx = await sendTransaction({
+  to: txData.to as string,
+  data: txData.data,
+  value: BigInt(txData.value),
+});
 ```
 
 ### Batch Set Allocator Data
@@ -431,8 +496,14 @@ const batchSetAllocatorData = [
   },
 ];
 
-const batchSetAllocatorData = strategy.getBatchSetAllocatorData(batchSetAllocatorData);
-console.log(`Batch Set Allocator Data: ${batchSetAllocatorData}`);
+const txData = strategy.getBatchSetAllocatorData(batchSetAllocatorData);
+
+// Client could be from ethers, viem, etc.
+const tx = await sendTransaction({
+  to: txData.to as string,
+  data: txData.data,
+  value: BigInt(txData.value),
+});
 ```
 
 ### Update Pool Timestamps Data
@@ -443,6 +514,12 @@ Generate transaction data for updating pool timestamps:
 const allocationStartTime = 1642320000; // Example timestamp, replace with the actual value
 const allocationEndTime = 1642410000; // Example timestamp, replace with the actual value
 
-const updateTimestampsData = strategy.getUpdatePoolTimestampsData(allocationStartTime, allocationEndTime);
+const txData = strategy.getUpdatePoolTimestampsData(allocationStartTime, allocationEndTime);
 
-``` -->
+// Client could be from ethers, viem, etc.
+const tx = await sendTransaction({
+  to: txData.to as string,
+  data: txData.data,
+  value: BigInt(txData.value),
+});
+```
