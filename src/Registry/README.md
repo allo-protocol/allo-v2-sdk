@@ -1,10 +1,10 @@
 # Registry Table of Contents
 
-- [Table of Contents](#table-of-contents)
+- [Registry Table of Contents](#registry-table-of-contents)
 - [Registry](#registry)
   - [Initialization](#initialization)
     - [Creating a Registry Instance](#creating-a-registry-instance)
-  - [Read Functions](#view-functions)
+  - [Read Functions](#read-functions)
     - [Get Allo Owner](#get-allo-owner)
     - [Get Default Admin Role](#get-default-admin-role)
     - [Get Native](#get-native)
@@ -42,8 +42,7 @@ Before using the functions provided by the Registry module, you need to create a
 To create a new Registry instance, you need to provide the chain information. In this example, we're using the 5 chain information.
 
 ```javascript
-import { chains } from "../Client/chains";
-import { Registry } from "../Registry/Registry";
+import { Registry } from "@allo-team/allo-v2-sdk/";
 
 const registry = new Registry({ chain: 5 });
 ```
@@ -96,7 +95,7 @@ console.log(profileId);
 To fetch a Profile using an Anchor:
 
 ```javascript
-import { Profile } from "../Registry/types";
+import { Profile } from "@allo-team/allo-v2-sdk/dist/Registry/types";
 
 const anchor = "your_anchor_value_here";
 const profile: Profile = await registry.getProfileByAnchor(anchor);
@@ -108,7 +107,7 @@ console.log(profile);
 To retrieve a Profile using its ID:
 
 ```javascript
-import { Profile } from "../Registry/types";
+import { Profile } from "@allo-team/allo-v2-sdk/dist/Registry/types";
 
 const profileId = "your_profile_id_here";
 const profile: Profile = await registry.getProfileById(profileId);
@@ -130,7 +129,7 @@ console.log(admin);
 To check if an account has a specific role:
 
 ```javascript
-import { HasRoleArgs } from "../Registry/types";
+import { HasRoleArgs } from "@allo-team/allo-v2-sdk/dist/Registry/types";
 
 const hasRoleArgs: HasRoleArgs = {
   role: "your_role_here",
@@ -145,7 +144,7 @@ console.log(hasRole);
 To check if an account is a member of a profile:
 
 ```javascript
-import { ProfileAndAddressArgs } from "../Registry/types";
+import { ProfileAndAddressArgs } from "@allo-team/allo-v2-sdk/dist/Registry/types";
 
 const profileAndAddressArgs: ProfileAndAddressArgs = {
   profileId: "your_profile_id_here",
@@ -162,7 +161,7 @@ console.log(isMember);
 To check if an account is the owner of a profile:
 
 ```javascript
-import { ProfileAndAddressArgs } from "../Registry/types";
+import { ProfileAndAddressArgs } from "@allo-team/allo-v2-sdk/dist/Registry/types";
 
 const profileAndAddressArgs: ProfileAndAddressArgs = {
   profileId: "your_profile_id_here",
@@ -177,7 +176,7 @@ console.log(isOwner);
 To check if an account is either the owner or a member of a profile:
 
 ```javascript
-import { ProfileAndAddressArgs } from "../Registry/types";
+import { ProfileAndAddressArgs } from "@allo-team/allo-v2-sdk/dist/Registry/types";
 
 const profileAndAddressArgs: ProfileAndAddressArgs = {
   profileId: "your_profile_id_here",
@@ -206,7 +205,7 @@ console.log(pendingOwner);
 To get profile details by ID:
 
 ```javascript
-import { Profile } from "../Registry/types";
+import { Profile } from "@allo-team/allo-v2-sdk/dist/Registry/types";
 
 const profileId = "your_profile_id_here";
 const profile: Profile = await registry.getProfilesById(profileId);
@@ -222,8 +221,8 @@ console.log(profile);
 To create a new profile using the `createProfile` function:
 
 ```javascript
-import { CreateProfileArgs } from "../Registry/types";
-import { TransactionData } from "../types";
+import { CreateProfileArgs } from "@allo-team/allo-v2-sdk/dist/Registry/types";
+import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
 
 const createProfileArgs: CreateProfileArgs = {
   nonce: 3,
@@ -245,7 +244,6 @@ const txData: TransactionData = registry.createProfile(createProfileArgs);
 const hash = await client.sendTransaction({
   data: txData.data,
   account,
-  to: txData.to,
   value: BigInt(txData.value),
 });
 
@@ -277,7 +275,7 @@ console.log(`Transaction hash: ${hash}`);
 To add members to a profile using the `addMembers` function:
 
 ```javascript
-import { MemberArgs } from "../Registry/types";
+import { MemberArgs } from "@allo-team/allo-v2-sdk/dist/Registry/types";
 
 const memberArgs: MemberArgs = {
   profileId: "your_profile_id_here",
@@ -306,7 +304,7 @@ console.log(`Transaction hash: ${hash}`);
 To remove members from a profile using the `removeMembers` function:
 
 ```javascript
-import { MemberArgs } from "../Registry/types";
+import { MemberArgs } from "@allo-team/allo-v2-sdk/dist/Registry/types";
 
 const memberArgs: MemberArgs = {
   profileId: "your_profile_id_here",
@@ -335,7 +333,7 @@ console.log(`Transaction hash: ${hash}`);
 To update profile metadata using the `updateProfileMetadata` function:
 
 ```javascript
-import { ProfileMetadataArgs } from "../Registry/types";
+import { ProfileMetadataArgs } from "@allo-team/allo-v2-sdk/dist/Registry/types";
 
 const profileMetadataArgs: ProfileMetadataArgs = {
   profileId: "your_profile_id_here",
@@ -364,7 +362,7 @@ console.log(`Transaction hash: ${hash}`);
 To update profile name using the `updateProfileName` function:
 
 ```javascript
-import { ProfileNameArgs } from "../Registry/types";
+import { ProfileNameArgs } from "@allo-team/allo-v2-sdk/dist/Registry/types";
 
 const profileNameArgs: ProfileNameArgs = {
   profileId: "your_profile_id_here",
@@ -389,7 +387,7 @@ console.log(`Transaction hash: ${hash}`);
 To update the pending owner of a profile using the `updateProfilePendingOwner` function:
 
 ```javascript
-import { ProfileAndAddressArgs } from "../Registry/types";
+import { ProfileAndAddressArgs } from "@allo-team/allo-v2-sdk/dist/Registry/types";
 
 const profilePendingOwnerArgs: ProfileAndAddressArgs = {
   profileId: "your_profile_id_here",

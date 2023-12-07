@@ -36,3 +36,7 @@ Thumbs.db
 # ignore yarn.lock
 # yarn.lock
 bun.lockb
+
+
+# Ignore doc files for now
+# /docs
