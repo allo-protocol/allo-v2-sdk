@@ -43,6 +43,17 @@ export type InitializeParamsGov = InitializeParams & {
   minVotePower: bigint;
 };
 
+export type InitializeParamsSuperFluid = InitializeParams & {
+  metadataRequired: boolean;
+  passportDecoder: `0x${string}`;
+  superFluidHost: `0x${string}`;
+  allocationSuperToken: `0x${string}`;
+  registrationStartTime: bigint;
+  registrationEndTime: bigint;
+  minPassportScore: bigint;
+  initialSuperAppBalance: bigint;
+}
+
 export type Allocation = {
   recipientId: `0x${string}`;
   status: Status;

@@ -347,21 +347,21 @@ export class MicroGrantsStrategy {
   public async getStrategyContractId(
     strategyContract: string
   ): Promise<{ strategyId: `0x${string}` }> {
-    const abi = [
-      {
-        inputs: [],
-        name: "getStrategyId",
-        outputs: [
-          {
-            internalType: "bytes32",
-            name: "",
-            type: "bytes32",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-    ];
+    // const abi = [
+    //   {
+    //     inputs: [],
+    //     name: "getStrategyId",
+    //     outputs: [
+    //       {
+    //         internalType: "bytes32",
+    //         name: "",
+    //         type: "bytes32",
+    //       },
+    //     ],
+    //     stateMutability: "view",
+    //     type: "function",
+    //   },
+    // ];
 
     const contractReader = getContract({
       address: strategyContract as `0x${string}`,
