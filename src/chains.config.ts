@@ -1,7 +1,7 @@
 import { Chain } from "viem";
 import {
   arbitrum,
-  arbitrumGoerli,
+  arbitrumSepolia,
   base,
   celoAlfajores,
   celo,
@@ -15,7 +15,7 @@ import {
 
 export const supportedChains: Chain[] = [
   arbitrum,
-  arbitrumGoerli,
+  arbitrumSepolia,
   base,
   celoAlfajores,
   celo,

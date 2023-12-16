@@ -4,7 +4,7 @@ exports.supportedChains = void 0;
 const chains_1 = require("viem/chains");
 exports.supportedChains = [
     chains_1.arbitrum,
-    chains_1.arbitrumGoerli,
+    chains_1.arbitrumSepolia,
     chains_1.base,
     chains_1.celoAlfajores,
     chains_1.celo,
