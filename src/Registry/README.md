@@ -243,6 +243,7 @@ const txData: TransactionData = registry.createProfile(createProfileArgs);
 // Client could be from ethers, viem, etc..
 const hash = await client.sendTransaction({
   data: txData.data,
+  to: txData.to,
   account,
   value: BigInt(txData.value),
 });
