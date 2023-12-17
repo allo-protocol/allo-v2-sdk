@@ -18,7 +18,7 @@ Welcome to the allo-v2-sdk, a powerful software development kit designed to simp
 To install the allo-v2-sdk, use the following steps:
 
 ```bash
-npm install @allo-team/v2-core
+npm i @allo-team/allo-v2-sdk
 ```
 
 ## Profile Management
