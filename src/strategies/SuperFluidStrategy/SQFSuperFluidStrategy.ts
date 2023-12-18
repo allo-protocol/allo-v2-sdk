@@ -24,7 +24,7 @@ import {
 } from "./superfluid.config";
 import { InitializeParamsSuperFluid } from "../MicroGrantsStrategy/types";
 
-export class SuperFluidStrategy {
+export class SQFSuperFluidStrategy {
   private client: PublicClient<Transport, Chain>;
   private contract: any;
 
@@ -289,6 +289,35 @@ export class SuperFluidStrategy {
       abi: abi,
       bytecode: (bytecode + constructorArgsNo0x) as unknown as `0x${string}`,
     };
+  }
+
+
+  public getUpdatePoolTimestampsData(
+    registrationStartTime: bigint,
+    registrationEndTime: bigint,
+    allocationStartTime: bigint,
+    allocationEndTime: bigint
+  ) {
+    const encoded: `0x${string}` = encodeAbiParameters(
+      parseAbiParameters("uint64, uint64, uint64, uint64"),
+      [
+        registrationStartTime,
+        registrationEndTime,
+        allocationStartTime,
+        allocationEndTime,
+      ]
+    );
+
+    return encoded;
+  }
+
+  public getUpdateMinPassportScore(minPassportScore: bigint) {
+    const encoded: `0x${string}` = encodeAbiParameters(
+      parseAbiParameters("uint256"),
+      [minPassportScore]
+    );
+
+    return encoded;
   }
 
   // todo: finish this...
