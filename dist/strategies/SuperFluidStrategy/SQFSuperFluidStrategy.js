@@ -15,6 +15,7 @@ const Allo_1 = require("../../Allo/Allo");
 const chains_config_1 = require("../../chains.config");
 const Client_1 = require("../../Client/Client");
 const superfluid_config_1 = require("./superfluid.config");
+const allo_config_1 = require("../../Allo/allo.config");
 class SQFSuperFluidStrategy {
     constructor({ chain, rpc, address, poolId }) {
         const usedChain = (0, viem_1.extractChain)({
@@ -56,6 +57,37 @@ class SQFSuperFluidStrategy {
         if (!this.strategy)
             throw new Error("SQFSuperfluidStrategy: No strategy address provided. Please call `setContract` first.");
     }
+    // Init and Deploy
+    getInitializeData(params) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("bool, bool, address, address, address, uint64, uint64, uint64, uint64, uint256, uint256"), [
+                params.useRegistryAnchor,
+                params.metadataRequired,
+                params.passportDecoder,
+                params.superfluidHost,
+                params.allocationSuperToken,
+                params.registrationStartTime,
+                params.registrationEndTime,
+                params.allocationStartTime,
+                params.allocationEndTime,
+                params.minPassportScore,
+                params.initialSuperAppBalance,
+            ]);
+            return encoded;
+        });
+    }
+    getDeployParams() {
+        const constructorArgs = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, string"), [this.allo.address(), "SQFSuperfluidv1"]);
+        const constructorArgsNo0x = constructorArgs.slice(2);
+        // create the proper bytecode
+        const bytecode = superfluid_config_1.bytecode;
+        const abi = superfluid_config_1.abi;
+        return {
+            abi: abi,
+            bytecode: (bytecode + constructorArgsNo0x),
+        };
+    }
+    // Getters
     getNative() {
         return __awaiter(this, void 0, void 0, function* () {
             this.checkStrategy();
@@ -63,42 +95,32 @@ class SQFSuperFluidStrategy {
             return native;
         });
     }
-    allocator(allocatorAddress) {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.checkStrategy();
-            const allocator = yield this.contract.read.allocators([allocatorAddress]);
-            return allocator;
-        });
-    }
-    allocated(allocatorAddress, recipientAddress) {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.checkStrategy();
-            const allocated = yield this.contract.read.allocated([
-                allocatorAddress,
-                recipientAddress,
-            ]);
-            return allocated;
-        });
-    }
-    allocationEndTime() {
+    getAllocationEndTime() {
         return __awaiter(this, void 0, void 0, function* () {
             this.checkStrategy();
             const endTime = yield this.contract.read.allocationEndTime();
             return endTime;
         });
     }
-    allocationStartTime() {
+    getAllocationStartTime() {
         return __awaiter(this, void 0, void 0, function* () {
             this.checkStrategy();
             const startTime = yield this.contract.read.allocationStartTime();
             return startTime;
         });
     }
-    approvalThreshold() {
+    getRegistrationEndTime() {
         return __awaiter(this, void 0, void 0, function* () {
             this.checkStrategy();
-            const threshold = yield this.contract.read.approvalThreshold();
-            return threshold;
+            const endTime = yield this.contract.read.registrationEndTime();
+            return endTime;
+        });
+    }
+    getRegistrationStartTime() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.checkStrategy();
+            const startTime = yield this.contract.read.registrationStartTime();
+            return startTime;
         });
     }
     getAllo() {
@@ -173,23 +195,6 @@ class SQFSuperFluidStrategy {
             return valid;
         });
     }
-    recipientAllocations(recipientId, status) {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.checkStrategy();
-            const allocations = yield this.contract.read.recipientAllocations([
-                recipientId,
-                status,
-            ]);
-            return allocations;
-        });
-    }
-    maxRequestedAmount() {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.checkStrategy();
-            const maxRequestedAmount = yield this.contract.read.maxRequestedAmount();
-            return maxRequestedAmount;
-        });
-    }
     useRegistryAnchor() {
         return __awaiter(this, void 0, void 0, function* () {
             this.checkStrategy();
@@ -197,35 +202,63 @@ class SQFSuperFluidStrategy {
             return useRegistryAnchor;
         });
     }
-    getInitializeData(params) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("bool, bool, address, address, address, uint64, uint64, uint64, uint64, uint256, uint256"), [
-                params.useRegistryAnchor,
-                params.metadataRequired,
-                params.passportDecoder,
-                params.superfluidHost,
-                params.allocationSuperToken,
-                params.registrationStartTime,
-                params.registrationEndTime,
-                params.allocationStartTime,
-                params.allocationEndTime,
-                params.minPassportScore,
-                params.initialSuperAppBalance,
-            ]);
-            return encoded;
-        });
+    getInitialSuperAppBalance() {
+        this.checkStrategy();
+        return this.contract.read.initialSuperAppBalance();
     }
-    getDeployParams() {
-        const constructorArgs = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, string"), [this.allo.address(), "SQFSuperfluidv1"]);
-        const constructorArgsNo0x = constructorArgs.slice(2);
-        // create the proper bytecode
-        const bytecode = superfluid_config_1.bytecode;
-        const abi = superfluid_config_1.abi;
-        return {
-            abi: abi,
-            bytecode: (bytecode + constructorArgsNo0x),
-        };
+    getSuperfluidHost() {
+        this.checkStrategy();
+        return this.contract.read.superfluidHost();
     }
+    getAllocationSuperToken() {
+        this.checkStrategy();
+        return this.contract.read.allocationSuperToken();
+    }
+    getPoolSuperToken() {
+        this.checkStrategy();
+        return this.contract.read.poolSuperToken();
+    }
+    getGdaPool() {
+        this.checkStrategy();
+        return this.contract.read.gdaPool();
+    }
+    getPassportDecoder() {
+        this.checkStrategy();
+        return this.contract.read.passportDecoder();
+    }
+    getMinPassportScore() {
+        this.checkStrategy();
+        return this.contract.read.minPassportScore();
+    }
+    getMetadataRequired() {
+        this.checkStrategy();
+        return this.contract.read.metadataRequired();
+    }
+    getRegistry() {
+        this.checkStrategy();
+        return this.contract.read.registry();
+    }
+    getRecipientIdBySuperApp(superApp) {
+        this.checkStrategy();
+        return this.contract.read.superApps([superApp]);
+    }
+    getRecipientAllocatorUnits(recipientId, allocator) {
+        this.checkStrategy();
+        return this.contract.read.recipientAllocatorUnits([recipientId, allocator]);
+    }
+    getTotalUnitsByRecipient(recipientId) {
+        this.checkStrategy();
+        return this.contract.read.totalUnitsByRecipient([recipientId]);
+    }
+    getRecipientFlowRate(recipientId) {
+        this.checkStrategy();
+        return this.contract.read.recipientFlowRate([recipientId]);
+    }
+    getSuperApp(recipientId) {
+        this.checkStrategy();
+        return this.contract.read.getSuperApp([recipientId]);
+    }
+    // Write functions
     getUpdatePoolTimestampsData(registrationStartTime, registrationEndTime, allocationStartTime, allocationEndTime) {
         const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("uint64, uint64, uint64, uint64"), [
             registrationStartTime,
@@ -233,11 +266,172 @@ class SQFSuperFluidStrategy {
             allocationStartTime,
             allocationEndTime,
         ]);
-        return encoded;
+        const encodedData = (0, viem_1.encodeFunctionData)({
+            abi: superfluid_config_1.abi,
+            functionName: "updatePoolTimestamps",
+            args: [encoded],
+        });
+        return {
+            to: this.strategy,
+            data: encodedData,
+            value: "0",
+        };
     }
-    getUpdateMinPassportScore(minPassportScore) {
+    getUpdateMinPassportScoreData(minPassportScore) {
         const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("uint256"), [minPassportScore]);
-        return encoded;
+        const encodedData = (0, viem_1.encodeFunctionData)({
+            abi: superfluid_config_1.abi,
+            functionName: "updateMinPassportScore",
+            args: [encoded],
+        });
+        return {
+            to: this.strategy,
+            data: encodedData,
+            value: "0",
+        };
+    }
+    getRegisterRecipientData(data) {
+        this.checkPoolId();
+        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, address, (uint256, string)"), [
+            data.registryAnchor,
+            data.recipientAddress,
+            [data.metadata.protocol, data.metadata.pointer],
+        ]);
+        const encodedData = (0, viem_1.encodeFunctionData)({
+            abi: allo_config_1.abi,
+            functionName: "registerRecipient",
+            args: [this.poolId, encoded],
+        });
+        return {
+            to: this.allo.address(),
+            data: encodedData,
+            value: "0",
+        };
+    }
+    getBatchRegisterRecipientData(data) {
+        this.checkPoolId();
+        const encodedParams = [];
+        data.forEach((registerData) => {
+            const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, address, (uint256, string)"), [
+                registerData.registryAnchor,
+                registerData.recipientAddress,
+                [registerData.metadata.protocol, registerData.metadata.pointer],
+            ]);
+            encodedParams.push(encoded);
+        });
+        const poolIds = Array(encodedParams.length).fill(this.poolId);
+        const encodedData = (0, viem_1.encodeFunctionData)({
+            abi: allo_config_1.abi,
+            functionName: "batchRegisterRecipient",
+            args: [poolIds, encodedParams],
+        });
+        return {
+            to: this.allo.address(),
+            data: encodedData,
+            value: "0",
+        };
+    }
+    getDistributeData(flowRate) {
+        this.checkPoolId();
+        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("int96"), [flowRate]);
+        const encodedData = (0, viem_1.encodeFunctionData)({
+            abi: allo_config_1.abi,
+            functionName: "distribute",
+            args: [this.poolId, [], encoded],
+        });
+        return {
+            to: this.strategy,
+            data: encodedData,
+            value: "0",
+        };
+    }
+    getAllocationData(recipientId, flowRate) {
+        this.checkPoolId();
+        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, int96"), [recipientId, flowRate]);
+        const encodedData = (0, viem_1.encodeFunctionData)({
+            abi: allo_config_1.abi,
+            functionName: "allocate",
+            args: [this.poolId, encoded],
+        });
+        return {
+            to: this.allo.address(),
+            data: encodedData,
+            value: "0",
+        };
+    }
+    getBatchAllocationData(allocations) {
+        this.checkPoolId();
+        const encodedParams = [];
+        allocations.forEach((allocation) => {
+            const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, int96"), [allocation.recipientId, allocation.flowRate]);
+            encodedParams.push(encoded);
+        });
+        const poolIds = Array(encodedParams.length).fill(this.poolId);
+        const encodedData = (0, viem_1.encodeFunctionData)({
+            abi: allo_config_1.abi,
+            functionName: "batchAllocate",
+            args: [poolIds, encodedParams],
+        });
+        return {
+            to: this.allo.address(),
+            data: encodedData,
+            value: "0",
+        };
+    }
+    getReviewRecipientData(data) {
+        this.checkStrategy();
+        const recipientIds = data.map((recipient) => recipient.recipientId);
+        const statuses = data.map((recipient) => recipient.recipientStatus);
+        const encodedData = (0, viem_1.encodeFunctionData)({
+            abi: superfluid_config_1.abi,
+            functionName: "reviewRecipient",
+            args: [recipientIds, statuses],
+        });
+        return {
+            to: this.strategy,
+            data: encodedData,
+            value: "0",
+        };
+    }
+    getCancelRecipientsData(recipientIds) {
+        this.checkStrategy();
+        const encodedData = (0, viem_1.encodeFunctionData)({
+            abi: superfluid_config_1.abi,
+            functionName: "cancelRecipients",
+            args: [recipientIds],
+        });
+        return {
+            to: this.strategy,
+            data: encodedData,
+            value: "0",
+        };
+    }
+    getWithdrawData(token, amount) {
+        this.checkStrategy();
+        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, uint256"), [token, amount]);
+        const encodedData = (0, viem_1.encodeFunctionData)({
+            abi: superfluid_config_1.abi,
+            functionName: "withdraw",
+            args: [encoded],
+        });
+        return {
+            to: this.strategy,
+            data: encodedData,
+            value: "0",
+        };
+    }
+    getCloseStream() {
+        this.checkStrategy();
+        const encodedData = (0, viem_1.encodeFunctionData)({
+            abi: superfluid_config_1.abi,
+            functionName: "closeStream",
+            args: [],
+        });
+        return {
+            to: this.strategy,
+            data: encodedData,
+            value: "0",
+        };
     }
 }
 exports.SQFSuperFluidStrategy = SQFSuperFluidStrategy;

@@ -32,3 +32,8 @@ export type RegisterDataSuperfluid = {
   recipientAddress: `0x${string}`;
   metadata: Metadata;
 };
+
+export type ReviewRecipientDataSuperfluid = {
+  recipientId: `0x${string}`;
+  recipientStatus: Status;
+};

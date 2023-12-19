@@ -1,6 +1,6 @@
 import { Allo } from "../../Allo/Allo";
-import { ConstructorArgs, DeployParams, PayoutSummary, Recipient, Status } from "../../types";
-import { InitializeParamsSuperFluid } from "./types";
+import { ConstructorArgs, DeployParams, Metadata, PayoutSummary, Recipient, Status, TransactionData } from "../../types";
+import { AllocationSuperlfuid, InitializeParamsSuperFluid, RegisterDataSuperfluid, ReviewRecipientDataSuperfluid } from "./types";
 export declare class SQFSuperFluidStrategy {
     private client;
     private contract;
@@ -12,12 +12,13 @@ export declare class SQFSuperFluidStrategy {
     setContract(address: `0x${string}`): void;
     private checkPoolId;
     private checkStrategy;
+    getInitializeData(params: InitializeParamsSuperFluid): Promise<`0x${string}`>;
+    getDeployParams(): DeployParams;
     getNative(): Promise<string>;
-    allocator(allocatorAddress: string): Promise<boolean>;
-    allocated(allocatorAddress: string, recipientAddress: string): Promise<boolean>;
-    allocationEndTime(): Promise<number>;
-    allocationStartTime(): Promise<number>;
-    approvalThreshold(): Promise<string>;
+    getAllocationEndTime(): Promise<number>;
+    getAllocationStartTime(): Promise<number>;
+    getRegistrationEndTime(): Promise<number>;
+    getRegistrationStartTime(): Promise<number>;
     getAllo(): Promise<Allo>;
     getPayouts(recipientIds: string[]): Promise<PayoutSummary[]>;
     getPoolAmount(): Promise<number>;
@@ -27,11 +28,34 @@ export declare class SQFSuperFluidStrategy {
     getStrategyId(): Promise<string>;
     isPoolActive(): Promise<boolean>;
     isValidAllocator(allocatorAddress: string): Promise<boolean>;
-    recipientAllocations(recipientId: string, status: Status): Promise<string>;
-    maxRequestedAmount(): Promise<number>;
     useRegistryAnchor(): Promise<boolean>;
-    getInitializeData(params: InitializeParamsSuperFluid): Promise<`0x${string}`>;
-    getDeployParams(): DeployParams;
-    getUpdatePoolTimestampsData(registrationStartTime: bigint, registrationEndTime: bigint, allocationStartTime: bigint, allocationEndTime: bigint): `0x${string}`;
-    getUpdateMinPassportScore(minPassportScore: bigint): `0x${string}`;
+    getInitialSuperAppBalance(): Promise<BigInt>;
+    getSuperfluidHost(): Promise<`0x${string}`>;
+    getAllocationSuperToken(): Promise<`0x${string}`>;
+    getPoolSuperToken(): Promise<`0x${string}`>;
+    getGdaPool(): Promise<`0x${string}`>;
+    getPassportDecoder(): Promise<`0x${string}`>;
+    getMinPassportScore(): Promise<BigInt>;
+    getMetadataRequired(): Promise<boolean>;
+    getRegistry(): Promise<`0x${string}`>;
+    getRecipientIdBySuperApp(superApp: `0x${string}`): Promise<`0x${string}`>;
+    getRecipientAllocatorUnits(recipientId: `0x${string}`, allocator: `0x${string}`): Promise<BigInt>;
+    getTotalUnitsByRecipient(recipientId: `0x${string}`): Promise<BigInt>;
+    getRecipientFlowRate(recipientId: `0x${string}`): Promise<BigInt>;
+    getSuperApp(recipientId: `0x${string}`): Promise<`0x${string}`>;
+    getUpdatePoolTimestampsData(registrationStartTime: bigint, registrationEndTime: bigint, allocationStartTime: bigint, allocationEndTime: bigint): TransactionData;
+    getUpdateMinPassportScoreData(minPassportScore: bigint): TransactionData;
+    getRegisterRecipientData(data: {
+        registryAnchor: `0x${string}`;
+        recipientAddress: `0x${string}`;
+        metadata: Metadata;
+    }): TransactionData;
+    getBatchRegisterRecipientData(data: RegisterDataSuperfluid[]): TransactionData;
+    getDistributeData(flowRate: bigint): TransactionData;
+    getAllocationData(recipientId: `0x${string}`, flowRate: bigint): TransactionData;
+    getBatchAllocationData(allocations: AllocationSuperlfuid[]): TransactionData;
+    getReviewRecipientData(data: ReviewRecipientDataSuperfluid[]): TransactionData;
+    getCancelRecipientsData(recipientIds: `0x${string}`[]): TransactionData;
+    getWithdrawData(token: `0x${string}`, amount: bigint): TransactionData;
+    getCloseStream(): TransactionData;
 }
