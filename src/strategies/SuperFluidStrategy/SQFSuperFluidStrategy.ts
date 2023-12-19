@@ -3,6 +3,7 @@ import {
   PublicClient,
   Transport,
   encodeAbiParameters,
+  encodeFunctionData,
   extractChain,
   getContract,
   parseAbiParameters,
@@ -11,10 +12,11 @@ import { Allo } from "../../Allo/Allo";
 import {
   ConstructorArgs,
   DeployParams,
-  InitializeParams,
+  Metadata,
   PayoutSummary,
   Recipient,
   Status,
+  TransactionData,
 } from "../../types";
 import { supportedChains } from "../../chains.config";
 import { create } from "../../Client/Client";
@@ -22,7 +24,13 @@ import {
   abi as superfluidAbi,
   bytecode as superfluidBytecode,
 } from "./superfluid.config";
-import { InitializeParamsSuperFluid } from "./types";
+import {
+  AllocationSuperlfuid,
+  InitializeParamsSuperFluid,
+  RegisterDataSuperfluid,
+  ReviewRecipientDataSuperfluid,
+} from "./types";
+import { abi as alloAbi } from "../../Allo/allo.config";
 
 export class SQFSuperFluidStrategy {
   private client: PublicClient<Transport, Chain>;
@@ -85,6 +93,52 @@ export class SQFSuperFluidStrategy {
       );
   }
 
+  // Init and Deploy
+
+  public async getInitializeData(
+    params: InitializeParamsSuperFluid,
+  ): Promise<`0x${string}`> {
+    const encoded: `0x${string}` = encodeAbiParameters(
+      parseAbiParameters(
+        "bool, bool, address, address, address, uint64, uint64, uint64, uint64, uint256, uint256",
+      ),
+      [
+        params.useRegistryAnchor,
+        params.metadataRequired,
+        params.passportDecoder,
+        params.superfluidHost,
+        params.allocationSuperToken,
+        params.registrationStartTime,
+        params.registrationEndTime,
+        params.allocationStartTime,
+        params.allocationEndTime,
+        params.minPassportScore,
+        params.initialSuperAppBalance,
+      ],
+    );
+
+    return encoded;
+  }
+
+  public getDeployParams(): DeployParams {
+    const constructorArgs: `0x${string}` = encodeAbiParameters(
+      parseAbiParameters("address, string"),
+      [this.allo.address(), "SQFSuperfluidv1"],
+    );
+    const constructorArgsNo0x = constructorArgs.slice(2);
+
+    // create the proper bytecode
+    const bytecode = superfluidBytecode;
+    const abi = superfluidAbi;
+
+    return {
+      abi: abi,
+      bytecode: (bytecode + constructorArgsNo0x) as unknown as `0x${string}`,
+    };
+  }
+
+  // Getters
+
   public async getNative(): Promise<string> {
     this.checkStrategy();
     const native = await this.contract.read.NATIVE();
@@ -92,28 +146,7 @@ export class SQFSuperFluidStrategy {
     return native;
   }
 
-  public async allocator(allocatorAddress: string): Promise<boolean> {
-    this.checkStrategy();
-    const allocator = await this.contract.read.allocators([allocatorAddress]);
-
-    return allocator;
-  }
-
-  public async allocated(
-    allocatorAddress: string,
-    recipientAddress: string,
-  ): Promise<boolean> {
-    this.checkStrategy();
-
-    const allocated = await this.contract.read.allocated([
-      allocatorAddress,
-      recipientAddress,
-    ]);
-
-    return allocated;
-  }
-
-  public async allocationEndTime(): Promise<number> {
+  public async getAllocationEndTime(): Promise<number> {
     this.checkStrategy();
 
     const endTime = await this.contract.read.allocationEndTime();
@@ -121,7 +154,7 @@ export class SQFSuperFluidStrategy {
     return endTime;
   }
 
-  public async allocationStartTime(): Promise<number> {
+  public async getAllocationStartTime(): Promise<number> {
     this.checkStrategy();
 
     const startTime = await this.contract.read.allocationStartTime();
@@ -129,12 +162,20 @@ export class SQFSuperFluidStrategy {
     return startTime;
   }
 
-  public async approvalThreshold(): Promise<string> {
+  public async getRegistrationEndTime(): Promise<number> {
     this.checkStrategy();
 
-    const threshold = await this.contract.read.approvalThreshold();
+    const endTime = await this.contract.read.registrationEndTime();
 
-    return threshold;
+    return endTime;
+  }
+
+  public async getRegistrationStartTime(): Promise<number> {
+    this.checkStrategy();
+
+    const startTime = await this.contract.read.registrationStartTime();
+
+    return startTime;
   }
 
   public async getAllo(): Promise<Allo> {
@@ -219,28 +260,6 @@ export class SQFSuperFluidStrategy {
     return valid;
   }
 
-  public async recipientAllocations(
-    recipientId: string,
-    status: Status,
-  ): Promise<string> {
-    this.checkStrategy();
-
-    const allocations = await this.contract.read.recipientAllocations([
-      recipientId,
-      status,
-    ]);
-
-    return allocations;
-  }
-
-  public async maxRequestedAmount(): Promise<number> {
-    this.checkStrategy();
-
-    const maxRequestedAmount = await this.contract.read.maxRequestedAmount();
-
-    return maxRequestedAmount;
-  }
-
   public async useRegistryAnchor(): Promise<boolean> {
     this.checkStrategy();
 
@@ -249,55 +268,103 @@ export class SQFSuperFluidStrategy {
     return useRegistryAnchor;
   }
 
-  public async getInitializeData(
-    params: InitializeParamsSuperFluid,
+  public getInitialSuperAppBalance(): Promise<BigInt> {
+    this.checkStrategy();
+
+    return this.contract.read.initialSuperAppBalance();
+  }
+
+  public getSuperfluidHost(): Promise<`0x${string}`> {
+    this.checkStrategy();
+
+    return this.contract.read.superfluidHost();
+  }
+
+  public getAllocationSuperToken(): Promise<`0x${string}`> {
+    this.checkStrategy();
+
+    return this.contract.read.allocationSuperToken();
+  }
+
+  public getPoolSuperToken(): Promise<`0x${string}`> {
+    this.checkStrategy();
+
+    return this.contract.read.poolSuperToken();
+  }
+
+  public getGdaPool(): Promise<`0x${string}`> {
+    this.checkStrategy();
+
+    return this.contract.read.gdaPool();
+  }
+
+  public getPassportDecoder(): Promise<`0x${string}`> {
+    this.checkStrategy();
+
+    return this.contract.read.passportDecoder();
+  }
+
+  public getMinPassportScore(): Promise<BigInt> {
+    this.checkStrategy();
+
+    return this.contract.read.minPassportScore();
+  }
+
+  public getMetadataRequired(): Promise<boolean> {
+    this.checkStrategy();
+
+    return this.contract.read.metadataRequired();
+  }
+
+  public getRegistry(): Promise<`0x${string}`> {
+    this.checkStrategy();
+
+    return this.contract.read.registry();
+  }
+
+  public getRecipientIdBySuperApp(
+    superApp: `0x${string}`,
   ): Promise<`0x${string}`> {
-    const encoded: `0x${string}` = encodeAbiParameters(
-      parseAbiParameters(
-        "bool, bool, address, address, address, uint64, uint64, uint64, uint64, uint256, uint256",
-      ),
-      [
-        params.useRegistryAnchor,
-        params.metadataRequired,
-        params.passportDecoder,
-        params.superfluidHost,
-        params.allocationSuperToken,
-        params.registrationStartTime,
-        params.registrationEndTime,
-        params.allocationStartTime,
-        params.allocationEndTime,
-        params.minPassportScore,
-        params.initialSuperAppBalance,
-      ],
-    );
+    this.checkStrategy();
 
-    return encoded;
+    return this.contract.read.superApps([superApp]);
   }
 
-  public getDeployParams(): DeployParams {
-    const constructorArgs: `0x${string}` = encodeAbiParameters(
-      parseAbiParameters("address, string"),
-      [this.allo.address(), "SQFSuperfluidv1"],
-    );
-    const constructorArgsNo0x = constructorArgs.slice(2);
+  public getRecipientAllocatorUnits(
+    recipientId: `0x${string}`,
+    allocator: `0x${string}`,
+  ): Promise<BigInt> {
+    this.checkStrategy();
 
-    // create the proper bytecode
-    const bytecode = superfluidBytecode;
-    const abi = superfluidAbi;
-
-    return {
-      abi: abi,
-      bytecode: (bytecode + constructorArgsNo0x) as unknown as `0x${string}`,
-    };
+    return this.contract.read.recipientAllocatorUnits([recipientId, allocator]);
   }
 
+  public getTotalUnitsByRecipient(recipientId: `0x${string}`): Promise<BigInt> {
+    this.checkStrategy();
+
+    return this.contract.read.totalUnitsByRecipient([recipientId]);
+  }
+
+  public getRecipientFlowRate(recipientId: `0x${string}`): Promise<BigInt> {
+    this.checkStrategy();
+
+    return this.contract.read.recipientFlowRate([recipientId]);
+  }
+
+  public getSuperApp(recipientId: `0x${string}`): Promise<`0x${string}`> {
+    this.checkStrategy();
+
+    return this.contract.read.getSuperApp([recipientId]);
+  }
+
+  // Write functions
 
   public getUpdatePoolTimestampsData(
     registrationStartTime: bigint,
     registrationEndTime: bigint,
     allocationStartTime: bigint,
-    allocationEndTime: bigint
-  ) {
+    allocationEndTime: bigint,
+  ): TransactionData {
     const encoded: `0x${string}` = encodeAbiParameters(
       parseAbiParameters("uint64, uint64, uint64, uint64"),
       [
@@ -305,20 +372,256 @@ export class SQFSuperFluidStrategy {
         registrationEndTime,
         allocationStartTime,
         allocationEndTime,
-      ]
+      ],
     );
 
-    return encoded;
+    const encodedData = encodeFunctionData({
+      abi: superfluidAbi,
+      functionName: "updatePoolTimestamps",
+      args: [encoded],
+    });
+
+    return {
+      to: this.strategy!,
+      data: encodedData,
+      value: "0",
+    };
   }
 
-  public getUpdateMinPassportScore(minPassportScore: bigint) {
+  public getUpdateMinPassportScoreData(
+    minPassportScore: bigint,
+  ): TransactionData {
     const encoded: `0x${string}` = encodeAbiParameters(
       parseAbiParameters("uint256"),
-      [minPassportScore]
+      [minPassportScore],
     );
 
-    return encoded;
+    const encodedData = encodeFunctionData({
+      abi: superfluidAbi,
+      functionName: "updateMinPassportScore",
+      args: [encoded],
+    });
+
+    return {
+      to: this.strategy!,
+      data: encodedData,
+      value: "0",
+    };
   }
 
-  // todo: finish this...
+  public getRegisterRecipientData(data: {
+    registryAnchor: `0x${string}`;
+    recipientAddress: `0x${string}`;
+    metadata: Metadata;
+  }): TransactionData {
+    this.checkPoolId();
+    const encoded: `0x${string}` = encodeAbiParameters(
+      parseAbiParameters("address, address, (uint256, string)"),
+      [
+        data.registryAnchor,
+        data.recipientAddress,
+        [data.metadata.protocol, data.metadata.pointer],
+      ],
+    );
+
+    const encodedData = encodeFunctionData({
+      abi: alloAbi,
+      functionName: "registerRecipient",
+      args: [this.poolId, encoded],
+    });
+
+    return {
+      to: this.allo.address(),
+      data: encodedData,
+      value: "0",
+    };
+  }
+
+  public getBatchRegisterRecipientData(
+    data: RegisterDataSuperfluid[],
+  ): TransactionData {
+    this.checkPoolId();
+    const encodedParams: `0x${string}`[] = [];
+
+    data.forEach((registerData) => {
+      const encoded: `0x${string}` = encodeAbiParameters(
+        parseAbiParameters("address, address, (uint256, string)"),
+        [
+          registerData.registryAnchor,
+          registerData.recipientAddress,
+          [registerData.metadata.protocol, registerData.metadata.pointer],
+        ],
+      );
+
+      encodedParams.push(encoded);
+    });
+
+    const poolIds: bigint[] = Array(encodedParams.length).fill(this.poolId);
+
+    const encodedData = encodeFunctionData({
+      abi: alloAbi,
+      functionName: "batchRegisterRecipient",
+      args: [poolIds, encodedParams],
+    });
+
+    return {
+      to: this.allo.address(),
+      data: encodedData,
+      value: "0",
+    };
+  }
+
+  public getDistributeData(flowRate: bigint): TransactionData {
+    this.checkPoolId();
+
+    const encoded: `0x${string}` = encodeAbiParameters(
+      parseAbiParameters("int96"),
+      [flowRate],
+    );
+
+    const encodedData = encodeFunctionData({
+      abi: alloAbi,
+      functionName: "distribute",
+      args: [this.poolId, [], encoded],
+    });
+
+    return {
+      to: this.strategy!,
+      data: encodedData,
+      value: "0",
+    };
+  }
+
+  public getAllocationData(
+    recipientId: `0x${string}`,
+    flowRate: bigint,
+  ): TransactionData {
+    this.checkPoolId();
+    const encoded: `0x${string}` = encodeAbiParameters(
+      parseAbiParameters("address, int96"),
+      [recipientId, flowRate],
+    );
+
+    const encodedData = encodeFunctionData({
+      abi: alloAbi,
+      functionName: "allocate",
+      args: [this.poolId, encoded],
+    });
+
+    return {
+      to: this.allo.address(),
+      data: encodedData,
+      value: "0",
+    };
+  }
+
+  public getBatchAllocationData(
+    allocations: AllocationSuperlfuid[],
+  ): TransactionData {
+    this.checkPoolId();
+
+    const encodedParams: `0x${string}`[] = [];
+
+    allocations.forEach((allocation) => {
+      const encoded: `0x${string}` = encodeAbiParameters(
+        parseAbiParameters("address, int96"),
+        [allocation.recipientId, allocation.flowRate],
+      );
+
+      encodedParams.push(encoded);
+    });
+
+    const poolIds: bigint[] = Array(encodedParams.length).fill(this.poolId);
+
+    const encodedData = encodeFunctionData({
+      abi: alloAbi,
+      functionName: "batchAllocate",
+      args: [poolIds, encodedParams],
+    });
+
+    return {
+      to: this.allo.address(),
+      data: encodedData,
+      value: "0",
+    };
+  }
+
+  public getReviewRecipientData(
+    data: ReviewRecipientDataSuperfluid[],
+  ): TransactionData {
+    this.checkStrategy();
+
+    const recipientIds = data.map((recipient) => recipient.recipientId);
+    const statuses = data.map((recipient) => recipient.recipientStatus);
+
+    const encodedData = encodeFunctionData({
+      abi: superfluidAbi,
+      functionName: "reviewRecipient",
+      args: [recipientIds, statuses],
+    });
+
+    return {
+      to: this.strategy!,
+      data: encodedData,
+      value: "0",
+    };
+  }
+
+  public getCancelRecipientsData(
+    recipientIds: `0x${string}`[],
+  ): TransactionData {
+    this.checkStrategy();
+
+    const encodedData = encodeFunctionData({
+      abi: superfluidAbi,
+      functionName: "cancelRecipients",
+      args: [recipientIds],
+    });
+
+    return {
+      to: this.strategy!,
+      data: encodedData,
+      value: "0",
+    };
+  }
+
+  public getWithdrawData(
+    token: `0x${string}`,
+    amount: bigint,
+  ): TransactionData {
+    this.checkStrategy();
+
+    const encoded: `0x${string}` = encodeAbiParameters(
+      parseAbiParameters("address, uint256"),
+      [token, amount],
+    );
+
+    const encodedData = encodeFunctionData({
+      abi: superfluidAbi,
+      functionName: "withdraw",
+      args: [encoded],
+    });
+
+    return {
+      to: this.strategy!,
+      data: encodedData,
+      value: "0",
+    };
+  }
+
+  public getCloseStream(): TransactionData {
+    this.checkStrategy();
+
+    const encodedData = encodeFunctionData({
+      abi: superfluidAbi,
+      functionName: "closeStream",
+      args: [],
+    });
+
+    return {
+      to: this.strategy!,
+      data: encodedData,
+      value: "0",
+    };
+  }
 }

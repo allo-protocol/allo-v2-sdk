@@ -1,3 +1,5 @@
+import { Metadata, Status } from "../../types";
+
 export type InitializeParamsSuperFluid = {
   useRegistryAnchor: boolean;
   registrationStartTime: bigint;
@@ -10,4 +12,23 @@ export type InitializeParamsSuperFluid = {
   allocationSuperToken: `0x${string}`;
   minPassportScore: bigint;
   initialSuperAppBalance: bigint;
+};
+
+export type RecipientSuperfluid = {
+  useRegistryAnchor: boolean;
+  recipientAddress: `0x${string}`;
+  recipientStatus: Status;
+  metadata: Metadata;
+  superApp: `0x${string}`;
+};
+
+export type AllocationSuperlfuid = {
+  recipientId: `0x${string}`;
+  flowRate: bigint;
+};
+
+export type RegisterDataSuperfluid = {
+  registryAnchor: `0x${string}`;
+  recipientAddress: `0x${string}`;
+  metadata: Metadata;
 };
