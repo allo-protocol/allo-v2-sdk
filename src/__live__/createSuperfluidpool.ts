@@ -3,7 +3,7 @@ import { privateKeyToAccount } from "viem/accounts";
 import { goerli } from "viem/chains";
 import { config } from "dotenv";
 import { DeployParams } from "../Common/types";
-import { SuperFluidStrategy } from "../strategies/SuperFluidStrategy/SuperFluidStrategy";
+import { SQFSuperFluidStrategy } from "../strategies/SuperFluidStrategy/SQFSuperFluidStrategy";
 import { Allo } from "../Allo/Allo";
 import { CreatePoolArgs } from "../types";
 import { InitializeParamsSuperFluid } from "../strategies/SuperFluidStrategy/types";
@@ -26,7 +26,7 @@ const account = privateKeyToAccount(process.env.PRIVATE_KEY! as `0x${string}`);
 
 console.log("Account: " + account.address);
 
-const strategy = new SuperFluidStrategy({
+const strategy = new SQFSuperFluidStrategy({
   chain: 5,
 });
 
@@ -58,7 +58,7 @@ const createPool = async (): Promise<void> => {
   const startDate = new Date(now.getTime() + 5 * 60000);
   const endDate = new Date(now.getTime() + 6 * 60000);
 
-  const deployment = "0x82163F9aD2bc6B04D53e222d7EFC9fE34a698159"; //await deployStrategy();
+  const deployment = await deployStrategy();
 
   const params: InitializeParamsSuperFluid = {
     useRegistryAnchor: true,

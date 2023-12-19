@@ -13,7 +13,7 @@ const viem_1 = require("viem");
 const accounts_1 = require("viem/accounts");
 const chains_1 = require("viem/chains");
 const dotenv_1 = require("dotenv");
-const SuperFluidStrategy_1 = require("../strategies/SuperFluidStrategy/SuperFluidStrategy");
+const SQFSuperFluidStrategy_1 = require("../strategies/SuperFluidStrategy/SQFSuperFluidStrategy");
 const Allo_1 = require("../Allo/Allo");
 (0, dotenv_1.config)();
 const client = (0, viem_1.createWalletClient)({
@@ -29,7 +29,7 @@ if (!process.env.PRIVATE_KEY) {
 }
 const account = (0, accounts_1.privateKeyToAccount)(process.env.PRIVATE_KEY);
 console.log("Account: " + account.address);
-const strategy = new SuperFluidStrategy_1.SuperFluidStrategy({
+const strategy = new SQFSuperFluidStrategy_1.SQFSuperFluidStrategy({
     chain: 5,
 });
 const deployStrategy = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -53,7 +53,7 @@ const createPool = () => __awaiter(void 0, void 0, void 0, function* () {
     const now = new Date();
     const startDate = new Date(now.getTime() + 5 * 60000);
     const endDate = new Date(now.getTime() + 6 * 60000);
-    const deployment = "0x82163F9aD2bc6B04D53e222d7EFC9fE34a698159"; //await deployStrategy();
+    const deployment = yield deployStrategy();
     const params = {
         useRegistryAnchor: true,
         metadataRequired: false,

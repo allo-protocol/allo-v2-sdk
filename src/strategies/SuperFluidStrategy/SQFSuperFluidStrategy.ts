@@ -277,7 +277,7 @@ export class SQFSuperFluidStrategy {
   public getDeployParams(): DeployParams {
     const constructorArgs: `0x${string}` = encodeAbiParameters(
       parseAbiParameters("address, string"),
-      [this.allo.address(), "SQFSuperfluidStrategyv1"],
+      [this.allo.address(), "SQFSuperfluidv1"],
     );
     const constructorArgsNo0x = constructorArgs.slice(2);
 

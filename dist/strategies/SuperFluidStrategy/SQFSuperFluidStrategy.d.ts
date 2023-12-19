@@ -1,0 +1,37 @@
+import { Allo } from "../../Allo/Allo";
+import { ConstructorArgs, DeployParams, PayoutSummary, Recipient, Status } from "../../types";
+import { InitializeParamsSuperFluid } from "./types";
+export declare class SQFSuperFluidStrategy {
+    private client;
+    private contract;
+    private strategy;
+    private poolId;
+    private allo;
+    constructor({ chain, rpc, address, poolId }: ConstructorArgs);
+    setPoolId(poolId: number): Promise<void>;
+    setContract(address: `0x${string}`): void;
+    private checkPoolId;
+    private checkStrategy;
+    getNative(): Promise<string>;
+    allocator(allocatorAddress: string): Promise<boolean>;
+    allocated(allocatorAddress: string, recipientAddress: string): Promise<boolean>;
+    allocationEndTime(): Promise<number>;
+    allocationStartTime(): Promise<number>;
+    approvalThreshold(): Promise<string>;
+    getAllo(): Promise<Allo>;
+    getPayouts(recipientIds: string[]): Promise<PayoutSummary[]>;
+    getPoolAmount(): Promise<number>;
+    getPoolId(): Promise<number>;
+    getRecipient(recipientId: string): Promise<Recipient>;
+    getRecipientStatus(recipientId: string): Promise<Status>;
+    getStrategyId(): Promise<string>;
+    isPoolActive(): Promise<boolean>;
+    isValidAllocator(allocatorAddress: string): Promise<boolean>;
+    recipientAllocations(recipientId: string, status: Status): Promise<string>;
+    maxRequestedAmount(): Promise<number>;
+    useRegistryAnchor(): Promise<boolean>;
+    getInitializeData(params: InitializeParamsSuperFluid): Promise<`0x${string}`>;
+    getDeployParams(): DeployParams;
+    getUpdatePoolTimestampsData(registrationStartTime: bigint, registrationEndTime: bigint, allocationStartTime: bigint, allocationEndTime: bigint): `0x${string}`;
+    getUpdateMinPassportScore(minPassportScore: bigint): `0x${string}`;
+}

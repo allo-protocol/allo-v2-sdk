@@ -3,3 +3,9 @@ export { ConstructorArgs, TransactionData, Metadata, FunctionDataParams, DeployP
 export { Profile, CreateProfileArgs, HasRoleArgs, ProfileAndAddressArgs, MemberArgs, ProfileMetadataArgs, ProfileNameArgs, } from "./Registry/types";
 export { PayoutSummary, Status } from "./strategies/types";
 export { Recipient, RegisterData, InitializeParams, Allocation, SetAllocatorData, } from "./strategies/MicroGrantsStrategy/types";
+export declare const StrategyType: {
+    MicroGrants: string;
+    Hats: string;
+    Gov: string;
+    SQFSuperFluid: string;
+};
