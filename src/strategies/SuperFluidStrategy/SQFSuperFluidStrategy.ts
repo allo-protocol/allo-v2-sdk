@@ -22,13 +22,13 @@ import {
   abi as superfluidAbi,
   bytecode as superfluidBytecode,
 } from "./superfluid.config";
-import { InitializeParamsSuperFluid } from "../MicroGrantsStrategy/types";
+import { InitializeParamsSuperFluid } from "./types";
 
 export class SQFSuperFluidStrategy {
   private client: PublicClient<Transport, Chain>;
   private contract: any;
 
-  private strategy: `0x${string}`;
+  private strategy: `0x${string}` | undefined;
   private poolId: number;
 
   private allo: Allo;
@@ -74,14 +74,14 @@ export class SQFSuperFluidStrategy {
   private checkPoolId(): void {
     if (this.poolId === -1)
       throw new Error(
-        "MicroGrantsStrategy: No poolId provided. Please call `setPoolId` first."
+        "SQFSuperfluidStrategy: No poolId provided. Please call `setPoolId` first.",
       );
   }
 
   private checkStrategy(): void {
     if (!this.strategy)
       throw new Error(
-        "MicroGrantsStrategy: No strategy address provided. Please call `setContract` first."
+        "SQFSuperfluidStrategy: No strategy address provided. Please call `setContract` first.",
       );
   }
 
@@ -101,7 +101,7 @@ export class SQFSuperFluidStrategy {
 
   public async allocated(
     allocatorAddress: string,
-    recipientAddress: string
+    recipientAddress: string,
   ): Promise<boolean> {
     this.checkStrategy();
 
@@ -221,7 +221,7 @@ export class SQFSuperFluidStrategy {
 
   public async recipientAllocations(
     recipientId: string,
-    status: Status
+    status: Status,
   ): Promise<string> {
     this.checkStrategy();
 
@@ -250,34 +250,34 @@ export class SQFSuperFluidStrategy {
   }
 
   public async getInitializeData(
-    params: InitializeParamsSuperFluid
+    params: InitializeParamsSuperFluid,
   ): Promise<`0x${string}`> {
     const encoded: `0x${string}` = encodeAbiParameters(
       parseAbiParameters(
-        "bool, bool, address, address, address, uint64, uint64, uint64, uint64, uint256, uint256"
+        "bool, bool, address, address, address, uint64, uint64, uint64, uint64, uint256, uint256",
       ),
       [
         params.useRegistryAnchor,
         params.metadataRequired,
         params.passportDecoder,
-        params.superFluidHost,
+        params.superfluidHost,
         params.allocationSuperToken,
         params.registrationStartTime,
         params.registrationEndTime,
         params.allocationStartTime,
         params.allocationEndTime,
-        params.approvalThreshold,
-        params.maxRequestedAmount,
-      ]
+        params.minPassportScore,
+        params.initialSuperAppBalance,
+      ],
     );
 
     return encoded;
   }
 
-  public getDeployParams(strategyType: string): DeployParams {
+  public getDeployParams(): DeployParams {
     const constructorArgs: `0x${string}` = encodeAbiParameters(
       parseAbiParameters("address, string"),
-      [this.allo.address(), strategyType]
+      [this.allo.address(), "SQFSuperfluidStrategyv1"],
     );
     const constructorArgsNo0x = constructorArgs.slice(2);
 
