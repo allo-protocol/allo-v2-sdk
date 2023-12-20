@@ -1,5 +1,3 @@
-import { Registry } from "../Registry/Registry";
-
 import { createPublicClient, createWalletClient, http } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { goerli } from "viem/chains";
