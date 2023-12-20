@@ -1,13 +1,13 @@
 import { Metadata } from "../../Common/types";
 import { Status } from "../types";
 
+// export type TStrategyType = keyof typeof StrategyType;
+
 export const StrategyType = {
   MicroGrants: "MicroGrantsv1",
   Hats: "MicroGrantsHatsv1",
   Gov: "MicroGrantsGovv1",
 };
-
-// export type TStrategyType = keyof typeof StrategyType;
 
 export type Recipient = {
   useRegistryAnchor: boolean;

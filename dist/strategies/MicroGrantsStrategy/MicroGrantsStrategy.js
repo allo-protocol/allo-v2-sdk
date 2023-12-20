@@ -264,21 +264,6 @@ class MicroGrantsStrategy {
     }
     getStrategyContractId(strategyContract) {
         return __awaiter(this, void 0, void 0, function* () {
-            const abi = [
-                {
-                    inputs: [],
-                    name: "getStrategyId",
-                    outputs: [
-                        {
-                            internalType: "bytes32",
-                            name: "",
-                            type: "bytes32",
-                        },
-                    ],
-                    stateMutability: "view",
-                    type: "function",
-                },
-            ];
             const contractReader = (0, viem_1.getContract)({
                 address: strategyContract,
                 abi: microGrantsGov_config_1.abi,

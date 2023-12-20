@@ -28,3 +28,11 @@ export {
   Allocation,
   SetAllocatorData,
 } from "./strategies/MicroGrantsStrategy/types";
+
+
+export const StrategyType = {
+  MicroGrants: "MicroGrantsv1",
+  Hats: "MicroGrantsHatsv1",
+  Gov: "MicroGrantsGovv1",
+  SQFSuperFluid: "SQFSuperFluidStrategyv1"
+};
