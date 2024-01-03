@@ -36,6 +36,7 @@ Custom strategies may include functions that are not explicitly defined in the I
 
 **Supported Strategies**
 - [MicroGrants](./src/strategies/MicroGrantsStrategy/README.md)
+- [SuperFluidStrategy](./src/strategies/SuperFluidStrategy/README.md)
 
 ## Supported Chains
 
