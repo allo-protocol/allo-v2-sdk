@@ -242,10 +242,6 @@ class SQFSuperFluidStrategy {
         this.checkStrategy();
         return this.contract.read.superApps([superApp]);
     }
-    getRecipientAllocatorUnits(recipientId, allocator) {
-        this.checkStrategy();
-        return this.contract.read.recipientAllocatorUnits([recipientId, allocator]);
-    }
     getTotalUnitsByRecipient(recipientId) {
         this.checkStrategy();
         return this.contract.read.totalUnitsByRecipient([recipientId]);
