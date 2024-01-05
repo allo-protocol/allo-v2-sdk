@@ -210,20 +210,6 @@ const isValid = await strategy.isValidAllocator(allocatorAddress);
 console.log(`Is Allocator Valid: ${isValid}`);
 ```
 
-### Get Recipient Allocator Units
-
-Retrieve the allocations of a recipient based on their status:
-
-```javascript
-const recipientId = "0xYourRecipientId";
-const allocator = "0xYourAllocatorAddress";
-const allocatorUnits = await strategy.recipientAllocatorUnits(
-  recipientId,
-  allocator,
-);
-console.log(`Recipient AllocatorUnits: ${allocatorUnits}`);
-```
-
 ### Get total units by recipient
 
 ```javascript
