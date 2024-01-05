@@ -39,7 +39,6 @@ export declare class SQFSuperFluidStrategy {
     getMetadataRequired(): Promise<boolean>;
     getRegistry(): Promise<`0x${string}`>;
     getRecipientIdBySuperApp(superApp: `0x${string}`): Promise<`0x${string}`>;
-    getRecipientAllocatorUnits(recipientId: `0x${string}`, allocator: `0x${string}`): Promise<BigInt>;
     getTotalUnitsByRecipient(recipientId: `0x${string}`): Promise<BigInt>;
     getRecipientFlowRate(recipientId: `0x${string}`): Promise<BigInt>;
     getSuperApp(recipientId: `0x${string}`): Promise<`0x${string}`>;

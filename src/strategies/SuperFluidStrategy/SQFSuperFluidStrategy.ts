@@ -330,15 +330,6 @@ export class SQFSuperFluidStrategy {
     return this.contract.read.superApps([superApp]);
   }
 
-  public getRecipientAllocatorUnits(
-    recipientId: `0x${string}`,
-    allocator: `0x${string}`,
-  ): Promise<BigInt> {
-    this.checkStrategy();
-
-    return this.contract.read.recipientAllocatorUnits([recipientId, allocator]);
-  }
-
   public getTotalUnitsByRecipient(recipientId: `0x${string}`): Promise<BigInt> {
     this.checkStrategy();
 
