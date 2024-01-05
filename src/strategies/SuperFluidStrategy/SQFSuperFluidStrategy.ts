@@ -268,7 +268,7 @@ export class SQFSuperFluidStrategy {
     return useRegistryAnchor;
   }
 
-  public getInitialSuperAppBalance(): Promise<BigInt> {
+  public getInitialSuperAppBalance(): Promise<bigint> {
     this.checkStrategy();
 
     return this.contract.read.initialSuperAppBalance();
@@ -304,7 +304,7 @@ export class SQFSuperFluidStrategy {
     return this.contract.read.passportDecoder();
   }
 
-  public getMinPassportScore(): Promise<BigInt> {
+  public getMinPassportScore(): Promise<bigint> {
     this.checkStrategy();
 
     return this.contract.read.minPassportScore();
@@ -330,13 +330,13 @@ export class SQFSuperFluidStrategy {
     return this.contract.read.superApps([superApp]);
   }
 
-  public getTotalUnitsByRecipient(recipientId: `0x${string}`): Promise<BigInt> {
+  public getTotalUnitsByRecipient(recipientId: `0x${string}`): Promise<bigint> {
     this.checkStrategy();
 
     return this.contract.read.totalUnitsByRecipient([recipientId]);
   }
 
-  public getRecipientFlowRate(recipientId: `0x${string}`): Promise<BigInt> {
+  public getRecipientFlowRate(recipientId: `0x${string}`): Promise<bigint> {
     this.checkStrategy();
 
     return this.contract.read.recipientFlowRate([recipientId]);
