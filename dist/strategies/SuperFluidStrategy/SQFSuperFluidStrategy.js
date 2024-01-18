@@ -380,7 +380,7 @@ class SQFSuperFluidStrategy {
         const statuses = data.map((recipient) => recipient.recipientStatus);
         const encodedData = (0, viem_1.encodeFunctionData)({
             abi: superfluid_config_1.abi,
-            functionName: "reviewRecipient",
+            functionName: "reviewRecipients",
             args: [recipientIds, statuses],
         });
         return {

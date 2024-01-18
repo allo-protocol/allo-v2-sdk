@@ -547,7 +547,7 @@ export class SQFSuperFluidStrategy {
 
     const encodedData = encodeFunctionData({
       abi: superfluidAbi,
-      functionName: "reviewRecipient",
+      functionName: "reviewRecipients",
       args: [recipientIds, statuses],
     });
 
