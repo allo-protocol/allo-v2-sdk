@@ -242,10 +242,6 @@ class SQFSuperFluidStrategy {
         this.checkStrategy();
         return this.contract.read.superApps([superApp]);
     }
-    getRecipientAllocatorUnits(recipientId, allocator) {
-        this.checkStrategy();
-        return this.contract.read.recipientAllocatorUnits([recipientId, allocator]);
-    }
     getTotalUnitsByRecipient(recipientId) {
         this.checkStrategy();
         return this.contract.read.totalUnitsByRecipient([recipientId]);
@@ -384,7 +380,7 @@ class SQFSuperFluidStrategy {
         const statuses = data.map((recipient) => recipient.recipientStatus);
         const encodedData = (0, viem_1.encodeFunctionData)({
             abi: superfluid_config_1.abi,
-            functionName: "reviewRecipient",
+            functionName: "reviewRecipients",
             args: [recipientIds, statuses],
         });
         return {
