@@ -12,6 +12,7 @@ import {
   optimism,
   polygon,
   polygonMumbai,
+  optimismSepolia,
 } from "viem/chains";
 
 export const supportedChains: Chain[] = [
@@ -27,4 +28,5 @@ export const supportedChains: Chain[] = [
   optimism,
   polygon,
   polygonMumbai,
+  optimismSepolia,
 ];
