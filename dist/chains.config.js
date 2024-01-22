@@ -15,4 +15,5 @@ exports.supportedChains = [
     chains_1.optimism,
     chains_1.polygon,
     chains_1.polygonMumbai,
+    chains_1.optimismSepolia,
 ];
