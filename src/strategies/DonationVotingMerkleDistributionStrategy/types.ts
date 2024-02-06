@@ -34,9 +34,25 @@ export type InitializeData = {
   allowedTokens: `0x${string}`[];
 };
 
+export type TokenPermissions = {
+  token: `0x${string}`;
+  amount: bigint;
+};
+
+export type PermitTransferFrom = {
+  permitted: TokenPermissions;
+  nonce: bigint;
+  deadline: bigint;
+};
+
 export type Permit2Data = {
-  permit: any;
+  permit: PermitTransferFrom;
   signature: `0x${string}`;
+};
+
+export type Allocation = {
+  recipientId: `0x${string}`;
+  permit2Data: Permit2Data;
 };
 
 export type Claim = { recipientId: `0x${string}`; token: `0x${string}` };
