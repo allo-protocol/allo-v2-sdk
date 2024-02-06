@@ -9,12 +9,19 @@ import {
   parseAbiParameters,
 } from "viem";
 import { Allo } from "../../Allo/Allo";
+import { abi as alloAbi } from "../../Allo/allo.config";
 import { create } from "../../Client/Client";
-import { ConstructorArgs, Metadata, TransactionData } from "../../Common/types";
+import {
+  ConstructorArgs,
+  Metadata,
+  TransactionData,
+  ZERO_ADDRESS,
+} from "../../Common/types";
 import { supportedChains } from "../../chains.config";
+import { RegisterDataDonationVoting } from "../MicroGrantsStrategy/types";
 import { PayoutSummary, Status } from "../types";
-import { abi } from "./donationVoting.config";
-import { Claim, Recipient } from "./types";
+import { abi as strategyAbi } from "./donationVoting.config";
+import { Claim, Distribution, Recipient } from "./types";
 
 export class DonationVotingMerkleDistributionStrategy {
   private client: PublicClient<Transport, Chain>;
@@ -40,7 +47,7 @@ export class DonationVotingMerkleDistributionStrategy {
     if (address) {
       this.contract = getContract({
         address: address,
-        abi: abi,
+        abi: strategyAbi,
         publicClient: this.client,
       });
       this.strategy = address;
@@ -313,6 +320,10 @@ export class DonationVotingMerkleDistributionStrategy {
     return anchor;
   }
 
+  /**
+   * Write functions
+   */
+
   // Callable by allo client
   public allocate(strategyData: string): TransactionData {
     return this.allo.allocate(this.poolId, strategyData);
@@ -324,27 +335,139 @@ export class DonationVotingMerkleDistributionStrategy {
     return this.allo.batchAllocate(poolIds, strategyData);
   }
 
-  public registerRecipient(strategyData: string): TransactionData {
-    return this.allo.registerRecipient(this.poolId, strategyData);
-  }
+  /**
+   *
+   * @param strategyData - (address, address, Metadata)
+   * @returns
+   */
+  public getRegisterRecipientData(
+    data: RegisterDataDonationVoting
+  ): TransactionData {
+    this.checkPoolId();
 
-  public batchRegisterRecipient(strategyData: string[]): TransactionData {
-    const poolIds = Array(strategyData.length).fill(this.poolId);
+    const encoded: `0x${string}` = encodeAbiParameters(
+      parseAbiParameters("address,address,(uint256,string)"),
+      [
+        data.registryAnchor || ZERO_ADDRESS,
+        data.recipientAddress,
+        [data.metadata.protocol, data.metadata.pointer],
+      ]
+    );
 
-    return this.allo.batchRegisterRecipient(poolIds, strategyData);
-  }
+    const encodedData = encodeFunctionData({
+      abi: alloAbi,
+      functionName: "registerRecipient",
+      args: [this.poolId, encoded],
+    });
 
-  public fundPool(amount: number): TransactionData {
-    return this.allo.fundPool(this.poolId, amount);
-  }
-
-  public distribute(recipientIds: string[], data: string): TransactionData {
-    return this.allo.distribute(this.poolId, recipientIds, data);
+    return this.allo.registerRecipient(this.poolId, encodedData);
   }
 
   /**
-   * Write functions
+   * Batch register recipients
+   *
+   * @param data - Array of RegisterDataDonationVoting
+   *
+   * @returns TransactionData
    */
+  public getBatchRegisterRecipientData(
+    data: RegisterDataDonationVoting[]
+  ): TransactionData {
+    this.checkPoolId();
+    const encodedParams: `0x${string}`[] = [];
+
+    data.forEach((registerData) => {
+      const encoded: `0x${string}` = encodeAbiParameters(
+        parseAbiParameters("address, address, (uit256, string)"),
+        [
+          registerData.registryAnchor || ZERO_ADDRESS,
+          registerData.recipientAddress,
+          [registerData.metadata.protocol, registerData.metadata.pointer],
+        ]
+      );
+
+      encodedParams.push(encoded);
+    });
+
+    const poolIds: bigint[] = Array(encodedParams.length).fill(this.poolId);
+
+    const encodedData = encodeFunctionData({
+      abi: alloAbi,
+      functionName: "batchRegisterRecipient",
+      args: [poolIds, encodedParams],
+    });
+
+    return {
+      to: this.allo.address(),
+      data: encodedData,
+      value: "0",
+    };
+  }
+
+  /**
+   * Fund the pool
+   *
+   * @param amount - Amount to fund the pool
+   *
+   * @returns TransactionData
+   */
+  public fundPool(amount: bigint): TransactionData {
+    this.checkPoolId();
+
+    const encoded: `0x${string}` = encodeAbiParameters(
+      parseAbiParameters("uint256,uint256"),
+      [BigInt(this.poolId), amount]
+    );
+
+    const encodedData = encodeFunctionData({
+      abi: alloAbi,
+      functionName: "fundPool",
+      args: [encoded],
+    });
+
+    return {
+      to: this.allo.address(),
+      data: encodedData,
+      value: "0",
+    };
+  }
+
+  /**
+   * Distribute to the recipients
+   *
+   * @param recipientIds - Array of recipientIds
+   * @param data - Array of Distribution
+   *
+   * @returns TransactionData
+   */
+  public distribute(
+    recipientIds: `0x${string}`[],
+    // (uint256 _poolId, address[] memory _recipientIds, bytes memory _data)
+    data: Distribution[]
+  ): TransactionData {
+    this.checkPoolId();
+
+    const encodeDistribution = encodeAbiParameters(
+      parseAbiParameters("Distribution[]"),
+      [data]
+    );
+    const encoded: `0x${string}` = encodeAbiParameters(
+      parseAbiParameters("uint256, address[], bytes"),
+      [BigInt(this.poolId), recipientIds, encodeDistribution]
+    );
+
+    const encodedData = encodeFunctionData({
+      abi: alloAbi,
+      functionName: "distribute",
+      args: [encoded],
+    });
+
+    return {
+      to: this.allo.address(),
+      data: encodedData,
+      value: "0",
+    };
+  }
 
   /**
    * Get the claim function encoded data
@@ -367,9 +490,9 @@ export class DonationVotingMerkleDistributionStrategy {
     });
 
     const encodedData = encodeFunctionData({
-      abi: abi,
+      abi: strategyAbi,
       functionName: "claim",
-      args: [this.poolId, encoded],
+      args: [encoded],
     });
 
     return {
@@ -390,9 +513,9 @@ export class DonationVotingMerkleDistributionStrategy {
     this.checkPoolId();
 
     const encodedData = encodeFunctionData({
-      abi: abi,
+      abi: strategyAbi,
       functionName: "multicall",
-      args: [this.poolId, data],
+      args: [data],
     });
 
     return {
@@ -402,11 +525,18 @@ export class DonationVotingMerkleDistributionStrategy {
     };
   }
 
+  /**
+   * Review recipients
+   *
+   * @param statuses - Array of status indexes and statusRows
+   *
+   * @returns TransactionData
+   */
   public reviewRecipients(
     statuses: { index: number; statusRow: number }[]
   ): TransactionData {
     const data = encodeFunctionData({
-      abi: abi,
+      abi: strategyAbi,
       functionName: "reviewRecipients",
       args: [statuses],
     });
@@ -423,7 +553,7 @@ export class DonationVotingMerkleDistributionStrategy {
     distributionMetadata: Metadata
   ): TransactionData {
     const data = encodeFunctionData({
-      abi: abi,
+      abi: strategyAbi,
       functionName: "updateDistribution",
       args: [merkleRoot, distributionMetadata],
     });
@@ -442,7 +572,7 @@ export class DonationVotingMerkleDistributionStrategy {
     allocationEndTime: number
   ): TransactionData {
     const data = encodeFunctionData({
-      abi: abi,
+      abi: strategyAbi,
       functionName: "updatePoolTimestamps",
       args: [
         registrationStartTime,
@@ -461,7 +591,7 @@ export class DonationVotingMerkleDistributionStrategy {
 
   public withdraw(amount: number): TransactionData {
     const data = encodeFunctionData({
-      abi: abi,
+      abi: strategyAbi,
       functionName: "withdraw",
       args: [amount],
     });

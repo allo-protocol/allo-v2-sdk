@@ -24,6 +24,12 @@ export type RegisterData = {
   metadata: Metadata;
 };
 
+export type RegisterDataDonationVoting = {
+  registryAnchor?: `0x${string}`;
+  recipientAddress: `0x${string}`;
+  metadata: Metadata;
+};
+
 export type InitializeParams = {
   useRegistryAnchor: boolean;
   allocationStartTime: bigint;
