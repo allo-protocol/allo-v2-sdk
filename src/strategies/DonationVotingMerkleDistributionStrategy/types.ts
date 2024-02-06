@@ -27,10 +27,10 @@ export type Distribution = {
 export type InitializeData = {
   useRegistryAnchor: boolean;
   metadataRequired: boolean;
-  registrationStartTime: number;
-  registrationEndTime: number;
-  allocationStartTime: number;
-  allocationEndTime: number;
+  registrationStartTime: bigint;
+  registrationEndTime: bigint;
+  allocationStartTime: bigint;
+  allocationEndTime: bigint;
   allowedTokens: `0x${string}`[];
 };
 
@@ -56,3 +56,8 @@ export type Allocation = {
 };
 
 export type Claim = { recipientId: `0x${string}`; token: `0x${string}` };
+
+export const StrategyType = {
+  Vault: "Vault",
+  Direct: "Direct",
+};

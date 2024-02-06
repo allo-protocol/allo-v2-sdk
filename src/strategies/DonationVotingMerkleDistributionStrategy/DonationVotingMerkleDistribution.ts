@@ -13,6 +13,7 @@ import { abi as alloAbi } from "../../Allo/allo.config";
 import { create } from "../../Client/Client";
 import {
   ConstructorArgs,
+  DeployParams,
   Metadata,
   TransactionData,
   ZERO_ADDRESS,
@@ -24,10 +25,21 @@ import {
   Allocation,
   Claim,
   Distribution,
+  InitializeData,
   Recipient,
   RegisterData,
+  StrategyType,
 } from "./types";
 import { NATIVE } from "../../types";
+
+import {
+  abi as vaultAbi,
+  bytecode as vaultBytecode,
+} from "./donationVotingVault.config";
+import {
+  abi as directAbi,
+  bytecode as directBytecode,
+} from "./donationVotingDirect.config";
 
 export class DonationVotingMerkleDistributionStrategy {
   private client: PublicClient<Transport, Chain>;
@@ -313,10 +325,62 @@ export class DonationVotingMerkleDistributionStrategy {
 
   /**
    *
+   * @param strategyType - StrategyType ("Vault" | "Direct")
+   * @returns DeployParams {abi, bytecode}
+   */
+  public getDeployParams(strategyType: string): DeployParams {
+    if (
+      strategyType !== StrategyType.Vault &&
+      strategyType !== StrategyType.Direct
+    ) {
+      throw new Error("Invalid strategy type");
+    }
+
+    const version =
+      strategyType === StrategyType.Vault
+        ? "DonationVotingMerkleDistributionVaultStrategyv1.0a"
+        : "DonationVotingMerkleDistributionDirectTransferStrategyv1.0";
+
+    const bytecode =
+      strategyType === StrategyType.Vault ? vaultBytecode : directBytecode;
+
+    const abi = strategyType === StrategyType.Vault ? vaultAbi : directAbi;
+
+    const constructorArgs: `0x${string}` = encodeAbiParameters(
+      parseAbiParameters("address, string"),
+      [this.allo.address(), version],
+    );
+    const constructorArgsNo0x = constructorArgs.slice(2);
+
+    return {
+      abi: abi,
+      bytecode: (bytecode + constructorArgsNo0x) as unknown as `0x${string}`,
+    };
+  }
+
+  public async getInitializeData(data: InitializeData): Promise<`0x${string}`> {
+    const encodedData: `0x${string}` = encodeAbiParameters(
+      parseAbiParameters("bool,bool,uint256,uint256,uint256,uint256,address[]"),
+      [
+        data.useRegistryAnchor,
+        data.metadataRequired,
+        data.registrationStartTime,
+        data.registrationEndTime,
+        data.allocationStartTime,
+        data.allocationEndTime,
+        data.allowedTokens,
+      ],
+    );
+
+    return encodedData;
+  }
+
+  /**
+   *
    * @param data - Allocation: (address,(((address,uint256),uint256,uint256),bytes32))
    * @returns `0x${string}`
    */
-  public getEnocdedAllocation(data: Allocation): `0x${string}` {
+  public getEncodedAllocation(data: Allocation): `0x${string}` {
     const encoded: `0x${string}` = encodeAbiParameters(
       parseAbiParameters(
         "address,(((address,uint256),uint256,uint256),bytes32)",
@@ -351,7 +415,7 @@ export class DonationVotingMerkleDistributionStrategy {
     const token = allocation.permit2Data.permit.permitted.token;
     const amount = allocation.permit2Data.permit.permitted.amount;
 
-    const encoded: `0x${string}` = this.getEnocdedAllocation(allocation);
+    const encoded: `0x${string}` = this.getEncodedAllocation(allocation);
 
     const encodedData = encodeFunctionData({
       abi: alloAbi,
@@ -377,7 +441,7 @@ export class DonationVotingMerkleDistributionStrategy {
     const encodedParams: `0x${string}`[] = [];
 
     allocations.forEach((allocation) => {
-      const encoded: `0x${string}` = this.getEnocdedAllocation(allocation);
+      const encoded: `0x${string}` = this.getEncodedAllocation(allocation);
       encodedParams.push(encoded);
     });
 
@@ -415,7 +479,7 @@ export class DonationVotingMerkleDistributionStrategy {
     const encodedParams: `0x${string}`[] = [];
 
     allocations.forEach((allocation) => {
-      const encoded: `0x${string}` = this.getEnocdedAllocation(allocation);
+      const encoded: `0x${string}` = this.getEncodedAllocation(allocation);
       encodedParams.push(encoded);
     });
 
