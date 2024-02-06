@@ -47,9 +47,11 @@ import { supportedChains } from "../../chains.config";
 
 export class MicroGrantsStrategy {
   private client: PublicClient<Transport, Chain>;
+
   private contract: any;
 
   private strategy: `0x${string}` | undefined;
+
   private poolId: number;
 
   private allo: Allo;

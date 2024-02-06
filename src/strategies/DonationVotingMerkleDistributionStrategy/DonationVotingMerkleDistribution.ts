@@ -18,10 +18,9 @@ import {
   ZERO_ADDRESS,
 } from "../../Common/types";
 import { supportedChains } from "../../chains.config";
-import { RegisterDataDonationVoting } from "../MicroGrantsStrategy/types";
 import { PayoutSummary, Status } from "../types";
 import { abi as strategyAbi } from "./donationVoting.config";
-import { Claim, Distribution, Recipient } from "./types";
+import { Claim, Distribution, Recipient, RegisterData } from "./types";
 
 export class DonationVotingMerkleDistributionStrategy {
   private client: PublicClient<Transport, Chain>;

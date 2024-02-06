@@ -11,6 +11,12 @@ export type Recipient = {
   metadata: Metadata;
 };
 
+export type RegisterData = {
+  registryAnchor?: `0x${string}`;
+  recipientAddress: `0x${string}`;
+  metadata: Metadata;
+};
+
 export type Distribution = {
   index: number;
   recipientId: `0x${string}`;
