@@ -2,9 +2,11 @@ import {
   Chain,
   PublicClient,
   Transport,
+  encodeAbiParameters,
   encodeFunctionData,
   extractChain,
   getContract,
+  parseAbiParameters,
 } from "viem";
 import { Allo } from "../../Allo/Allo";
 import { create } from "../../Client/Client";
@@ -12,7 +14,7 @@ import { ConstructorArgs, Metadata, TransactionData } from "../../Common/types";
 import { supportedChains } from "../../chains.config";
 import { PayoutSummary, Status } from "../types";
 import { abi } from "./donationVoting.config";
-import { Recipient } from "./types";
+import { Claim, Recipient } from "./types";
 
 export class DonationVotingMerkleDistributionStrategy {
   private client: PublicClient<Transport, Chain>;
@@ -56,14 +58,16 @@ export class DonationVotingMerkleDistributionStrategy {
 
   public async setPoolId(poolId: number): Promise<void> {
     this.poolId = poolId;
+
     const strategyAddress = await this.allo.getStrategy(poolId);
+
     this.setContract(strategyAddress as `0x${string}`);
   }
 
   public setContract(address: `0x${string}`): void {
     this.contract = getContract({
       address: address,
-      abi: [], // todo: add abi
+      abi: abi,
       publicClient: this.client,
     });
 
@@ -104,11 +108,18 @@ export class DonationVotingMerkleDistributionStrategy {
     return permit2;
   }
 
-  public async getAllocationEndTime(): Promise<number> {
+  public async getRegistrationStartTime(): Promise<number> {
     this.checkStrategy();
-    const endTime = await this.contract.read.allocationEndTime();
+    const startTime = await this.contract.read.registrationStartTime();
 
-    return endTime;
+    return startTime;
+  }
+
+  public async getRegistrationEndTime(): Promise<number> {
+    this.checkStrategy();
+    const startTime = await this.contract.read.registrationStartTime();
+
+    return startTime;
   }
 
   public async getAllocationStartTime(): Promise<number> {
@@ -116,6 +127,13 @@ export class DonationVotingMerkleDistributionStrategy {
     const startTime = await this.contract.read.allocationStartTime();
 
     return startTime;
+  }
+
+  public async getAllocationEndTime(): Promise<number> {
+    this.checkStrategy();
+    const endTime = await this.contract.read.allocationEndTime();
+
+    return endTime;
   }
 
   public async isAllowedTokens(token: string): Promise<boolean> {
@@ -127,6 +145,12 @@ export class DonationVotingMerkleDistributionStrategy {
 
   public async getClaims(recipient: string, token: string): Promise<number> {
     const claims = await this.contract.read.claims([recipient, token]);
+
+    return claims;
+  }
+
+  public async getTotalClaimableAmount(recipient: string): Promise<number> {
+    const claims = await this.contract.read.totalClaimableAmount([recipient]);
 
     return claims;
   }
@@ -321,31 +345,58 @@ export class DonationVotingMerkleDistributionStrategy {
   /**
    * Write functions
    */
-  public claim(
-    claims: { recipientId: string; token: string }[]
-  ): TransactionData {
-    const data = encodeFunctionData({
+
+  /**
+   * Get the claim function encoded data
+   *
+   * @param claims - Array of claims
+   *
+   * @returns - Encoded transaction data
+   */
+  public getClaimData(claims: Claim[]): TransactionData {
+    this.checkPoolId();
+
+    const encoded: `0x${string}`[] = [];
+    claims.forEach((claim: Claim) => {
+      const encodedClaimParams = encodeAbiParameters(
+        parseAbiParameters("address, address"),
+        [claim.recipientId, claim.token]
+      );
+
+      encoded.push(encodedClaimParams);
+    });
+
+    const encodedData = encodeFunctionData({
       abi: abi,
       functionName: "claim",
-      args: [claims],
+      args: [this.poolId, encoded],
     });
 
     return {
-      to: this.strategy,
-      data: data,
+      to: this.strategy!,
+      data: encodedData,
       value: "0",
     };
   }
 
-  public multicall(data: string[]): TransactionData {
+  /**
+   * Provides a function to batch together multiple calls in a single external call
+   *
+   * @param data - Array of encoded data
+   *
+   * @returns - Encoded transaction data
+   */
+  public multicall(data: `0x${string}`[]): TransactionData {
+    this.checkPoolId();
+
     const encodedData = encodeFunctionData({
       abi: abi,
       functionName: "multicall",
-      args: [data],
+      args: [this.poolId, data],
     });
 
     return {
-      to: this.strategy,
+      to: this.strategy!,
       data: encodedData,
       value: "0",
     };
@@ -361,7 +412,7 @@ export class DonationVotingMerkleDistributionStrategy {
     });
 
     return {
-      to: this.strategy,
+      to: this.strategy!,
       data: data,
       value: "0",
     };
@@ -378,7 +429,7 @@ export class DonationVotingMerkleDistributionStrategy {
     });
 
     return {
-      to: this.strategy,
+      to: this.strategy!,
       data: data,
       value: "0",
     };
@@ -402,7 +453,7 @@ export class DonationVotingMerkleDistributionStrategy {
     });
 
     return {
-      to: this.strategy,
+      to: this.strategy!,
       data: data,
       value: "0",
     };
@@ -416,7 +467,7 @@ export class DonationVotingMerkleDistributionStrategy {
     });
 
     return {
-      to: this.strategy,
+      to: this.strategy!,
       data: data,
       value: "0",
     };

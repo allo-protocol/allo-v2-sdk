@@ -13,9 +13,9 @@ export type Recipient = {
 
 export type Distribution = {
   index: number;
-  recipientId: string;
+  recipientId: `0x${string}`;
   amount: string;
-  merkleProof: string[];
+  merkleProof: `0x${string}`[];
 };
 
 export type InitializeData = {
@@ -25,10 +25,12 @@ export type InitializeData = {
   registrationEndTime: number;
   allocationStartTime: number;
   allocationEndTime: number;
-  allowedTokens: string[];
+  allowedTokens: `0x${string}`[];
 };
 
 export type Permit2Data = {
   permit: any;
-  signature: string;
+  signature: `0x${string}`;
 };
+
+export type Claim = { recipientId: `0x${string}`; token: `0x${string}` };
