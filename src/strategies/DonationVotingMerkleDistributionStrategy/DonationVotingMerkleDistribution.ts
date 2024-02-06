@@ -134,28 +134,28 @@ export class DonationVotingMerkleDistributionStrategy {
     return started;
   }
 
-  public async getRegistrationStartTime(): Promise<number> {
+  public async registrationStartTime(): Promise<number> {
     this.checkStrategy();
     const startTime = await this.contract.read.registrationStartTime();
 
     return startTime;
   }
 
-  public async getRegistrationEndTime(): Promise<number> {
+  public async registrationEndTime(): Promise<number> {
     this.checkStrategy();
-    const startTime = await this.contract.read.registrationStartTime();
+    const endTime = await this.contract.read.registrationEndTime();
 
-    return startTime;
+    return endTime;
   }
 
-  public async getAllocationStartTime(): Promise<number> {
+  public async allocationStartTime(): Promise<number> {
     this.checkStrategy();
     const startTime = await this.contract.read.allocationStartTime();
 
     return startTime;
   }
 
-  public async getAllocationEndTime(): Promise<number> {
+  public async allocationEndTime(): Promise<number> {
     this.checkStrategy();
     const endTime = await this.contract.read.allocationEndTime();
 
@@ -218,6 +218,8 @@ export class DonationVotingMerkleDistributionStrategy {
   }
 
   /* Public Read Functions */
+  // TODO: FIX FROM HERE
+
   public async getPayouts(
     recipientIds: string[],
     data: string[]
@@ -296,20 +298,6 @@ export class DonationVotingMerkleDistributionStrategy {
     const valid = await this.contract.read.isValidAllocator([allocator]);
 
     return valid;
-  }
-
-  public async registrationEndTime(): Promise<number> {
-    this.checkStrategy();
-    const endTime = await this.contract.read.registrationEndTime();
-
-    return endTime;
-  }
-
-  public async registrationStartTime(): Promise<number> {
-    this.checkStrategy();
-    const startTime = await this.contract.read.registrationStartTime();
-
-    return startTime;
   }
 
   /**
