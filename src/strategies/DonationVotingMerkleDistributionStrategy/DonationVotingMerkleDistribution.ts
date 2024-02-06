@@ -360,7 +360,11 @@ export class DonationVotingMerkleDistributionStrategy {
       args: [this.poolId, encoded],
     });
 
-    return this.allo.registerRecipient(this.poolId, encodedData);
+    return {
+      to: this.allo.address(),
+      data: encodedData,
+      value: "0",
+    }
   }
 
   /**
