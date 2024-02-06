@@ -55,51 +55,42 @@ export class DonationVotingMerkleDistributionStrategy {
     this.poolId = poolId || -1;
   }
 
-  /**
-   * Utility functions
-   */
   public async getAllo(): Promise<Allo> {
     return this.allo;
   }
 
   public async setPoolId(poolId: number): Promise<void> {
     this.poolId = poolId;
-
     const strategyAddress = await this.allo.getStrategy(poolId);
-
     this.setContract(strategyAddress as `0x${string}`);
   }
 
   public setContract(address: `0x${string}`): void {
     this.contract = getContract({
       address: address,
-      abi: abi,
+      abi: strategyAbi,
       publicClient: this.client,
     });
 
     this.strategy = address;
   }
 
-  /**
-   * Validation functions
-   */
+  // Validation functions
   private checkPoolId(): void {
     if (this.poolId === -1)
       throw new Error(
-        "MicroGrantsStrategy: No poolId provided. Please call `setPoolId` first."
+        "DonationVotingMerkleDistributionStrategy: No poolId provided. Please call `setPoolId` first."
       );
   }
 
   private checkStrategy(): void {
     if (!this.strategy)
       throw new Error(
-        "MicroGrantsStrategy: No strategy address provided. Please call `setContract` first."
+        "DonationVotingMerkleDistributionStrategy: No strategy address provided. Please call `setContract` first."
       );
   }
 
-  /**
-   * Read only functions
-   */
+  /* Read Functions */
   public async getNative(): Promise<string> {
     this.checkStrategy();
     const native = await this.contract.read.NATIVE();
@@ -112,6 +103,35 @@ export class DonationVotingMerkleDistributionStrategy {
     const permit2 = await this.contract.read.PERMIT2();
 
     return permit2;
+  }
+
+  /* Public Storage Variables */
+  public async getDistributionMetadata(): Promise<Metadata> {
+    this.checkStrategy();
+    const metadata: Metadata = await this.contract.read.distributionMetadata();
+
+    return metadata;
+  }
+
+  public async useRegistryAnchor(): Promise<boolean> {
+    this.checkStrategy();
+    const anchor = await this.contract.read.useRegistryAnchor();
+
+    return anchor;
+  }
+
+  public async metadataRequired(): Promise<boolean> {
+    this.checkStrategy();
+    const required = await this.contract.read.metadataRequired();
+
+    return required;
+  }
+
+  public async distributionStarted(): Promise<boolean> {
+    this.checkStrategy();
+    const started = await this.contract.read.distributionStarted();
+
+    return started;
   }
 
   public async getRegistrationStartTime(): Promise<number> {
@@ -142,7 +162,43 @@ export class DonationVotingMerkleDistributionStrategy {
     return endTime;
   }
 
-  public async isAllowedTokens(token: string): Promise<boolean> {
+  public async totalPayoutAmount(): Promise<number> {
+    this.checkStrategy();
+    const amount = await this.contract.read.totalPayoutAmount();
+    return amount;
+  }
+
+  public async recipientsCounter(): Promise<number> {
+    this.checkStrategy();
+    const counter = await this.contract.read.recipientsCounter();
+
+    return counter;
+  }
+
+  public async getMerkleRoot(): Promise<string> {
+    this.checkStrategy();
+    const root = await this.contract.read.merkleRoot();
+
+    return root;
+  }
+
+  public async statusesBitMap(index: number): Promise<number> {
+    this.checkStrategy();
+    const bitMap = await this.contract.read.statusesBitMap([index]);
+
+    return bitMap;
+  }
+
+  public async recipientToStatusIndexes(recipient: string): Promise<number[]> {
+    this.checkStrategy();
+    const indexes = await this.contract.read.recipientToStatusIndexes([
+      recipient,
+    ]);
+
+    return indexes;
+  }
+
+  public async isTokenAllowed(token: string): Promise<boolean> {
     this.checkStrategy();
     const allowed = await this.contract.read.allowedTokens(token);
 
@@ -161,20 +217,7 @@ export class DonationVotingMerkleDistributionStrategy {
     return claims;
   }
 
-  public async getDistributionMetadata(): Promise<Metadata> {
-    this.checkStrategy();
-    const metadata: Metadata = await this.contract.read.distributionMetadata();
-
-    return metadata;
-  }
-
-  public async getDistributionStarted(): Promise<boolean> {
-    this.checkStrategy();
-    const started = await this.contract.read.distributionStarted();
-
-    return started;
-  }
-
+  /* Public Read Functions */
   public async getPayouts(
     recipientIds: string[],
     data: string[]
@@ -255,36 +298,6 @@ export class DonationVotingMerkleDistributionStrategy {
     return valid;
   }
 
-  public async getMerkleRoot(): Promise<string> {
-    this.checkStrategy();
-    const root = await this.contract.read.merkleRoot();
-
-    return root;
-  }
-
-  public async metadataRequired(): Promise<boolean> {
-    this.checkStrategy();
-    const required = await this.contract.read.metadataRequired();
-
-    return required;
-  }
-
-  public async recipientToStatusIndexes(recipient: string): Promise<number[]> {
-    this.checkStrategy();
-    const indexes = await this.contract.read.recipientToStatusIndexes([
-      recipient,
-    ]);
-
-    return indexes;
-  }
-
-  public async recipientsCounter(): Promise<number> {
-    this.checkStrategy();
-    const counter = await this.contract.read.recipientsCounter();
-
-    return counter;
-  }
-
   public async registrationEndTime(): Promise<number> {
     this.checkStrategy();
     const endTime = await this.contract.read.registrationEndTime();
@@ -297,26 +310,6 @@ export class DonationVotingMerkleDistributionStrategy {
     const startTime = await this.contract.read.registrationStartTime();
 
     return startTime;
-  }
-
-  public async statusesBitMap(index: number): Promise<number> {
-    this.checkStrategy();
-    const bitMap = await this.contract.read.statusesBitMap([index]);
-
-    return bitMap;
-  }
-
-  public async totalPayoutAmount(): Promise<number> {
-    this.checkStrategy();
-    const amount = await this.contract.read.totalPayoutAmount();
-    return amount;
-  }
-
-  public async useRegistryAnchor(): Promise<boolean> {
-    this.checkStrategy();
-    const anchor = await this.contract.read.useRegistryAnchor();
-
-    return anchor;
   }
 
   /**
@@ -340,7 +333,7 @@ export class DonationVotingMerkleDistributionStrategy {
    * @returns
    */
   public getRegisterRecipientData(
-    data: RegisterDataDonationVoting
+    data: RegisterData
   ): TransactionData {
     this.checkPoolId();
 
@@ -374,7 +367,7 @@ export class DonationVotingMerkleDistributionStrategy {
    * @returns TransactionData
    */
   public getBatchRegisterRecipientData(
-    data: RegisterDataDonationVoting[]
+    data: RegisterData[]
   ): TransactionData {
     this.checkPoolId();
     const encodedParams: `0x${string}`[] = [];
