@@ -361,16 +361,18 @@ export class DonationVotingMerkleDistributionStrategy {
   public async getInitializeData(data: InitializeData): Promise<`0x${string}`> {
     const encodedData: `0x${string}` = encodeAbiParameters(
       parseAbiParameters(
-        "bool, bool, uint64, uint64, uint64, uint64, address[]",
+        "(bool, bool, uint64, uint64, uint64, uint64, address[])",
       ),
       [
-        data.useRegistryAnchor,
-        data.metadataRequired,
-        data.registrationStartTime,
-        data.registrationEndTime,
-        data.allocationStartTime,
-        data.allocationEndTime,
-        data.allowedTokens,
+        [
+          data.useRegistryAnchor,
+          data.metadataRequired,
+          data.registrationStartTime,
+          data.registrationEndTime,
+          data.allocationStartTime,
+          data.allocationEndTime,
+          data.allowedTokens,
+        ],
       ],
     );
 
