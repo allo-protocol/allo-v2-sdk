@@ -360,7 +360,9 @@ export class DonationVotingMerkleDistributionStrategy {
 
   public async getInitializeData(data: InitializeData): Promise<`0x${string}`> {
     const encodedData: `0x${string}` = encodeAbiParameters(
-      parseAbiParameters("bool,bool,uint256,uint256,uint256,uint256,address[]"),
+      parseAbiParameters(
+        "bool, bool, uint64, uint64, uint64, uint64, address[]",
+      ),
       [
         data.useRegistryAnchor,
         data.metadataRequired,
@@ -383,7 +385,7 @@ export class DonationVotingMerkleDistributionStrategy {
   public getEncodedAllocation(data: Allocation): `0x${string}` {
     const encoded: `0x${string}` = encodeAbiParameters(
       parseAbiParameters(
-        "address,(((address,uint256),uint256,uint256),bytes32)",
+        "address, (((address, uint256), uint256, uint256), bytes32)",
       ),
       [
         data.recipientId,
@@ -505,7 +507,7 @@ export class DonationVotingMerkleDistributionStrategy {
     this.checkPoolId();
 
     const encoded: `0x${string}` = encodeAbiParameters(
-      parseAbiParameters("address,address,(uint256,string)"),
+      parseAbiParameters("address, address, (uint256, string)"),
       [
         data.registryAnchor || ZERO_ADDRESS,
         data.recipientAddress,
@@ -576,7 +578,7 @@ export class DonationVotingMerkleDistributionStrategy {
     this.checkPoolId();
 
     const encoded: `0x${string}` = encodeAbiParameters(
-      parseAbiParameters("uint256,uint256"),
+      parseAbiParameters("uint256, uint256"),
       [BigInt(this.poolId), amount],
     );
 

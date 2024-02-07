@@ -301,7 +301,7 @@ class DonationVotingMerkleDistributionStrategy {
     }
     getInitializeData(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            const encodedData = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("bool,bool,uint256,uint256,uint256,uint256,address[]"), [
+            const encodedData = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("bool, bool, uint64, uint64, uint64, uint64, address[]"), [
                 data.useRegistryAnchor,
                 data.metadataRequired,
                 data.registrationStartTime,
@@ -319,7 +319,7 @@ class DonationVotingMerkleDistributionStrategy {
      * @returns `0x${string}`
      */
     getEncodedAllocation(data) {
-        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address,(((address,uint256),uint256,uint256),bytes32)"), [
+        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, (((address, uint256), uint256, uint256), bytes32)"), [
             data.recipientId,
             [
                 [
@@ -413,7 +413,7 @@ class DonationVotingMerkleDistributionStrategy {
      */
     getRegisterRecipientData(data) {
         this.checkPoolId();
-        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address,address,(uint256,string)"), [
+        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, address, (uint256, string)"), [
             data.registryAnchor || types_1.ZERO_ADDRESS,
             data.recipientAddress,
             [data.metadata.protocol, data.metadata.pointer],
@@ -468,7 +468,7 @@ class DonationVotingMerkleDistributionStrategy {
      */
     fundPool(amount) {
         this.checkPoolId();
-        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("uint256,uint256"), [BigInt(this.poolId), amount]);
+        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("uint256, uint256"), [BigInt(this.poolId), amount]);
         const encodedData = (0, viem_1.encodeFunctionData)({
             abi: allo_config_1.abi,
             functionName: "fundPool",
