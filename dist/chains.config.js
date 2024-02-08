@@ -2,6 +2,26 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.supportedChains = void 0;
 const chains_1 = require("viem/chains");
+const devChain1 = {
+    id: 1337,
+    name: "Development 1",
+    network: "dev1",
+    nativeCurrency: {
+        decimals: 18,
+        name: "Ether",
+        symbol: "ETH",
+    },
+    rpcUrls: {
+        default: { http: ["http://127.0.0.1:8545/"] },
+        public: { http: ["http://127.0.0.1:8545/"] },
+    },
+    blockExplorers: {
+        default: {
+            name: "dev1",
+            url: "",
+        },
+    },
+};
 exports.supportedChains = [
     chains_1.arbitrum,
     chains_1.arbitrumGoerli,
@@ -16,4 +36,5 @@ exports.supportedChains = [
     chains_1.polygon,
     chains_1.polygonMumbai,
     chains_1.optimismSepolia,
+    devChain1,
 ];

@@ -1,24 +1,39 @@
-import { ConstructorArgs, Metadata, TransactionData } from "../../Common/types";
+import { Allo } from "../../Allo/Allo";
+import { ConstructorArgs, DeployParams, Metadata, TransactionData } from "../../Common/types";
 import { PayoutSummary, Status } from "../types";
-import { Recipient } from "./types";
+import { Allocation, Claim, Distribution, InitializeData, Recipient, RegisterData } from "./types";
 export declare class DonationVotingMerkleDistributionStrategy {
     private client;
     private contract;
     private strategy;
     private poolId;
     private allo;
-    constructor({ chain, rpc, address }: ConstructorArgs);
+    constructor({ chain, rpc, address, poolId }: ConstructorArgs);
+    getAllo(): Promise<Allo>;
+    setPoolId(poolId: number): Promise<void>;
+    setContract(address: `0x${string}`): void;
+    private checkPoolId;
+    private checkStrategy;
     getNative(): Promise<string>;
     getPermit2(): Promise<string>;
-    getAllocationEndTime(): Promise<number>;
-    getAllocationStartTime(): Promise<number>;
-    isAllowedTokens(token: string): Promise<boolean>;
-    getClaims(recipient: string, token: string): Promise<number>;
     getDistributionMetadata(): Promise<Metadata>;
-    getDistributionStarted(): Promise<boolean>;
-    getAllo(): Promise<string>;
+    useRegistryAnchor(): Promise<boolean>;
+    metadataRequired(): Promise<boolean>;
+    distributionStarted(): Promise<boolean>;
+    registrationStartTime(): Promise<number>;
+    registrationEndTime(): Promise<number>;
+    allocationStartTime(): Promise<number>;
+    allocationEndTime(): Promise<number>;
+    totalPayoutAmount(): Promise<bigint>;
+    recipientsCounter(): Promise<number>;
+    getMerkleRoot(): Promise<string>;
+    statusesBitMap(index: number): Promise<bigint>;
+    recipientToStatusIndexes(recipient: string): Promise<number[]>;
+    isTokenAllowed(token: string): Promise<boolean>;
+    getClaims(recipient: string, token: string): Promise<bigint>;
+    getTotalClaimableAmount(recipient: string): Promise<bigint>;
     getPayouts(recipientIds: string[], data: string[]): Promise<PayoutSummary[]>;
-    getPoolAmount(): Promise<number>;
+    getPoolAmount(): Promise<bigint>;
     getPoolId(): Promise<number>;
     getRecipient(recipientId: string): Promise<Recipient>;
     getRecipientStatus(recipientId: string): Promise<Status>;
@@ -27,26 +42,95 @@ export declare class DonationVotingMerkleDistributionStrategy {
     isDistributionSet(): Promise<boolean>;
     isPoolActive(): Promise<boolean>;
     isValidAllocator(allocator: `0x${string}`): Promise<boolean>;
-    getMerkleRoot(): Promise<string>;
-    metadataRequired(): Promise<boolean>;
-    recipientToStatusIndexes(recipient: string): Promise<number[]>;
-    recipientsCounter(): Promise<number>;
-    registrationEndTime(): Promise<number>;
-    registrationStartTime(): Promise<number>;
-    statusesBitMap(index: number): Promise<number>;
-    totalPayoutAmount(): Promise<number>;
-    useRegistryAnchor(): Promise<boolean>;
-    allocate(strategyData: string): TransactionData;
-    batchAllocate(strategyData: string[]): TransactionData;
-    registerRecipient(strategyData: string): TransactionData;
-    batchRegisterRecipient(strategyData: string[]): TransactionData;
-    fundPool(amount: number): TransactionData;
-    distribute(recipientIds: string[], data: string): TransactionData;
-    claim(claims: {
-        recipientId: string;
-        token: string;
-    }[]): TransactionData;
-    multicall(data: string[]): TransactionData;
+    /**
+     * Write functions
+     */
+    /**
+     *
+     * @param strategyType - StrategyType ("Vault" | "Direct")
+     * @returns DeployParams {abi, bytecode}
+     */
+    getDeployParams(strategyType: string): DeployParams;
+    getInitializeData(data: InitializeData): Promise<`0x${string}`>;
+    /**
+     *
+     * @param data - Allocation: (address,(((address,uint256),uint256,uint256),bytes32))
+     * @returns `0x${string}`
+     */
+    getEncodedAllocation(data: Allocation): `0x${string}`;
+    /**
+     *
+     * @param allocation - Allocation: (address,(((address,uint256),uint256,uint256),bytes32))
+     * @returns TransactionData: {to: `0x${string}`, data: `0x${string}`, value: string}
+     */
+    getAllocateData(allocation: Allocation): TransactionData;
+    /**
+     *
+     * @param allocations - Array of Allocation: (address,(((address,uint256),uint256,uint256),bytes32))
+     * @returns TransactionData: {to: `0x${string}`, data: `0x${string}`, value: string}
+     */
+    getBatchAllocateData(allocations: Allocation[]): TransactionData;
+    /**
+     *
+     * @param poolIds - Array of poolIds
+     * @param allocations - Array of Allocation: (address,(((address,uint256),uint256,uint256),bytes32))
+     * @returns TransactionData: {to: `0x${string}`, data: `0x${string}`, value: string}
+     */
+    getBatchAllocateDataMultiplePools(poolIds: number[], allocations: Allocation[]): TransactionData;
+    /**
+     *
+     * @param data - (address, address, Metadata)
+     * @returns
+     */
+    getRegisterRecipientData(data: RegisterData): TransactionData;
+    /**
+     * Batch register recipients
+     *
+     * @param data - Array of RegisterDataDonationVoting
+     *
+     * @returns TransactionData
+     */
+    getBatchRegisterRecipientData(data: RegisterData[]): TransactionData;
+    /**
+     * Fund the pool
+     *
+     * @param amount - Amount to fund the pool
+     *
+     * @returns TransactionData
+     */
+    fundPool(amount: bigint): TransactionData;
+    /**
+     * Distribute to the recipients
+     *
+     * @param recipientIds - Array of recipientIds
+     * @param data - Array of Distribution
+     *
+     * @returns TransactionData
+     */
+    distribute(recipientIds: `0x${string}`[], data: Distribution[]): TransactionData;
+    /**
+     * Get the claim function encoded data
+     *
+     * @param claims - Array of claims
+     *
+     * @returns - Encoded transaction data
+     */
+    getClaimData(claims: Claim[]): TransactionData;
+    /**
+     * Provides a function to batch together multiple calls in a single external call
+     *
+     * @param data - Array of encoded data
+     *
+     * @returns - Encoded transaction data
+     */
+    multicall(data: `0x${string}`[]): TransactionData;
+    /**
+     * Review recipients
+     *
+     * @param statuses - Array of status indexes and statusRows
+     *
+     * @returns TransactionData
+     */
     reviewRecipients(statuses: {
         index: number;
         statusRow: number;

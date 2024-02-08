@@ -9,3 +9,4 @@ export declare const StrategyType: {
     Gov: string;
     SQFSuperFluid: string;
 };
+export declare const NATIVE: string;

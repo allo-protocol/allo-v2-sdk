@@ -36,3 +36,6 @@ export const StrategyType = {
   Gov: "MicroGrantsGovv1",
   SQFSuperFluid: "SQFSuperFluidStrategyv1"
 };
+
+export const NATIVE =
+  "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE".toLocaleLowerCase();
