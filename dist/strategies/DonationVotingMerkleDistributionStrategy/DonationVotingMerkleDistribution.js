@@ -288,8 +288,8 @@ class DonationVotingMerkleDistributionStrategy {
             throw new Error("Invalid strategy type");
         }
         const version = strategyType === types_2.StrategyType.Vault
-            ? "DonationVotingMerkleDistributionVaultStrategyv1.0a"
-            : "DonationVotingMerkleDistributionDirectTransferStrategyv1.0";
+            ? "DonationVotingMerkleDistributionVaultStrategyv1.1"
+            : "DonationVotingMerkleDistributionDirectTransferStrategyv1.1";
         const bytecode = strategyType === types_2.StrategyType.Vault ? donationVotingVault_config_1.bytecode : donationVotingDirect_config_1.bytecode;
         const abi = strategyType === types_2.StrategyType.Vault ? donationVotingVault_config_1.abi : donationVotingDirect_config_1.abi;
         const constructorArgs = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, string"), [this.allo.address(), version]);
