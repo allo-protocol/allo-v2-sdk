@@ -4,7 +4,7 @@ import { Status } from "../types";
 export type InitializeParams = {
   registryGating: boolean;
   metadataRequired: boolean;
-  grantAmountRequired: bigint;
+  grantAmountRequired: boolean;
 };
 
 export type Recipient = {
@@ -21,3 +21,10 @@ export type Milestone = {
   metadata: Metadata;
   milestoneStatus: Status;
 }
+
+
+export type Allocation = {
+  recipientId: `0x${string}`;
+  status: Status;
+  grantAmount: number;
+};

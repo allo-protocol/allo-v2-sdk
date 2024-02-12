@@ -19,6 +19,7 @@ import {
   ZERO_ADDRESS,
 } from "../../Common/types";
 import { supportedChains } from "../../chains.config";
+import { NATIVE } from "../../types";
 import { PayoutSummary, Status } from "../types";
 import { abi as strategyAbi } from "./donationVoting.config";
 import {
@@ -30,16 +31,15 @@ import {
   RegisterData,
   StrategyType,
 } from "./types";
-import { NATIVE } from "../../types";
 
-import {
-  abi as vaultAbi,
-  bytecode as vaultBytecode,
-} from "./donationVotingVault.config";
 import {
   abi as directAbi,
   bytecode as directBytecode,
 } from "./donationVotingDirect.config";
+import {
+  abi as vaultAbi,
+  bytecode as vaultBytecode,
+} from "./donationVotingVault.config";
 
 export class DonationVotingMerkleDistributionStrategy {
   private client: PublicClient<Transport, Chain>;
@@ -361,10 +361,9 @@ export class DonationVotingMerkleDistributionStrategy {
   public async getInitializeData(data: InitializeData): Promise<`0x${string}`> {
     const encodedData: `0x${string}` = encodeAbiParameters(
       parseAbiParameters(
-        "(bool, bool, uint64, uint64, uint64, uint64, address[])",
+        ("bool, bool, uint64, uint64, uint64, uint64, address[]")
       ),
       [
-        [
           data.useRegistryAnchor,
           data.metadataRequired,
           data.registrationStartTime,
@@ -372,7 +371,6 @@ export class DonationVotingMerkleDistributionStrategy {
           data.allocationStartTime,
           data.allocationEndTime,
           data.allowedTokens,
-        ],
       ],
     );
 

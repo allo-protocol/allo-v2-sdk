@@ -3,28 +3,33 @@ import {
   PublicClient,
   Transport,
   encodeAbiParameters,
+  encodeFunctionData,
   extractChain,
   getContract,
   parseAbiParameters,
 } from "viem";
 import { Allo } from "../../Allo/Allo";
+import { abi as alloAbi } from "../../Allo/allo.config";
 import { create } from "../../Client/Client";
 import { supportedChains } from "../../chains.config";
 import {
   ConstructorArgs,
   DeployParams,
+  Metadata,
   PayoutSummary,
   Recipient,
+  RegisterData,
   Status,
+  TransactionData,
+  ZERO_ADDRESS,
 } from "../../types";
 import {
   abi as directGrantsAbi,
   bytecode as directGrantsBytecode,
 } from "./directGrants.config";
-// import { abi as alloAbi } from "../../Allo/allo.config";
-import { InitializeParams } from "./types";
+import { Allocation, InitializeParams, Milestone } from "./types";
 
-export class DirectGrants {
+export class DirectGrantsStrategy {
   private client: PublicClient<Transport, Chain>;
 
   private contract: any;
@@ -60,7 +65,7 @@ export class DirectGrants {
   //  Get the DirectGrants strategy InitializeData
   public getInitializeData(params: InitializeParams): `0x${string}` {
     const encoded: `0x${string}` = encodeAbiParameters(
-      parseAbiParameters("bool, bool, uint256"),
+      parseAbiParameters("bool, bool, bool"),
       [
         params.registryGating,
         params.metadataRequired,
@@ -88,6 +93,7 @@ export class DirectGrants {
   public async setPoolId(poolId: number): Promise<void> {
     this.poolId = poolId;
     const strategyAddress = await this.allo.getStrategy(poolId);
+
     this.setContract(strategyAddress as `0x${string}`);
   }
 
@@ -122,75 +128,32 @@ export class DirectGrants {
     return native;
   }
 
-  public async allocator(allocatorAddress: string): Promise<boolean> {
+  public async getAllocatedGrantAmount(): Promise<number> {
     this.checkStrategy();
-    const allocator = await this.contract.read.allocators([allocatorAddress]);
 
-    return allocator;
+    const amount = await this.contract.read.allocatedGrantAmount();
+
+    return amount;
   }
 
-  public async allocated(
-    allocatorAddress: string,
-    recipientAddress: string
-  ): Promise<boolean> {
+  public async getGrantAmountRequired(): Promise<boolean> {
     this.checkStrategy();
 
-    const allocated = await this.contract.read.allocated([
-      allocatorAddress,
-      recipientAddress,
-    ]);
+    const required: boolean = await this.contract.read.grantAmountRequired();
 
-    return allocated;
+    return required;
   }
 
-  public async allocationEndTime(): Promise<number> {
+  public async getMetadataRequired(): Promise<boolean> {
     this.checkStrategy();
 
-    const endTime = await this.contract.read.allocationEndTime();
+    const required: boolean = await this.contract.read.metadataRequired();
 
-    return endTime;
-  }
-
-  public async allocationStartTime(): Promise<number> {
-    this.checkStrategy();
-
-    const startTime = await this.contract.read.allocationStartTime();
-
-    return startTime;
-  }
-
-  public async approvalThreshold(): Promise<string> {
-    this.checkStrategy();
-
-    const threshold = await this.contract.read.approvalThreshold();
-
-    return threshold;
+    return required;
   }
 
   public async getAllo(): Promise<Allo> {
-    return this.allo;
-  }
-
-  public async getPayouts(recipientIds: string[]): Promise<PayoutSummary[]> {
-    this.checkStrategy();
-
-    const emptyData = Array(recipientIds.length).fill("0x");
-
-    const payouts = await this.contract.read.getPayouts([
-      recipientIds,
-      emptyData,
-    ]);
-
-    const payoutSummary: PayoutSummary[] = payouts.map((payout: any) => {
-      this.checkStrategy();
-
-      return {
-        address: payout.recipientAddress,
-        amount: payout.amount,
-      };
-    });
-
-    return payoutSummary;
+    return this.contract.read.getAllo();
   }
 
   public async getPoolAmount(): Promise<number> {
@@ -249,33 +212,363 @@ export class DirectGrants {
     return valid;
   }
 
-  public async recipientAllocations(
-    recipientId: string,
-    status: Status
-  ): Promise<string> {
-    this.checkStrategy();
-
-    const allocations = await this.contract.read.recipientAllocations([
-      recipientId,
-      status,
-    ]);
-
-    return allocations;
-  }
-
-  public async maxRequestedAmount(): Promise<number> {
-    this.checkStrategy();
-
-    const maxRequestedAmount = await this.contract.read.maxRequestedAmount();
-
-    return maxRequestedAmount;
-  }
-
   public async useRegistryAnchor(): Promise<boolean> {
     this.checkStrategy();
 
     const useRegistryAnchor = await this.contract.read.useRegistryAnchor();
 
     return useRegistryAnchor;
+  }
+
+  public async getMilestoneStatus() {
+    this.checkStrategy();
+
+    const status = await this.contract.read.getMilestoneStatus();
+
+    return status;
+  }
+
+  public async getMilestones(
+    recipientAddress: `0x${string}`
+  ): Promise<`0x${string}`> {
+    this.checkStrategy();
+
+    const milestones = await this.contract.read.getMilestones([
+      recipientAddress,
+    ]);
+
+    return milestones;
+  }
+
+  public async getUpcomingMilestone(recipientAddress: `0x${string}`) {
+    this.checkStrategy();
+
+    const milestone = await this.contract.read.upcomingMilestone([
+      recipientAddress,
+    ]);
+
+    return milestone;
+  }
+
+  // todo: fix this
+  public async getPayouts(
+    recipientIds: `0x${string}`[]
+  ): Promise<PayoutSummary[]> {
+    this.checkStrategy();
+
+    const emptyData = Array(recipientIds.length).fill("0x");
+
+    const payouts = await this.contract.read.getPayouts([
+      recipientIds,
+      emptyData,
+    ]);
+
+    const payoutSummary: PayoutSummary[] = payouts.map((payout: any) => {
+      this.checkStrategy();
+
+      return {
+        address: payout.recipientAddress,
+        amount: payout.amount,
+      };
+    });
+
+    return payoutSummary;
+  }
+
+  // Write methods
+
+  public getIncreaseMaxRequestedAmountData(amount: number): TransactionData {
+    this.checkPoolId();
+    const encoded: `0x${string}` = encodeAbiParameters(
+      parseAbiParameters("uint256"),
+      [BigInt(amount)]
+    );
+
+    const encodedData = encodeFunctionData({
+      abi: directGrantsAbi,
+      functionName: "increaseMaxRequestedAmount",
+      args: [this.poolId, encoded],
+    });
+
+    return {
+      to: this.strategy as `0x${string}`,
+      data: encodedData,
+      value: "0",
+    };
+  }
+
+  public getSetApprovalThresholdData(amount: number): TransactionData {
+    this.checkPoolId();
+    const encoded: `0x${string}` = encodeAbiParameters(
+      parseAbiParameters("uint256"),
+      [BigInt(amount)]
+    );
+
+    const encodedData = encodeFunctionData({
+      abi: directGrantsAbi,
+      functionName: "setApprovalThreshold",
+      args: [this.poolId, encoded],
+    });
+
+    return {
+      to: this.strategy as `0x${string}`,
+      data: encodedData,
+      value: "0",
+    };
+  }
+
+  public getSetMilestonesData(
+    recipientId: `0x${string}`,
+    milestones: Milestone[]
+  ): TransactionData {
+    this.checkPoolId();
+    const encodedMilestones: `0x${string}`[] = [];
+
+    milestones.forEach((milestone: Milestone) => {
+      const encoded: `0x${string}` = encodeAbiParameters(
+        parseAbiParameters("uint256, (uint256, stringt), uint256"),
+        [
+          BigInt(milestone.amountPercentage),
+          [milestone.metadata.protocol, milestone.metadata.pointer],
+          BigInt(milestone.milestoneStatus),
+        ]
+      );
+
+      encodedMilestones.push(encoded);
+    });
+
+    const encodedData = encodeFunctionData({
+      abi: directGrantsAbi,
+      functionName: "setMilestones",
+      args: [recipientId, encodedMilestones],
+    });
+
+    return {
+      to: this.strategy as `0x${string}`,
+      data: encodedData,
+      value: "0",
+    };
+  }
+
+  public getReviewSetMilestonesData(
+    recipientId: `0x${string}`,
+    status: Status
+  ): TransactionData {
+    this.checkPoolId();
+    const encoded = encodeAbiParameters(
+      parseAbiParameters("address, uint256"),
+      [recipientId, BigInt(status)]
+    );
+
+    return {
+      to: this.strategy as `0x${string}`,
+      data: encoded,
+      value: "0",
+    };
+  }
+
+  public getSubmitMilestonesData(
+    recipientId: `0x${string}`,
+    milestoneId: number,
+    metadata: Metadata
+  ): TransactionData {
+    this.checkPoolId();
+
+    const encodedData = encodeFunctionData({
+      abi: directGrantsAbi,
+      functionName: "submitMilestones",
+      args: [recipientId, BigInt(milestoneId), metadata],
+    });
+
+    return {
+      to: this.strategy as `0x${string}`,
+      data: encodedData,
+      value: "0",
+    };
+  }
+
+  public getRejectMilestoneData(
+    recipientId: `0x${string}`,
+    milestoneId: number
+  ): TransactionData {
+    this.checkPoolId();
+
+    const encodedData = encodeFunctionData({
+      abi: directGrantsAbi,
+      functionName: "rejectMilestone",
+      args: [recipientId, BigInt(milestoneId)],
+    });
+
+    return {
+      to: this.strategy as `0x${string}`,
+      data: encodedData,
+      value: "0",
+    };
+  }
+
+  public getSetRecipientStatusToInReviewData(
+    recipientIds: `0x${string}`[]
+  ): TransactionData {
+    this.checkPoolId();
+
+    const encodedData = encodeFunctionData({
+      abi: directGrantsAbi,
+      functionName: "setRecipientStatusToInReview",
+      args: [recipientIds],
+    });
+
+    return {
+      to: this.strategy as `0x${string}`,
+      data: encodedData,
+      value: "0",
+    };
+  }
+
+  public getSetPoolActiveData(flag: boolean): TransactionData {
+    this.checkPoolId();
+
+    const encodedData = encodeFunctionData({
+      abi: directGrantsAbi,
+      functionName: "setPoolActive",
+      args: [flag],
+    });
+
+    return {
+      to: this.strategy as `0x${string}`,
+      data: encodedData,
+      value: "0",
+    };
+  }
+
+  public getRegisterRecipientData(data: RegisterData): TransactionData {
+    this.checkPoolId();
+    const encoded: `0x${string}` = encodeAbiParameters(
+      parseAbiParameters("address, address, uint256, (uit256, string)"),
+      [
+        data.registryAnchor || ZERO_ADDRESS,
+        data.recipientAddress,
+        data.requestedAmount,
+        [data.metadata.protocol, data.metadata.pointer],
+      ]
+    );
+
+    const encodedData = encodeFunctionData({
+      abi: alloAbi,
+      functionName: "registerRecipient",
+      args: [this.poolId, encoded],
+    });
+
+    return {
+      to: this.allo.address(),
+      data: encodedData,
+      value: "0",
+    };
+  }
+
+  public getBatchRegisterRecipientData(data: RegisterData[]): TransactionData {
+    this.checkPoolId();
+    const encodedParams: `0x${string}`[] = [];
+
+    data.forEach((registerData) => {
+      const encoded: `0x${string}` = encodeAbiParameters(
+        parseAbiParameters("address, address, uint256, (uit256, string)"),
+        [
+          registerData.registryAnchor || ZERO_ADDRESS,
+          registerData.recipientAddress,
+          registerData.requestedAmount,
+          [registerData.metadata.protocol, registerData.metadata.pointer],
+        ]
+      );
+
+      encodedParams.push(encoded);
+    });
+
+    const poolIds: bigint[] = Array(encodedParams.length).fill(this.poolId);
+
+    const encodedData = encodeFunctionData({
+      abi: alloAbi,
+      functionName: "batchRegisterRecipient",
+      args: [poolIds, encodedParams],
+    });
+
+    return {
+      to: this.allo.address(),
+      data: encodedData,
+      value: "0",
+    };
+  }
+
+  public getAllocationData(
+    recipientId: `0x${string}`,
+    status: Status,
+    grantAmount: bigint
+  ): TransactionData {
+    this.checkPoolId();
+    const encoded: `0x${string}` = encodeAbiParameters(
+      parseAbiParameters("address, uint8, uint256"),
+      [recipientId, status, grantAmount]
+    );
+
+    const encodedData = encodeFunctionData({
+      abi: alloAbi,
+      functionName: "allocate",
+      args: [this.poolId, encoded],
+    });
+
+    return {
+      to: this.allo.address(),
+      data: encodedData,
+      value: "0",
+    };
+  }
+
+  public getBatchAllocationData(allocations: Allocation[]): TransactionData {
+    this.checkPoolId();
+
+    const encodedParams: `0x${string}`[] = [];
+
+    allocations.forEach((allocation) => {
+      const encoded: `0x${string}` = encodeAbiParameters(
+        parseAbiParameters("address, uint8, uint256"),
+        [
+          allocation.recipientId,
+          allocation.status,
+          BigInt(allocation.grantAmount),
+        ]
+      );
+
+      encodedParams.push(encoded);
+    });
+
+    const poolIds: bigint[] = Array(encodedParams.length).fill(this.poolId);
+
+    const encodedData = encodeFunctionData({
+      abi: alloAbi,
+      functionName: "batchAllocate",
+      args: [poolIds, encodedParams],
+    });
+
+    return {
+      to: this.allo.address(),
+      data: encodedData,
+      value: "0",
+    };
+  }
+
+  // todo: distribte, distributeUpcomingMilestone
+  public getDistributeData(recipientIds: `0x${string}`[]): TransactionData {
+    this.checkPoolId();
+
+    const encodedData = encodeFunctionData({
+      abi: alloAbi,
+      functionName: "distribute",
+      args: [recipientIds],
+    });
+
+    return {
+      to: this.allo.address(),
+      data: encodedData,
+      value: "0",
+    };
   }
 }
