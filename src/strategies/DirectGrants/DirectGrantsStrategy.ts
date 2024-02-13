@@ -22,12 +22,11 @@ import {
   TransactionData,
   ZERO_ADDRESS,
 } from "../../types";
-import { RegisterData } from "../DonationVotingMerkleDistributionStrategy/types";
 import {
   abi as directGrantsAbi,
   bytecode as directGrantsBytecode,
 } from "./directGrants.config";
-import { Allocation, InitializeParams, Milestone } from "./types";
+import { Allocation, InitializeParams, Milestone, RegisterData } from "./types";
 
 export class DirectGrantsStrategy {
   private client: PublicClient<Transport, Chain>;
