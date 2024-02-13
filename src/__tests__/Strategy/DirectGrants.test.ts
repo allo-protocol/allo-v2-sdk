@@ -34,5 +34,5 @@ describe("Direct Grants Strategy", () => {
 
       expect(native).toEqual(NATIVE);
     });
-  });
+  });  
 });
