@@ -301,26 +301,6 @@ export class DirectGrantsStrategy {
     };
   }
 
-  public getSetApprovalThresholdData(amount: number): TransactionData {
-    this.checkPoolId();
-    const encoded: `0x${string}` = encodeAbiParameters(
-      parseAbiParameters("uint256"),
-      [BigInt(amount)]
-    );
-
-    const encodedData = encodeFunctionData({
-      abi: directGrantsAbi,
-      functionName: "setApprovalThreshold",
-      args: [this.poolId, encoded],
-    });
-
-    return {
-      to: this.strategy as `0x${string}`,
-      data: encodedData,
-      value: "0",
-    };
-  }
-
   public getSetMilestonesData(
     recipientId: `0x${string}`,
     milestones: Milestone[]

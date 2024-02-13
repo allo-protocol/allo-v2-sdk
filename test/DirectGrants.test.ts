@@ -2,24 +2,12 @@ import { expect } from "chai";
 import * as dotenv from "dotenv";
 import { ContractFactory } from "ethers";
 import { ethers } from "hardhat";
-import {
-  TransactionReceipt,
-  decodeEventLog,
-  keccak256,
-  stringToBytes,
-} from "viem";
 import { Allo } from "../src/Allo/Allo";
 import { CreatePoolArgs } from "../src/Allo/types";
 import { Registry } from "../src/Registry/Registry";
 import { DirectGrantsStrategy } from "../src/strategies/DirectGrants/DirectGrantsStrategy";
 import { InitializeParams } from "../src/strategies/DirectGrants/types";
-import {
-  AbiComponent,
-  AbiItem,
-  ContractAbi,
-  CreateProfileArgs,
-  NATIVE,
-} from "../src/types";
+import { CreateProfileArgs, NATIVE } from "../src/types";
 
 dotenv.config();
 
@@ -49,7 +37,11 @@ describe("DirectGrantsStrategy", function () {
 
       try {
         // send it
-        // strategyAddress = result.contractAddress!;
+        const receipt = await user.sendTransaction({
+          data: deployParams.bytecode,
+        });
+
+        console.log("receipt", receipt);
       } catch (error) {
         console.error("error deploying contract", error);
       }
@@ -76,13 +68,9 @@ describe("DirectGrantsStrategy", function () {
 
       try {
         // send it
+        const receipt = await user.sendTransaction(createProfileTx);
         // todo: get the profileId from the receipt??
-        // const profileId =
-        //   getEventValues(receipt, RegistryABI, "ProfileCreated").profileId ||
-        //   "0x";
-        // if (profileId === "0x") {
-        //   throw new Error("Profile creation failed");
-        // }
+        console.log("receipt", receipt);
       } catch (error) {
         console.error("error creating profile", error);
       }
@@ -110,82 +98,41 @@ describe("DirectGrantsStrategy", function () {
         managers: [],
       };
 
-      const createPoolDate =
+      const createPoolData =
         allo.createPoolWithCustomStrategy(poolCreationData);
 
       try {
         // send it
-        // const logValues = getEventValues(receipt, DirectGrantsAbi, "Initialized");
-        // if (logValues.poolId) poolId = Number(logValues.poolId);
+        const receipt = user.sendTransaction(createPoolData);
+
+        console.log("receipt", receipt);
+
+        // todo: get the poolId from the receipt??
       } catch (error) {
         console.error("error creating pool and initializing", error);
       }
 
       expect(true).to.be.true;
     });
+
+    it("should register a recipient", async () => {});
+
+    it("should increase max requested amount", async () => {});
+
+    it("should set the milestones", async () => {});
+
+    it("should review the milestone", async () => {});
+
+    it("should submit the milestone", async () => {});
+
+    it("should reject the milestone", async () => {});
+
+    it("should set the recipient status to in review", async () => {});
+
+    it("should set the pool active flag", async () => {});
+
+    it("should allocate to a recipient", async () => {});
+
+    it("should distribute to a recipient milestone", async () => {});
   });
 });
-
-const getEventValues = (
-  receipt: TransactionReceipt,
-  abi: ContractAbi,
-  eventName: string
-): any => {
-  const { logs } = receipt;
-  const event = abi.filter(
-    (item) => item.type === "event" && item.name === eventName
-  )[0];
-
-  console.log("event", event);
-
-  const eventTopic = getEventTopic(event);
-
-  const log = logs.find(
-    (log) => log.topics[0]?.toLowerCase() === eventTopic.toLowerCase()
-  );
-
-  const { topics, data } = log as { topics: string[]; data: string };
-
-  const d = decodeEventLog({
-    abi: [event as any],
-    data: data as `0x${string}`,
-    topics: topics as any,
-  });
-
-  return d.args;
-};
-
-function getEventTopic(event: AbiItem): string {
-  const inputTypesString = getInputTypeString(event);
-  const eventString = `${event.name}(${inputTypesString})`;
-  const eventTopic = keccak256(stringToBytes(eventString));
-
-  return eventTopic;
-}
-
-function getInputTypeString(event: AbiItem): string {
-  const inputTypes = event.inputs ? flattenInputTypes(event.inputs) : [];
-  return inputTypes.join(",");
-}
-
-function flattenInputTypes(
-  inputs: Array<{
-    name: string;
-    type: string;
-    components?: Array<AbiComponent>;
-  }>
-): string[] {
-  const result: string[] = [];
-
-  for (const input of inputs) {
-    if (input.components) {
-      const componentsString = flattenInputTypes(input.components).join(",");
-
-      result.push(`(${componentsString})`);
-    } else {
-      result.push(input.type);
-    }
-  }
-
-  return result;
-}
