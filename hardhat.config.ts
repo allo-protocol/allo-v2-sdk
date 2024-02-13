@@ -1,4 +1,9 @@
-// import "@typechain/hardhat";
+import "@nomicfoundation/hardhat-chai-matchers";
+import "@nomicfoundation/hardhat-ethers";
+import "@typechain/hardhat";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 const config = {
   solidity: {
@@ -14,17 +19,11 @@ const config = {
   networks: {
     // Local Networks
     hardhat: {
-      // forking: {
-      //   url: process.env.MAINNET,
-      //   blockNumber: 33317730,
-      // },
-      mining: {
-        auto: false,
-        interval: 1000,
+      forking: {
+        url: process.env.RPC_URL,
       },
     },
   },
-
 };
 
 export default config;
