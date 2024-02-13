@@ -220,10 +220,16 @@ export class DirectGrantsStrategy {
     return useRegistryAnchor;
   }
 
-  public async getMilestoneStatus() {
+  public async getMilestoneStatus(
+    recipientId: `0x${string}`,
+    milestoneId: number
+  ): Promise<Status> {
     this.checkStrategy();
 
-    const status = await this.contract.read.getMilestoneStatus();
+    const status = await this.contract.read.getMilestoneStatus([
+      recipientId,
+      BigInt(milestoneId),
+    ]);
 
     return status;
   }
@@ -250,7 +256,6 @@ export class DirectGrantsStrategy {
     return milestone;
   }
 
-  // todo: fix this
   public async getPayouts(
     recipientIds: `0x${string}`[]
   ): Promise<PayoutSummary[]> {
@@ -447,7 +452,7 @@ export class DirectGrantsStrategy {
       [
         data.registryAnchor || ZERO_ADDRESS,
         data.recipientAddress,
-        data.requestedAmount,
+        data.grantAmount,
         [data.metadata.protocol, data.metadata.pointer],
       ]
     );
@@ -555,14 +560,16 @@ export class DirectGrantsStrategy {
     };
   }
 
-  // todo: distribte, distributeUpcomingMilestone
   public getDistributeData(recipientIds: `0x${string}`[]): TransactionData {
     this.checkPoolId();
+
+    // note: not sure if we need to do this, we don't use _data here.
+    const emptyData = Array(recipientIds.length).fill("0x");
 
     const encodedData = encodeFunctionData({
       abi: alloAbi,
       functionName: "distribute",
-      args: [recipientIds],
+      args: [this.poolId, recipientIds, emptyData],
     });
 
     return {
