@@ -18,11 +18,11 @@ import {
   Metadata,
   PayoutSummary,
   Recipient,
-  RegisterData,
   Status,
   TransactionData,
   ZERO_ADDRESS,
 } from "../../types";
+import { RegisterData } from "../DonationVotingMerkleDistributionStrategy/types";
 import {
   abi as directGrantsAbi,
   bytecode as directGrantsBytecode,
@@ -480,7 +480,7 @@ export class DirectGrantsStrategy {
         [
           registerData.registryAnchor || ZERO_ADDRESS,
           registerData.recipientAddress,
-          registerData.requestedAmount,
+          registerData.grantAmount,
           [registerData.metadata.protocol, registerData.metadata.pointer],
         ]
       );

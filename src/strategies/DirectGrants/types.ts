@@ -26,5 +26,5 @@ export type Milestone = {
 export type Allocation = {
   recipientId: `0x${string}`;
   status: Status;
-  grantAmount: number;
+  grantAmount: bigint;
 };
