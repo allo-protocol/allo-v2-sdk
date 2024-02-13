@@ -19,8 +19,17 @@ import {
   ZERO_ADDRESS,
 } from "../../Common/types";
 import { supportedChains } from "../../chains.config";
+import { NATIVE } from "../../types";
 import { PayoutSummary, Status } from "../types";
 import { abi as strategyAbi } from "./donationVoting.config";
+import {
+  abi as directAbi,
+  bytecode as directBytecode,
+} from "./donationVotingDirect.config";
+import {
+  abi as vaultAbi,
+  bytecode as vaultBytecode,
+} from "./donationVotingVault.config";
 import {
   Allocation,
   Claim,
@@ -30,16 +39,6 @@ import {
   RegisterData,
   StrategyType,
 } from "./types";
-import { NATIVE } from "../../types";
-
-import {
-  abi as vaultAbi,
-  bytecode as vaultBytecode,
-} from "./donationVotingVault.config";
-import {
-  abi as directAbi,
-  bytecode as directBytecode,
-} from "./donationVotingDirect.config";
 
 export class DonationVotingMerkleDistributionStrategy {
   private client: PublicClient<Transport, Chain>;
@@ -98,14 +97,14 @@ export class DonationVotingMerkleDistributionStrategy {
   private checkPoolId(): void {
     if (this.poolId === -1)
       throw new Error(
-        "DonationVotingMerkleDistributionStrategy: No poolId provided. Please call `setPoolId` first.",
+        "DonationVotingMerkleDistributionStrategy: No poolId provided. Please call `setPoolId` first."
       );
   }
 
   private checkStrategy(): void {
     if (!this.strategy)
       throw new Error(
-        "DonationVotingMerkleDistributionStrategy: No strategy address provided. Please call `setContract` first.",
+        "DonationVotingMerkleDistributionStrategy: No strategy address provided. Please call `setContract` first."
       );
   }
 
@@ -241,7 +240,7 @@ export class DonationVotingMerkleDistributionStrategy {
 
   public async getPayouts(
     recipientIds: string[],
-    data: string[],
+    data: string[]
   ): Promise<PayoutSummary[]> {
     this.checkStrategy();
     const payouts = await this.contract.read.getPayouts([recipientIds, data]);
@@ -348,7 +347,7 @@ export class DonationVotingMerkleDistributionStrategy {
 
     const constructorArgs: `0x${string}` = encodeAbiParameters(
       parseAbiParameters("address, string"),
-      [this.allo.address(), version],
+      [this.allo.address(), version]
     );
     const constructorArgsNo0x = constructorArgs.slice(2);
 
@@ -361,19 +360,17 @@ export class DonationVotingMerkleDistributionStrategy {
   public async getInitializeData(data: InitializeData): Promise<`0x${string}`> {
     const encodedData: `0x${string}` = encodeAbiParameters(
       parseAbiParameters(
-        "(bool, bool, uint64, uint64, uint64, uint64, address[])",
+        "bool, bool, uint64, uint64, uint64, uint64, address[]"
       ),
       [
-        [
-          data.useRegistryAnchor,
-          data.metadataRequired,
-          data.registrationStartTime,
-          data.registrationEndTime,
-          data.allocationStartTime,
-          data.allocationEndTime,
-          data.allowedTokens,
-        ],
-      ],
+        data.useRegistryAnchor,
+        data.metadataRequired,
+        data.registrationStartTime,
+        data.registrationEndTime,
+        data.allocationStartTime,
+        data.allocationEndTime,
+        data.allowedTokens,
+      ]
     );
 
     return encodedData;
@@ -387,7 +384,7 @@ export class DonationVotingMerkleDistributionStrategy {
   public getEncodedAllocation(data: Allocation): `0x${string}` {
     const encoded: `0x${string}` = encodeAbiParameters(
       parseAbiParameters(
-        "address, (((address, uint256), uint256, uint256), bytes32)",
+        "address, (((address, uint256), uint256, uint256), bytes32)"
       ),
       [
         data.recipientId,
@@ -402,7 +399,7 @@ export class DonationVotingMerkleDistributionStrategy {
           ],
           data.permit2Data.signature,
         ],
-      ],
+      ]
     );
 
     return encoded;
@@ -472,11 +469,11 @@ export class DonationVotingMerkleDistributionStrategy {
    */
   public getBatchAllocateDataMultiplePools(
     poolIds: number[],
-    allocations: Allocation[],
+    allocations: Allocation[]
   ): TransactionData {
     if (poolIds.length !== allocations.length) {
       throw new Error(
-        "DonationVotingMerkleDistributionStrategy: Length of poolIds and allocations must be equal",
+        "DonationVotingMerkleDistributionStrategy: Length of poolIds and allocations must be equal"
       );
     }
 
@@ -514,7 +511,7 @@ export class DonationVotingMerkleDistributionStrategy {
         data.registryAnchor || ZERO_ADDRESS,
         data.recipientAddress,
         [data.metadata.protocol, data.metadata.pointer],
-      ],
+      ]
     );
 
     const encodedData = encodeFunctionData({
@@ -548,7 +545,7 @@ export class DonationVotingMerkleDistributionStrategy {
           registerData.registryAnchor || ZERO_ADDRESS,
           registerData.recipientAddress,
           [registerData.metadata.protocol, registerData.metadata.pointer],
-        ],
+        ]
       );
 
       encodedParams.push(encoded);
@@ -581,7 +578,7 @@ export class DonationVotingMerkleDistributionStrategy {
 
     const encoded: `0x${string}` = encodeAbiParameters(
       parseAbiParameters("uint256, uint256"),
-      [BigInt(this.poolId), amount],
+      [BigInt(this.poolId), amount]
     );
 
     const encodedData = encodeFunctionData({
@@ -608,17 +605,17 @@ export class DonationVotingMerkleDistributionStrategy {
   public distribute(
     recipientIds: `0x${string}`[],
     // (uint256 _poolId, address[] memory _recipientIds, bytes memory _data)
-    data: Distribution[],
+    data: Distribution[]
   ): TransactionData {
     this.checkPoolId();
 
     const encodeDistribution = encodeAbiParameters(
       parseAbiParameters("Distribution[]"),
-      [data],
+      [data]
     );
     const encoded: `0x${string}` = encodeAbiParameters(
       parseAbiParameters("uint256, address[], bytes"),
-      [BigInt(this.poolId), recipientIds, encodeDistribution],
+      [BigInt(this.poolId), recipientIds, encodeDistribution]
     );
 
     const encodedData = encodeFunctionData({
@@ -648,7 +645,7 @@ export class DonationVotingMerkleDistributionStrategy {
     claims.forEach((claim: Claim) => {
       const encodedClaimParams = encodeAbiParameters(
         parseAbiParameters("address, address"),
-        [claim.recipientId, claim.token],
+        [claim.recipientId, claim.token]
       );
 
       encoded.push(encodedClaimParams);
@@ -698,7 +695,7 @@ export class DonationVotingMerkleDistributionStrategy {
    * @returns TransactionData
    */
   public reviewRecipients(
-    statuses: { index: number; statusRow: number }[],
+    statuses: { index: number; statusRow: number }[]
   ): TransactionData {
     const data = encodeFunctionData({
       abi: strategyAbi,
@@ -715,7 +712,7 @@ export class DonationVotingMerkleDistributionStrategy {
 
   public updateDistribution(
     merkleRoot: string,
-    distributionMetadata: Metadata,
+    distributionMetadata: Metadata
   ): TransactionData {
     const data = encodeFunctionData({
       abi: strategyAbi,
@@ -734,7 +731,7 @@ export class DonationVotingMerkleDistributionStrategy {
     registrationStartTime: number,
     registrationEndTime: number,
     allocationStartTime: number,
-    allocationEndTime: number,
+    allocationEndTime: number
   ): TransactionData {
     const data = encodeFunctionData({
       abi: strategyAbi,
