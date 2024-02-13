@@ -3,7 +3,6 @@ import { DirectGrantsStrategy } from "../../strategies/DirectGrants/DirectGrants
 import { NATIVE } from "../utils/utils";
 
 const address: Address = "0x1133eA7Af70876e64665ecD07C0A0476d09465a1";
-// const address: Address = "0xAEc621EC8D9dE4B524f4864791171045d6BBBe27";
 
 jest.mock("viem", () => ({
   ...jest.requireActual("viem"),
