@@ -1,11 +1,13 @@
 import { expect } from "chai";
 import * as dotenv from "dotenv";
 import { ContractFactory } from "ethers";
-import { ethers } from "hardhat";
+import { Log } from "viem";
 import { Allo } from "../src/Allo/Allo";
 import { CreatePoolArgs } from "../src/Allo/types";
 import { Registry } from "../src/Registry/Registry";
+import { abi as registryAbi } from "../src/Registry/registry.config";
 import { DirectGrantsStrategy } from "../src/strategies/DirectGrants/DirectGrantsStrategy";
+import { abi as directGrantsAbi } from "../src/strategies/DirectGrants/directGrants.config";
 import { InitializeParams } from "../src/strategies/DirectGrants/types";
 import { CreateProfileArgs, NATIVE } from "../src/types";
 
@@ -35,9 +37,11 @@ describe("DirectGrantsStrategy", function () {
       const [user] = await ethers.getSigners();
       const deployParams = strategy.getDeployParams();
 
+      let receipt: any;
+
       try {
         // send it
-        const receipt = await user.sendTransaction({
+        receipt = await user.sendTransaction({
           data: deployParams.bytecode,
         });
 
@@ -46,11 +50,34 @@ describe("DirectGrantsStrategy", function () {
         console.error("error deploying contract", error);
       }
 
+      // fetch the event
+      const logs = await user.provider.getLogs({
+        address: strategyAddress,
+        topics: [
+          "0x91efa3d50feccde0d0d202f8ae5c41ca0b2be614cebcb2bd2f4b019396e6568a", // Initialized(uint256,bytes)
+        ],
+        blockHash: receipt.blockHash,
+      });
+
+      console.log("logs", logs);
+
+      const iface = new ethers.Interface(directGrantsAbi);
+
+      logs.forEach((log: Log) => {
+        let parsedLog = iface.parseLog(log);
+
+        profileId = parsedLog.args[0];
+
+        console.log("parsedLog", parsedLog);
+      });
+
       expect(true).to.be.true;
     });
 
-    it("should create a new profile & pool and initialize", async () => {
+    it("should create a new profile", async () => {
       const [user] = await ethers.getSigners();
+
+      let receipt: any;
 
       // create a profile to use to create the pool
       const createProfileArgs: CreateProfileArgs = {
@@ -68,12 +95,39 @@ describe("DirectGrantsStrategy", function () {
 
       try {
         // send it
-        const receipt = await user.sendTransaction(createProfileTx);
-        // todo: get the profileId from the receipt??
+        receipt = await user.sendTransaction(createProfileTx);
         console.log("receipt", receipt);
       } catch (error) {
         console.error("error creating profile", error);
       }
+
+      // fetch the event
+      const logs = await user.provider.getLogs({
+        address: strategyAddress,
+        topics: [
+          // ProfileCreated(bytes32,uint256,string,(uint256,string),address,address)
+          "0x1e28352ff00d67474b59b87e6817d6ba65daa0130446266db8640214d8b80609",
+        ],
+        blockHash: receipt.blockHash,
+      });
+
+      console.log("logs", logs);
+
+      // todo: get the profile id from the logs
+      const iface = new ethers.Interface(registryAbi);
+
+      logs.forEach((log: Log) => {
+        let parsedLog = iface.parseLog(log);
+
+        profileId = parsedLog.args[0];
+
+        console.log("parsedLog", parsedLog.args[0]);
+      });
+    });
+
+    // todo:
+    it("should create a pool and initialize", async () => {
+      const [user] = await ethers.getSigners();
 
       // Create a pool and initialize it
       const initParams: InitializeParams = {
@@ -83,10 +137,8 @@ describe("DirectGrantsStrategy", function () {
       };
       const initStrategyData = strategy.getInitializeData(initParams);
       const poolCreationData: CreatePoolArgs = {
-        profileId:
-          "0x9abfca304ae55abc43a50e846e80fbe0bc01ee6abdb6cf5c218f6ade517590c0",
-        strategy:
-          strategyAddress ?? "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+        profileId: profileId,
+        strategy: strategyAddress,
         initStrategyData: initStrategyData,
         token: NATIVE,
         amount: BigInt(0),
@@ -98,19 +150,41 @@ describe("DirectGrantsStrategy", function () {
         managers: [],
       };
 
+      let receipt: any;
+
       const createPoolData =
         allo.createPoolWithCustomStrategy(poolCreationData);
 
       try {
         // send it
-        const receipt = user.sendTransaction(createPoolData);
+        receipt = await user.sendTransaction(createPoolData);
 
         console.log("receipt", receipt);
-
-        // todo: get the poolId from the receipt??
       } catch (error) {
         console.error("error creating pool and initializing", error);
       }
+
+      // fetch the event
+      const logs = await user.provider.getLogs({
+        address: strategyAddress,
+        topics: [
+          // PoolCreated(uint256,bytes32,address,address,uint256,(uint256,string))
+          "0x69bcb5a6cf6a3c95185cbb451e77787240c866dd2e8332597e3013ff18a1aba1",
+        ],
+        blockHash: receipt.blockHash,
+      });
+
+      console.log("logs", logs);
+
+      const iface = new ethers.Interface(directGrantsAbi);
+
+      logs.forEach((log: Log) => {
+        let parsedLog = iface.parseLog(log);
+
+        profileId = parsedLog.args[0];
+
+        console.log("parsedLog", parsedLog);
+      });
 
       expect(true).to.be.true;
     });

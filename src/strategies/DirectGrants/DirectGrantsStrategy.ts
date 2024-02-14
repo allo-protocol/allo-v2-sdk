@@ -6,7 +6,7 @@ import {
   encodeFunctionData,
   extractChain,
   getContract,
-  parseAbiParameters,
+  parseAbiParameters
 } from "viem";
 import { Allo } from "../../Allo/Allo";
 import { abi as alloAbi } from "../../Allo/allo.config";
