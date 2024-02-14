@@ -9,6 +9,6 @@ exports.StrategyType = {
     MicroGrants: "MicroGrantsv1",
     Hats: "MicroGrantsHatsv1",
     Gov: "MicroGrantsGovv1",
-    SQFSuperFluid: "SQFSuperFluidStrategyv1"
+    SQFSuperFluid: "SQFSuperFluidStrategyv1",
 };
 exports.NATIVE = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE".toLocaleLowerCase();

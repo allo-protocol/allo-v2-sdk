@@ -20,7 +20,6 @@
     "@nomicfoundation/hardhat-ethers": "^3.0.5",
     "@types/chai": "^4.3.11",
     "@types/jest": "^29.5.3",
-    "@types/mocha": "^10.0.6",
     "@typescript-eslint/eslint-plugin": "^6.6.0",
     "@typescript-eslint/parser": "^6.6.0",
     "chai": "^4.4.1",

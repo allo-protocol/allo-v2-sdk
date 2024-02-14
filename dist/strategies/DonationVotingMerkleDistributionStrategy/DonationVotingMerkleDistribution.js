@@ -16,11 +16,11 @@ const allo_config_1 = require("../../Allo/allo.config");
 const Client_1 = require("../../Client/Client");
 const types_1 = require("../../Common/types");
 const chains_config_1 = require("../../chains.config");
+const types_2 = require("../../types");
 const donationVoting_config_1 = require("./donationVoting.config");
-const types_2 = require("./types");
-const types_3 = require("../../types");
-const donationVotingVault_config_1 = require("./donationVotingVault.config");
 const donationVotingDirect_config_1 = require("./donationVotingDirect.config");
+const donationVotingVault_config_1 = require("./donationVotingVault.config");
+const types_3 = require("./types");
 class DonationVotingMerkleDistributionStrategy {
     constructor({ chain, rpc, address, poolId }) {
         const usedChain = (0, viem_1.extractChain)({
@@ -283,15 +283,15 @@ class DonationVotingMerkleDistributionStrategy {
      * @returns DeployParams {abi, bytecode}
      */
     getDeployParams(strategyType) {
-        if (strategyType !== types_2.StrategyType.Vault &&
-            strategyType !== types_2.StrategyType.Direct) {
+        if (strategyType !== types_3.StrategyType.Vault &&
+            strategyType !== types_3.StrategyType.Direct) {
             throw new Error("Invalid strategy type");
         }
-        const version = strategyType === types_2.StrategyType.Vault
+        const version = strategyType === types_3.StrategyType.Vault
             ? "DonationVotingMerkleDistributionVaultStrategyv1.1"
             : "DonationVotingMerkleDistributionDirectTransferStrategyv1.1";
-        const bytecode = strategyType === types_2.StrategyType.Vault ? donationVotingVault_config_1.bytecode : donationVotingDirect_config_1.bytecode;
-        const abi = strategyType === types_2.StrategyType.Vault ? donationVotingVault_config_1.abi : donationVotingDirect_config_1.abi;
+        const bytecode = strategyType === types_3.StrategyType.Vault ? donationVotingVault_config_1.bytecode : donationVotingDirect_config_1.bytecode;
+        const abi = strategyType === types_3.StrategyType.Vault ? donationVotingVault_config_1.abi : donationVotingDirect_config_1.abi;
         const constructorArgs = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, string"), [this.allo.address(), version]);
         const constructorArgsNo0x = constructorArgs.slice(2);
         return {
@@ -301,16 +301,14 @@ class DonationVotingMerkleDistributionStrategy {
     }
     getInitializeData(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            const encodedData = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("(bool, bool, uint64, uint64, uint64, uint64, address[])"), [
-                [
-                    data.useRegistryAnchor,
-                    data.metadataRequired,
-                    data.registrationStartTime,
-                    data.registrationEndTime,
-                    data.allocationStartTime,
-                    data.allocationEndTime,
-                    data.allowedTokens,
-                ],
+            const encodedData = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("bool, bool, uint64, uint64, uint64, uint64, address[]"), [
+                data.useRegistryAnchor,
+                data.metadataRequired,
+                data.registrationStartTime,
+                data.registrationEndTime,
+                data.allocationStartTime,
+                data.allocationEndTime,
+                data.allowedTokens,
             ]);
             return encodedData;
         });
@@ -355,7 +353,7 @@ class DonationVotingMerkleDistributionStrategy {
         return {
             to: this.allo.address(),
             data: encodedData,
-            value: token.toLowerCase() === types_3.NATIVE ? amount.toString() : "0",
+            value: token.toLowerCase() === types_2.NATIVE ? amount.toString() : "0",
         };
     }
     /**
