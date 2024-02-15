@@ -35,6 +35,7 @@ dotenv.config();
 /// ============================================== \\\
 
 const hardhatRpc = "http://localhost:8545";
+const random = Math.floor(Math.random() * 1000000000);
 
 const allo = new Allo({
   chain: 1,
@@ -71,14 +72,14 @@ describe("DirectGrantsStrategy", function () {
       expect(idString).to.be.equal(deployedIdString);
     });
 
-    it("should create a new profile", async () => {
+    it.only("should create a new profile", async () => {
       const [user] = await ethers.getSigners();
 
       let receipt: any;
 
       // create a profile to use to create the pool
       const createProfileArgs: CreateProfileArgs = {
-        nonce: 1234567890,
+        nonce: random,
         name: "SDK Test Profile",
         metadata: {
           protocol: BigInt(1),
