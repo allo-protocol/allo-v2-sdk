@@ -45,7 +45,7 @@ class DirectGrantsStrategy {
         return encoded;
     }
     getDeployParams() {
-        const constructorArgs = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, string"), [this.allo.address(), "DirectGrantsv1"]);
+        const constructorArgs = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, string"), [this.allo.address(), "DirectGrantsSimpleStrategy1.0"]);
         const constructorArgsNo0x = constructorArgs.slice(2);
         return {
             abi: directGrants_config_1.abi,

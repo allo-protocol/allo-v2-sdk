@@ -78,7 +78,7 @@ export class DirectGrantsStrategy {
   public getDeployParams(): DeployParams {
     const constructorArgs: `0x${string}` = encodeAbiParameters(
       parseAbiParameters("address, string"),
-      [this.allo.address(), "DirectGrantsv1"]
+      [this.allo.address(), "DirectGrantsSimpleStrategy1.0"],
     );
     const constructorArgsNo0x = constructorArgs.slice(2);
 
