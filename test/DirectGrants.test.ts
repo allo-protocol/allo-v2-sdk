@@ -72,7 +72,7 @@ describe("DirectGrantsStrategy", function () {
       expect(idString).to.be.equal(deployedIdString);
     });
 
-    it.only("should create a new profile", async () => {
+    it("should create a new profile", async () => {
       const [user] = await ethers.getSigners();
 
       let receipt: any;
