@@ -301,14 +301,16 @@ class DonationVotingMerkleDistributionStrategy {
     }
     getInitializeData(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            const encodedData = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("bool, bool, uint64, uint64, uint64, uint64, address[]"), [
-                data.useRegistryAnchor,
-                data.metadataRequired,
-                data.registrationStartTime,
-                data.registrationEndTime,
-                data.allocationStartTime,
-                data.allocationEndTime,
-                data.allowedTokens,
+            const encodedData = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("(bool, bool, uint64, uint64, uint64, uint64, address[])"), [
+                [
+                    data.useRegistryAnchor,
+                    data.metadataRequired,
+                    data.registrationStartTime,
+                    data.registrationEndTime,
+                    data.allocationStartTime,
+                    data.allocationEndTime,
+                    data.allowedTokens,
+                ],
             ]);
             return encodedData;
         });
