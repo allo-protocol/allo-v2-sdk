@@ -40,3 +40,7 @@ bun.lockb
 
 # Ignore doc files for now
 # /docs
+
+# Ignore Hardhat
+/cache
+/out

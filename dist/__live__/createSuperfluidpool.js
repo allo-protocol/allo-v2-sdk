@@ -57,7 +57,7 @@ const createPool = () => __awaiter(void 0, void 0, void 0, function* () {
     const params = {
         useRegistryAnchor: true,
         metadataRequired: false,
-        passportDecoder: "0xE7eB5D2b5b188777df902e89c54570E7Ef4F59CE",
+        passportDecoder: "0xE7eB5D2b5b188777df902e89c54570E7Ef4F59CE", // todo: remove dummy address
         superfluidHost: "0x22ff293e14F1EC3A09B137e9e06084AFd63adDF9",
         allocationSuperToken: "0xf2d68898557ccb2cf4c10c3ef2b034b2a69dad00",
         registrationStartTime: BigInt((startDate.getTime() / 1000 - 100).toFixed(0)),

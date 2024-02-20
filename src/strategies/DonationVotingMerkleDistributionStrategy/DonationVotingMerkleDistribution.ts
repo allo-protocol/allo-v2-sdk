@@ -19,8 +19,17 @@ import {
   ZERO_ADDRESS,
 } from "../../Common/types";
 import { supportedChains } from "../../chains.config";
+import { NATIVE } from "../../types";
 import { PayoutSummary, Status } from "../types";
 import { abi as strategyAbi } from "./donationVoting.config";
+import {
+  abi as directAbi,
+  bytecode as directBytecode,
+} from "./donationVotingDirect.config";
+import {
+  abi as vaultAbi,
+  bytecode as vaultBytecode,
+} from "./donationVotingVault.config";
 import {
   Allocation,
   Claim,
@@ -30,16 +39,6 @@ import {
   RegisterData,
   StrategyType,
 } from "./types";
-import { NATIVE } from "../../types";
-
-import {
-  abi as vaultAbi,
-  bytecode as vaultBytecode,
-} from "./donationVotingVault.config";
-import {
-  abi as directAbi,
-  bytecode as directBytecode,
-} from "./donationVotingDirect.config";
 
 export class DonationVotingMerkleDistributionStrategy {
   private client: PublicClient<Transport, Chain>;

@@ -12,14 +12,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MicroGrantsStrategy = void 0;
 const viem_1 = require("viem");
 const Allo_1 = require("../../Allo/Allo");
+const allo_config_1 = require("../../Allo/allo.config");
 const Client_1 = require("../../Client/Client");
 const microGrants_config_1 = require("./microGrants.config");
-const microGrantsHats_config_1 = require("./microGrantsHats.config");
 const microGrantsGov_config_1 = require("./microGrantsGov.config");
-const allo_config_1 = require("../../Allo/allo.config");
+const microGrantsHats_config_1 = require("./microGrantsHats.config");
 const types_1 = require("../../Common/types");
-const types_2 = require("./types");
 const chains_config_1 = require("../../chains.config");
+const types_2 = require("./types");
 class MicroGrantsStrategy {
     constructor({ chain, rpc, address, poolId }) {
         const usedChain = (0, viem_1.extractChain)({
