@@ -429,7 +429,7 @@ class MicroGrantsStrategy {
         this.checkPoolId();
         const encodedParams = [];
         data.forEach((registerData) => {
-            const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, address, uint256, (uit256, string)"), [
+            const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, address, uint256, (uint256, string)"), [
                 registerData.registryAnchor || types_1.ZERO_ADDRESS,
                 registerData.recipientAddress,
                 registerData.requestedAmount,
