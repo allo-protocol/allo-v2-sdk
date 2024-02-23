@@ -585,7 +585,7 @@ export class MicroGrantsStrategy {
           registerData.recipientAddress,
           registerData.requestedAmount,
           [registerData.metadata.protocol, registerData.metadata.pointer],
-        ],
+        ]
       );
 
       encodedParams.push(encoded);

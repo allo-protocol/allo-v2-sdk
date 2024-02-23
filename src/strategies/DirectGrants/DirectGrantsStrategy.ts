@@ -433,6 +433,7 @@ export class DirectGrantsStrategy {
         data.recipientAddress,
         data.grantAmount,
         [data.metadata.protocol, data.metadata.pointer],
+
       ],
     );
 
