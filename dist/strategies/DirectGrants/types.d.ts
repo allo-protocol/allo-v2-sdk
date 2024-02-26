@@ -4,6 +4,8 @@ export type InitializeParams = {
     registryGating: boolean;
     metadataRequired: boolean;
     grantAmountRequired: boolean;
+    registrationStartTime: number;
+    registrationEndTime: number;
 };
 export type Recipient = {
     useRegistryAnchor: boolean;
