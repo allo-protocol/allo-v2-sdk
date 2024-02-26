@@ -37,15 +37,17 @@ class DirectGrantsStrategy {
     }
     //  Get the DirectGrants strategy InitializeData
     getInitializeData(params) {
-        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("bool, bool, bool"), [
+        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("bool, bool, bool, uint128, uint128"), [
             params.registryGating,
             params.metadataRequired,
             params.grantAmountRequired,
+            BigInt(params.registrationStartTime),
+            BigInt(params.registrationEndTime),
         ]);
         return encoded;
     }
     getDeployParams() {
-        const constructorArgs = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, string"), [this.allo.address(), "DirectGrantsSimpleStrategy1.0"]);
+        const constructorArgs = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, string"), [this.allo.address(), "DirectGrantsSimpleStrategy1.1"]);
         const constructorArgsNo0x = constructorArgs.slice(2);
         return {
             abi: directGrants_config_1.abi,
@@ -400,6 +402,19 @@ class DirectGrantsStrategy {
         });
         return {
             to: this.allo.address(),
+            data: encodedData,
+            value: "0",
+        };
+    }
+    getUpdatePoolTimestampsData(registrationStartTime, registrationEndTime) {
+        this.checkStrategy();
+        const encodedData = (0, viem_1.encodeFunctionData)({
+            abi: directGrants_config_1.abi,
+            functionName: "updatePoolTimestamps",
+            args: [BigInt(registrationStartTime), BigInt(registrationEndTime)],
+        });
+        return {
+            to: this.strategy,
             data: encodedData,
             value: "0",
         };

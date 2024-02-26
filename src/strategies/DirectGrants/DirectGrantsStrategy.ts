@@ -6,7 +6,7 @@ import {
   encodeFunctionData,
   extractChain,
   getContract,
-  parseAbiParameters
+  parseAbiParameters,
 } from "viem";
 import { Allo } from "../../Allo/Allo";
 import { abi as alloAbi } from "../../Allo/allo.config";
@@ -64,12 +64,16 @@ export class DirectGrantsStrategy {
   //  Get the DirectGrants strategy InitializeData
   public getInitializeData(params: InitializeParams): `0x${string}` {
     const encoded: `0x${string}` = encodeAbiParameters(
-      parseAbiParameters("bool, bool, bool"),
+      parseAbiParameters(
+        "bool, bool, bool, uint128, uint128",
+      ),
       [
         params.registryGating,
         params.metadataRequired,
         params.grantAmountRequired,
-      ]
+        BigInt(params.registrationStartTime),
+        BigInt(params.registrationEndTime),
+      ],
     );
 
     return encoded;
@@ -78,7 +82,7 @@ export class DirectGrantsStrategy {
   public getDeployParams(): DeployParams {
     const constructorArgs: `0x${string}` = encodeAbiParameters(
       parseAbiParameters("address, string"),
-      [this.allo.address(), "DirectGrantsSimpleStrategy1.0"],
+      [this.allo.address(), "DirectGrantsSimpleStrategy1.1"],
     );
     const constructorArgsNo0x = constructorArgs.slice(2);
 
@@ -109,14 +113,14 @@ export class DirectGrantsStrategy {
   private checkPoolId(): void {
     if (this.poolId === -1)
       throw new Error(
-        "DirectGrantsStrategy: No poolId provided. Please call `setPoolId` first."
+        "DirectGrantsStrategy: No poolId provided. Please call `setPoolId` first.",
       );
   }
 
   private checkStrategy(): void {
     if (!this.strategy)
       throw new Error(
-        "DirectGrantsStrategy: No strategy address provided. Please call `setContract` first."
+        "DirectGrantsStrategy: No strategy address provided. Please call `setContract` first.",
       );
   }
 
@@ -221,7 +225,7 @@ export class DirectGrantsStrategy {
 
   public async getMilestoneStatus(
     recipientId: `0x${string}`,
-    milestoneId: number
+    milestoneId: number,
   ): Promise<Status> {
     this.checkStrategy();
 
@@ -234,7 +238,7 @@ export class DirectGrantsStrategy {
   }
 
   public async getMilestones(
-    recipientAddress: `0x${string}`
+    recipientAddress: `0x${string}`,
   ): Promise<`0x${string}`> {
     this.checkStrategy();
 
@@ -256,7 +260,7 @@ export class DirectGrantsStrategy {
   }
 
   public async getPayouts(
-    recipientIds: `0x${string}`[]
+    recipientIds: `0x${string}`[],
   ): Promise<PayoutSummary[]> {
     this.checkStrategy();
 
@@ -285,7 +289,7 @@ export class DirectGrantsStrategy {
     this.checkPoolId();
     const encoded: `0x${string}` = encodeAbiParameters(
       parseAbiParameters("uint256"),
-      [BigInt(amount)]
+      [BigInt(amount)],
     );
 
     const encodedData = encodeFunctionData({
@@ -303,7 +307,7 @@ export class DirectGrantsStrategy {
 
   public getSetMilestonesData(
     recipientId: `0x${string}`,
-    milestones: Milestone[]
+    milestones: Milestone[],
   ): TransactionData {
     this.checkPoolId();
     const encodedMilestones: `0x${string}`[] = [];
@@ -315,7 +319,7 @@ export class DirectGrantsStrategy {
           BigInt(milestone.amountPercentage),
           [milestone.metadata.protocol, milestone.metadata.pointer],
           BigInt(milestone.milestoneStatus),
-        ]
+        ],
       );
 
       encodedMilestones.push(encoded);
@@ -336,12 +340,12 @@ export class DirectGrantsStrategy {
 
   public getReviewSetMilestonesData(
     recipientId: `0x${string}`,
-    status: Status
+    status: Status,
   ): TransactionData {
     this.checkPoolId();
     const encoded = encodeAbiParameters(
       parseAbiParameters("address, uint256"),
-      [recipientId, BigInt(status)]
+      [recipientId, BigInt(status)],
     );
 
     return {
@@ -354,7 +358,7 @@ export class DirectGrantsStrategy {
   public getSubmitMilestonesData(
     recipientId: `0x${string}`,
     milestoneId: number,
-    metadata: Metadata
+    metadata: Metadata,
   ): TransactionData {
     this.checkPoolId();
 
@@ -373,7 +377,7 @@ export class DirectGrantsStrategy {
 
   public getRejectMilestoneData(
     recipientId: `0x${string}`,
-    milestoneId: number
+    milestoneId: number,
   ): TransactionData {
     this.checkPoolId();
 
@@ -391,7 +395,7 @@ export class DirectGrantsStrategy {
   }
 
   public getSetRecipientStatusToInReviewData(
-    recipientIds: `0x${string}`[]
+    recipientIds: `0x${string}`[],
   ): TransactionData {
     this.checkPoolId();
 
@@ -433,7 +437,6 @@ export class DirectGrantsStrategy {
         data.recipientAddress,
         data.grantAmount,
         [data.metadata.protocol, data.metadata.pointer],
-
       ],
     );
 
@@ -486,12 +489,12 @@ export class DirectGrantsStrategy {
   public getAllocationData(
     recipientId: `0x${string}`,
     status: Status,
-    grantAmount: bigint
+    grantAmount: bigint,
   ): TransactionData {
     this.checkPoolId();
     const encoded: `0x${string}` = encodeAbiParameters(
       parseAbiParameters("address, uint8, uint256"),
-      [recipientId, status, grantAmount]
+      [recipientId, status, grantAmount],
     );
 
     const encodedData = encodeFunctionData({
@@ -519,7 +522,7 @@ export class DirectGrantsStrategy {
           allocation.recipientId,
           allocation.status,
           BigInt(allocation.grantAmount),
-        ]
+        ],
       );
 
       encodedParams.push(encoded);
@@ -554,6 +557,24 @@ export class DirectGrantsStrategy {
 
     return {
       to: this.allo.address(),
+      data: encodedData,
+      value: "0",
+    };
+  }
+
+  public getUpdatePoolTimestampsData(
+    registrationStartTime: number,
+    registrationEndTime: number,
+  ): TransactionData {
+    this.checkStrategy();
+    const encodedData = encodeFunctionData({
+      abi: directGrantsAbi,
+      functionName: "updatePoolTimestamps",
+      args: [BigInt(registrationStartTime), BigInt(registrationEndTime)],
+    });
+
+    return {
+      to: this.strategy as `0x${string}`,
       data: encodedData,
       value: "0",
     };
