@@ -730,10 +730,10 @@ export class DonationVotingMerkleDistributionStrategy {
   }
 
   public updatePoolTimestamps(
-    registrationStartTime: number,
-    registrationEndTime: number,
-    allocationStartTime: number,
-    allocationEndTime: number,
+    registrationStartTime: bigint,
+    registrationEndTime: bigint,
+    allocationStartTime: bigint,
+    allocationEndTime: bigint,
   ): TransactionData {
     const data = encodeFunctionData({
       abi: strategyAbi,

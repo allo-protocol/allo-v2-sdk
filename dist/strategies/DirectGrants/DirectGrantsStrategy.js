@@ -411,7 +411,7 @@ class DirectGrantsStrategy {
         const encodedData = (0, viem_1.encodeFunctionData)({
             abi: directGrants_config_1.abi,
             functionName: "updatePoolTimestamps",
-            args: [BigInt(registrationStartTime), BigInt(registrationEndTime)],
+            args: [registrationStartTime, registrationEndTime],
         });
         return {
             to: this.strategy,
