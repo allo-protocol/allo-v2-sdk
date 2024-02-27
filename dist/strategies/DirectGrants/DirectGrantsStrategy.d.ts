@@ -43,5 +43,5 @@ export declare class DirectGrantsStrategy {
     getAllocationData(recipientId: `0x${string}`, status: Status, grantAmount: bigint): TransactionData;
     getBatchAllocationData(allocations: Allocation[]): TransactionData;
     getDistributeData(recipientIds: `0x${string}`[]): TransactionData;
-    getUpdatePoolTimestampsData(registrationStartTime: number, registrationEndTime: number): TransactionData;
+    getUpdatePoolTimestampsData(registrationStartTime: bigint, registrationEndTime: bigint): TransactionData;
 }

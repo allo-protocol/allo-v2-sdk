@@ -5,8 +5,8 @@ export type InitializeParams = {
   registryGating: boolean;
   metadataRequired: boolean;
   grantAmountRequired: boolean;
-  registrationStartTime: number;
-  registrationEndTime: number;
+  registrationStartTime: bigint;
+  registrationEndTime: bigint;
 };
 
 export type Recipient = {

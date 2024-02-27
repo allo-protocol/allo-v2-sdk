@@ -136,6 +136,6 @@ export declare class DonationVotingMerkleDistributionStrategy {
         statusRow: number;
     }[]): TransactionData;
     updateDistribution(merkleRoot: string, distributionMetadata: Metadata): TransactionData;
-    updatePoolTimestamps(registrationStartTime: number, registrationEndTime: number, allocationStartTime: number, allocationEndTime: number): TransactionData;
+    updatePoolTimestamps(registrationStartTime: bigint, registrationEndTime: bigint, allocationStartTime: bigint, allocationEndTime: bigint): TransactionData;
     withdraw(amount: number): TransactionData;
 }

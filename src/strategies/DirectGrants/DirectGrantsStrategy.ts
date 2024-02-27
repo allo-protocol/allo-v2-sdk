@@ -64,9 +64,7 @@ export class DirectGrantsStrategy {
   //  Get the DirectGrants strategy InitializeData
   public getInitializeData(params: InitializeParams): `0x${string}` {
     const encoded: `0x${string}` = encodeAbiParameters(
-      parseAbiParameters(
-        "bool, bool, bool, uint128, uint128",
-      ),
+      parseAbiParameters("bool, bool, bool, uint128, uint128"),
       [
         params.registryGating,
         params.metadataRequired,
@@ -563,14 +561,14 @@ export class DirectGrantsStrategy {
   }
 
   public getUpdatePoolTimestampsData(
-    registrationStartTime: number,
-    registrationEndTime: number,
+    registrationStartTime: bigint,
+    registrationEndTime: bigint,
   ): TransactionData {
     this.checkStrategy();
     const encodedData = encodeFunctionData({
       abi: directGrantsAbi,
       functionName: "updatePoolTimestamps",
-      args: [BigInt(registrationStartTime), BigInt(registrationEndTime)],
+      args: [registrationStartTime, registrationEndTime],
     });
 
     return {
