@@ -41,8 +41,8 @@ class DirectGrantsStrategy {
             params.registryGating,
             params.metadataRequired,
             params.grantAmountRequired,
-            BigInt(params.registrationStartTime),
-            BigInt(params.registrationEndTime),
+            params.registrationStartTime,
+            params.registrationEndTime,
         ]);
         return encoded;
     }

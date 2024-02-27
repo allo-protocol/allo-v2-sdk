@@ -41,8 +41,10 @@ export type Permit2Data = {
     permit: PermitTransferFrom;
     signature: `0x${string}`;
 };
+export type PermitType = "Permit" | "Permit2" | "PermitDAI";
 export type Allocation = {
     recipientId: `0x${string}`;
+    permitType: PermitType;
     permit2Data: Permit2Data;
 };
 export type Claim = {

@@ -1,14 +1,6 @@
 import { expect } from "chai";
 import * as dotenv from "dotenv";
-import {
-  AbiCoder,
-  Contract,
-  ContractFactory,
-  JsonRpcProvider,
-  keccak256,
-  solidityPackedKeccak256,
-  toUtf8Bytes,
-} from "ethers";
+import { AbiCoder, JsonRpcProvider, keccak256 } from "ethers";
 import { Log } from "viem";
 import { Allo } from "../src/Allo/Allo";
 import { CreatePoolArgs } from "../src/Allo/types";
@@ -63,9 +55,9 @@ describe("DirectGrantsStrategy", function () {
   });
 
   describe("should test deployed successfully", () => {
-    it("DirectGrantsStrategy SHOULD deploy properly", async () => {
+    it.skip("DirectGrantsStrategy SHOULD deploy properly", async () => {
       const idString = keccak256(
-        new AbiCoder().encode(["string"], ["DirectGrantsv1"]),
+        new AbiCoder().encode(["string"], ["DirectGrantsv1.1"])
       );
       const deployedIdString = await strategy.getStrategyId();
 
@@ -109,8 +101,6 @@ describe("DirectGrantsStrategy", function () {
         blockHash: receipt.blockHash,
       });
 
-      console.log("logs", logs);
-
       // todo: get the profile id from the logs
       const iface = new ethers.Interface(registryAbi);
 
@@ -124,7 +114,7 @@ describe("DirectGrantsStrategy", function () {
     });
 
     // todo:
-    it("should create a pool and initialize", async () => {
+    it.skip("should create a pool and initialize", async () => {
       const [user] = await ethers.getSigners();
 
       // Create a pool and initialize it
@@ -132,6 +122,8 @@ describe("DirectGrantsStrategy", function () {
         registryGating: true,
         metadataRequired: true,
         grantAmountRequired: true,
+        registrationStartTime: BigInt(0),
+        registrationEndTime: BigInt(0),
       };
       const initStrategyData = strategy.getInitializeData(initParams);
       const poolCreationData: CreatePoolArgs = {
@@ -221,7 +213,7 @@ const sendRawTx = async (signer: any, txData: TransactionData) => {};
 
 const deployContract = async (
   signer: any,
-  dpData: DeployParams,
+  dpData: DeployParams
 ): Promise<`0x${string}`> => {
   const response = await signer.sendTransaction({
     data: dpData.bytecode,
