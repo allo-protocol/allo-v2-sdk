@@ -288,8 +288,8 @@ class DonationVotingMerkleDistributionStrategy {
             throw new Error("Invalid strategy type");
         }
         const version = strategyType === types_3.StrategyType.Vault
-            ? "DonationVotingMerkleDistributionVaultStrategyv1.1"
-            : "DonationVotingMerkleDistributionDirectTransferStrategyv1.1";
+            ? "DonationVotingMerkleDistributionVaultStrategyv2.0"
+            : "DonationVotingMerkleDistributionDirectTransferStrategyv2.0";
         const bytecode = strategyType === types_3.StrategyType.Vault ? donationVotingVault_config_1.bytecode : donationVotingDirect_config_1.bytecode;
         const abi = strategyType === types_3.StrategyType.Vault ? donationVotingVault_config_1.abi : donationVotingDirect_config_1.abi;
         const constructorArgs = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, string"), [this.allo.address(), version]);
@@ -321,8 +321,9 @@ class DonationVotingMerkleDistributionStrategy {
      * @returns `0x${string}`
      */
     getEncodedAllocation(data) {
-        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, (((address, uint256), uint256, uint256), bytes32)"), [
+        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, uint8, (((address, uint256), uint256, uint256), bytes32)"), [
             data.recipientId,
+            data.permitType,
             [
                 [
                     [
@@ -339,7 +340,7 @@ class DonationVotingMerkleDistributionStrategy {
     }
     /**
      *
-     * @param allocation - Allocation: (address,(((address,uint256),uint256,uint256),bytes32))
+     * @param allocation - Allocation: (address,PermitType,(((address,uint256),uint256,uint256),bytes32))
      * @returns TransactionData: {to: `0x${string}`, data: `0x${string}`, value: string}
      */
     getAllocateData(allocation) {

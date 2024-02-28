@@ -90,11 +90,6 @@ export declare const abi: ({
     anonymous?: undefined;
 } | {
     inputs: ({
-        internalType: string;
-        name: string;
-        type: string;
-        components?: undefined;
-    } | {
         components: {
             internalType: string;
             name: string;
@@ -103,6 +98,11 @@ export declare const abi: ({
         internalType: string;
         name: string;
         type: string;
+    } | {
+        internalType: string;
+        name: string;
+        type: string;
+        components?: undefined;
     })[];
     name: string;
     outputs: never[];

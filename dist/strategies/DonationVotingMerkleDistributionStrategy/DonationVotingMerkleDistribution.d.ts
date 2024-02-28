@@ -60,7 +60,7 @@ export declare class DonationVotingMerkleDistributionStrategy {
     getEncodedAllocation(data: Allocation): `0x${string}`;
     /**
      *
-     * @param allocation - Allocation: (address,(((address,uint256),uint256,uint256),bytes32))
+     * @param allocation - Allocation: (address,PermitType,(((address,uint256),uint256,uint256),bytes32))
      * @returns TransactionData: {to: `0x${string}`, data: `0x${string}`, value: string}
      */
     getAllocateData(allocation: Allocation): TransactionData;
