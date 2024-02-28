@@ -337,8 +337,8 @@ export class DonationVotingMerkleDistributionStrategy {
 
     const version =
       strategyType === StrategyType.Vault
-        ? "DonationVotingMerkleDistributionVaultStrategyv1.1"
-        : "DonationVotingMerkleDistributionDirectTransferStrategyv1.1";
+        ? "DonationVotingMerkleDistributionVaultStrategyv2.0"
+        : "DonationVotingMerkleDistributionDirectTransferStrategyv2.0";
 
     const bytecode =
       strategyType === StrategyType.Vault ? vaultBytecode : directBytecode;
