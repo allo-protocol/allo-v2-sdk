@@ -386,10 +386,11 @@ export class DonationVotingMerkleDistributionStrategy {
   public getEncodedAllocation(data: Allocation): `0x${string}` {
     const encoded: `0x${string}` = encodeAbiParameters(
       parseAbiParameters(
-        "address, (((address, uint256), uint256, uint256), bytes32)",
+        "address, uint8, (((address, uint256), uint256, uint256), bytes32)",
       ),
       [
         data.recipientId,
+        data.permitType,
         [
           [
             [
@@ -409,7 +410,7 @@ export class DonationVotingMerkleDistributionStrategy {
 
   /**
    *
-   * @param allocation - Allocation: (address,(((address,uint256),uint256,uint256),bytes32))
+   * @param allocation - Allocation: (address,PermitType,(((address,uint256),uint256,uint256),bytes32))
    * @returns TransactionData: {to: `0x${string}`, data: `0x${string}`, value: string}
    */
   public getAllocateData(allocation: Allocation): TransactionData {

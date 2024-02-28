@@ -108,6 +108,11 @@ export const abi = [
   },
   {
     inputs: [],
+    name: "NOT_IMPLEMENTED",
+    type: "error",
+  },
+  {
+    inputs: [],
     name: "NOT_INITIALIZED",
     type: "error",
   },
@@ -145,6 +150,11 @@ export const abi = [
   {
     inputs: [],
     name: "RECIPIENT_NOT_ACCEPTED",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "REGISTRATION_ACTIVE",
     type: "error",
   },
   {
@@ -346,18 +356,6 @@ export const abi = [
   {
     anonymous: false,
     inputs: [
-      {
-        indexed: false,
-        internalType: "address",
-        name: "allo",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "bytes32",
-        name: "profileId",
-        type: "bytes32",
-      },
       {
         indexed: false,
         internalType: "uint256",
@@ -1096,6 +1094,11 @@ export const abi = [
         name: "statuses",
         type: "tuple[]",
       },
+      {
+        internalType: "uint256",
+        name: "refRecipientsCounter",
+        type: "uint256",
+      },
     ],
     name: "reviewRecipients",
     outputs: [],
@@ -1111,6 +1114,25 @@ export const abi = [
       },
     ],
     name: "statusesBitMap",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "totalClaimableAmount",
     outputs: [
       {
         internalType: "uint256",
@@ -1208,9 +1230,9 @@ export const abi = [
   {
     inputs: [
       {
-        internalType: "uint256",
-        name: "_amount",
-        type: "uint256",
+        internalType: "address",
+        name: "_token",
+        type: "address",
       },
     ],
     name: "withdraw",

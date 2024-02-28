@@ -12,4 +12,4 @@ var Status;
     Status[Status["Appealed"] = 4] = "Appealed";
     Status[Status["InReview"] = 5] = "InReview";
     Status[Status["Canceled"] = 6] = "Canceled";
-})(Status = exports.Status || (exports.Status = {}));
+})(Status || (exports.Status = Status = {}));

@@ -41,7 +41,11 @@ export type Permit2Data = {
     permit: PermitTransferFrom;
     signature: `0x${string}`;
 };
-export type PermitType = "Permit" | "Permit2" | "PermitDAI";
+export declare enum PermitType {
+    Permit = 0,
+    PermitDAI = 1,
+    Permit2 = 2
+}
 export type Allocation = {
     recipientId: `0x${string}`;
     permitType: PermitType;

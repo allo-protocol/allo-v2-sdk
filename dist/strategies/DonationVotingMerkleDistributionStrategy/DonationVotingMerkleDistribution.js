@@ -321,8 +321,9 @@ class DonationVotingMerkleDistributionStrategy {
      * @returns `0x${string}`
      */
     getEncodedAllocation(data) {
-        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, (((address, uint256), uint256, uint256), bytes32)"), [
+        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, uint8, (((address, uint256), uint256, uint256), bytes32)"), [
             data.recipientId,
+            data.permitType,
             [
                 [
                     [
@@ -339,7 +340,7 @@ class DonationVotingMerkleDistributionStrategy {
     }
     /**
      *
-     * @param allocation - Allocation: (address,(((address,uint256),uint256,uint256),bytes32))
+     * @param allocation - Allocation: (address,PermitType,(((address,uint256),uint256,uint256),bytes32))
      * @returns TransactionData: {to: `0x${string}`, data: `0x${string}`, value: string}
      */
     getAllocateData(allocation) {
