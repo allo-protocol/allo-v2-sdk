@@ -10,7 +10,7 @@ export declare class DonationVotingMerkleDistributionStrategy {
     private allo;
     constructor({ chain, rpc, address, poolId }: ConstructorArgs);
     getAllo(): Promise<Allo>;
-    setPoolId(poolId: number): Promise<void>;
+    setPoolId(poolId: bigint): Promise<void>;
     setContract(address: `0x${string}`): void;
     private checkPoolId;
     private checkStrategy;
@@ -20,25 +20,25 @@ export declare class DonationVotingMerkleDistributionStrategy {
     useRegistryAnchor(): Promise<boolean>;
     metadataRequired(): Promise<boolean>;
     distributionStarted(): Promise<boolean>;
-    registrationStartTime(): Promise<number>;
-    registrationEndTime(): Promise<number>;
-    allocationStartTime(): Promise<number>;
-    allocationEndTime(): Promise<number>;
+    registrationStartTime(): Promise<bigint>;
+    registrationEndTime(): Promise<bigint>;
+    allocationStartTime(): Promise<bigint>;
+    allocationEndTime(): Promise<bigint>;
     totalPayoutAmount(): Promise<bigint>;
-    recipientsCounter(): Promise<number>;
+    recipientsCounter(): Promise<bigint>;
     getMerkleRoot(): Promise<string>;
-    statusesBitMap(index: number): Promise<bigint>;
-    recipientToStatusIndexes(recipient: string): Promise<number[]>;
+    statusesBitMap(index: bigint): Promise<bigint>;
+    recipientToStatusIndexes(recipient: string): Promise<bigint[]>;
     isTokenAllowed(token: string): Promise<boolean>;
     getClaims(recipient: string, token: string): Promise<bigint>;
     getTotalClaimableAmount(recipient: string): Promise<bigint>;
     getPayouts(recipientIds: string[], data: string[]): Promise<PayoutSummary[]>;
     getPoolAmount(): Promise<bigint>;
-    getPoolId(): Promise<number>;
+    getPoolId(): Promise<bigint>;
     getRecipient(recipientId: string): Promise<Recipient>;
     getRecipientStatus(recipientId: string): Promise<Status>;
     getStrategyId(): Promise<string>;
-    hasBeenDistributed(index: number): Promise<boolean>;
+    hasBeenDistributed(index: bigint): Promise<boolean>;
     isDistributionSet(): Promise<boolean>;
     isPoolActive(): Promise<boolean>;
     isValidAllocator(allocator: `0x${string}`): Promise<boolean>;
@@ -76,7 +76,7 @@ export declare class DonationVotingMerkleDistributionStrategy {
      * @param allocations - Array of Allocation: (address,(((address,uint256),uint256,uint256),bytes32))
      * @returns TransactionData: {to: `0x${string}`, data: `0x${string}`, value: string}
      */
-    getBatchAllocateDataMultiplePools(poolIds: number[], allocations: Allocation[]): TransactionData;
+    getBatchAllocateDataMultiplePools(poolIds: bigint[], allocations: Allocation[]): TransactionData;
     /**
      *
      * @param data - (address, address, Metadata)
@@ -132,10 +132,10 @@ export declare class DonationVotingMerkleDistributionStrategy {
      * @returns TransactionData
      */
     reviewRecipients(statuses: {
-        index: number;
-        statusRow: number;
-    }[]): TransactionData;
+        index: bigint;
+        statusRow: bigint;
+    }[], refRecipientsCounter: bigint): TransactionData;
     updateDistribution(merkleRoot: string, distributionMetadata: Metadata): TransactionData;
     updatePoolTimestamps(registrationStartTime: bigint, registrationEndTime: bigint, allocationStartTime: bigint, allocationEndTime: bigint): TransactionData;
-    withdraw(amount: number): TransactionData;
+    withdraw(amount: bigint): TransactionData;
 }

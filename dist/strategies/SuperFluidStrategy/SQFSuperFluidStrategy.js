@@ -32,7 +32,7 @@ class SQFSuperFluidStrategy {
             });
             this.strategy = address;
         }
-        this.poolId = poolId || -1;
+        this.poolId = poolId || BigInt(-1);
     }
     setPoolId(poolId) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -50,7 +50,7 @@ class SQFSuperFluidStrategy {
         this.strategy = address;
     }
     checkPoolId() {
-        if (this.poolId === -1)
+        if (this.poolId === BigInt(-1))
             throw new Error("SQFSuperfluidStrategy: No poolId provided. Please call `setPoolId` first.");
     }
     checkStrategy() {
@@ -256,16 +256,16 @@ class SQFSuperFluidStrategy {
     }
     // Write functions
     getUpdatePoolTimestampsData(registrationStartTime, registrationEndTime, allocationStartTime, allocationEndTime) {
-        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("uint64, uint64, uint64, uint64"), [
-            registrationStartTime,
-            registrationEndTime,
-            allocationStartTime,
-            allocationEndTime,
-        ]);
+        this.checkStrategy();
         const encodedData = (0, viem_1.encodeFunctionData)({
             abi: superfluid_config_1.abi,
             functionName: "updatePoolTimestamps",
-            args: [encoded],
+            args: [
+                registrationStartTime,
+                registrationEndTime,
+                allocationStartTime,
+                allocationEndTime,
+            ],
         });
         return {
             to: this.strategy,
@@ -274,11 +274,11 @@ class SQFSuperFluidStrategy {
         };
     }
     getUpdateMinPassportScoreData(minPassportScore) {
-        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("uint256"), [minPassportScore]);
+        this.checkStrategy();
         const encodedData = (0, viem_1.encodeFunctionData)({
             abi: superfluid_config_1.abi,
             functionName: "updateMinPassportScore",
-            args: [encoded],
+            args: [minPassportScore],
         });
         return {
             to: this.strategy,
@@ -404,11 +404,10 @@ class SQFSuperFluidStrategy {
     }
     getWithdrawData(token, amount) {
         this.checkStrategy();
-        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, uint256"), [token, amount]);
         const encodedData = (0, viem_1.encodeFunctionData)({
             abi: superfluid_config_1.abi,
             functionName: "withdraw",
-            args: [encoded],
+            args: [token, amount],
         });
         return {
             to: this.strategy,
@@ -421,7 +420,6 @@ class SQFSuperFluidStrategy {
         const encodedData = (0, viem_1.encodeFunctionData)({
             abi: superfluid_config_1.abi,
             functionName: "closeStream",
-            args: [],
         });
         return {
             to: this.strategy,

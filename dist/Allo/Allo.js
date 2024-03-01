@@ -102,7 +102,7 @@ class Allo {
                 initStrategyData,
                 token,
                 amount,
-                [metadata.protocol, metadata.pointer],
+                metadata,
                 managers,
             ],
         });

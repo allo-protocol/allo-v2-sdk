@@ -33,7 +33,7 @@ class DirectGrantsStrategy {
             });
             this.strategy = address;
         }
-        this.poolId = poolId || -1;
+        this.poolId = poolId || BigInt(-1);
     }
     //  Get the DirectGrants strategy InitializeData
     getInitializeData(params) {
@@ -71,7 +71,7 @@ class DirectGrantsStrategy {
         this.strategy = address;
     }
     checkPoolId() {
-        if (this.poolId === -1)
+        if (this.poolId === BigInt(-1))
             throw new Error("DirectGrantsStrategy: No poolId provided. Please call `setPoolId` first.");
     }
     checkStrategy() {
@@ -214,35 +214,12 @@ class DirectGrantsStrategy {
         });
     }
     // Write methods
-    getIncreaseMaxRequestedAmountData(amount) {
-        this.checkPoolId();
-        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("uint256"), [BigInt(amount)]);
-        const encodedData = (0, viem_1.encodeFunctionData)({
-            abi: directGrants_config_1.abi,
-            functionName: "increaseMaxRequestedAmount",
-            args: [this.poolId, encoded],
-        });
-        return {
-            to: this.strategy,
-            data: encodedData,
-            value: "0",
-        };
-    }
     getSetMilestonesData(recipientId, milestones) {
         this.checkPoolId();
-        const encodedMilestones = [];
-        milestones.forEach((milestone) => {
-            const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("uint256, (uint256, stringt), uint256"), [
-                BigInt(milestone.amountPercentage),
-                [milestone.metadata.protocol, milestone.metadata.pointer],
-                BigInt(milestone.milestoneStatus),
-            ]);
-            encodedMilestones.push(encoded);
-        });
         const encodedData = (0, viem_1.encodeFunctionData)({
             abi: directGrants_config_1.abi,
             functionName: "setMilestones",
-            args: [recipientId, encodedMilestones],
+            args: [recipientId, milestones],
         });
         return {
             to: this.strategy,
@@ -263,7 +240,7 @@ class DirectGrantsStrategy {
         this.checkPoolId();
         const encodedData = (0, viem_1.encodeFunctionData)({
             abi: directGrants_config_1.abi,
-            functionName: "submitMilestones",
+            functionName: "submitMilestone",
             args: [recipientId, BigInt(milestoneId), metadata],
         });
         return {
@@ -393,12 +370,10 @@ class DirectGrantsStrategy {
     }
     getDistributeData(recipientIds) {
         this.checkPoolId();
-        // note: not sure if we need to do this, we don't use _data here.
-        const emptyData = Array(recipientIds.length).fill("0x");
         const encodedData = (0, viem_1.encodeFunctionData)({
             abi: allo_config_1.abi,
             functionName: "distribute",
-            args: [this.poolId, recipientIds, emptyData],
+            args: [this.poolId, recipientIds, "0x"],
         });
         return {
             to: this.allo.address(),

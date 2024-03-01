@@ -1,36 +1,36 @@
 import { Metadata } from "../Common/types";
 export type Profile = {
-    id: string;
-    nonce: number;
+    id: `0x${string}`;
+    nonce: bigint;
     name: string;
     metadata: Metadata;
-    owner: string;
-    anchor: string;
+    owner: `0x${string}`;
+    anchor: `0x${string}`;
 };
 export type CreateProfileArgs = {
-    nonce: number;
+    nonce: bigint;
     name: string;
     metadata: Metadata;
-    owner: string;
-    members: string[];
+    owner: `0x${string}`;
+    members: `0x${string}`[];
 };
 export type HasRoleArgs = {
-    role: string;
-    account: string;
+    role: `0x${string}`;
+    account: `0x${string}`;
 };
 export type ProfileAndAddressArgs = {
-    profileId: string;
-    account: string;
+    profileId: `0x${string}`;
+    account: `0x${string}`;
 };
 export type MemberArgs = {
-    profileId: string;
-    members: string[];
+    profileId: `0x${string}`;
+    members: `0x${string}`[];
 };
 export type ProfileMetadataArgs = {
-    profileId: string;
+    profileId: `0x${string}`;
     metadata: Metadata;
 };
 export type ProfileNameArgs = {
-    profileId: string;
+    profileId: `0x${string}`;
     name: string;
 };

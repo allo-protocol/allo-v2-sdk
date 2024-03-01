@@ -37,7 +37,7 @@ class DonationVotingMerkleDistributionStrategy {
             });
             this.strategy = address;
         }
-        this.poolId = poolId || -1;
+        this.poolId = poolId || BigInt(-1);
     }
     getAllo() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -61,7 +61,7 @@ class DonationVotingMerkleDistributionStrategy {
     }
     // Validation functions
     checkPoolId() {
-        if (this.poolId === -1)
+        if (this.poolId === BigInt(-1))
             throw new Error("DonationVotingMerkleDistributionStrategy: No poolId provided. Please call `setPoolId` first.");
     }
     checkStrategy() {
@@ -471,11 +471,10 @@ class DonationVotingMerkleDistributionStrategy {
      */
     fundPool(amount) {
         this.checkPoolId();
-        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("uint256, uint256"), [BigInt(this.poolId), amount]);
         const encodedData = (0, viem_1.encodeFunctionData)({
             abi: allo_config_1.abi,
             functionName: "fundPool",
-            args: [encoded],
+            args: [this.poolId, amount],
         });
         return {
             to: this.allo.address(),
@@ -496,11 +495,10 @@ class DonationVotingMerkleDistributionStrategy {
     data) {
         this.checkPoolId();
         const encodeDistribution = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("Distribution[]"), [data]);
-        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("uint256, address[], bytes"), [BigInt(this.poolId), recipientIds, encodeDistribution]);
         const encodedData = (0, viem_1.encodeFunctionData)({
             abi: allo_config_1.abi,
             functionName: "distribute",
-            args: [encoded],
+            args: [this.poolId, recipientIds, encodeDistribution],
         });
         return {
             to: this.allo.address(),
@@ -560,11 +558,11 @@ class DonationVotingMerkleDistributionStrategy {
      *
      * @returns TransactionData
      */
-    reviewRecipients(statuses) {
+    reviewRecipients(statuses, refRecipientsCounter) {
         const data = (0, viem_1.encodeFunctionData)({
             abi: donationVoting_config_1.abi,
             functionName: "reviewRecipients",
-            args: [statuses],
+            args: [statuses, refRecipientsCounter],
         });
         return {
             to: this.strategy,
