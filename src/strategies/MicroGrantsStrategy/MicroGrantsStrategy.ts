@@ -52,7 +52,7 @@ export class MicroGrantsStrategy {
 
   private strategy: `0x${string}` | undefined;
 
-  private poolId: number;
+  private poolId: bigint;
 
   private allo: Allo;
 
@@ -75,10 +75,10 @@ export class MicroGrantsStrategy {
       this.strategy = address;
     }
 
-    this.poolId = poolId || -1;
+    this.poolId = poolId || BigInt(-1);
   }
 
-  public async setPoolId(poolId: number): Promise<void> {
+  public async setPoolId(poolId: bigint): Promise<void> {
     this.poolId = poolId;
     const strategyAddress = await this.allo.getStrategy(poolId);
     this.setContract(strategyAddress as `0x${string}`);
@@ -95,16 +95,16 @@ export class MicroGrantsStrategy {
   }
 
   private checkPoolId(): void {
-    if (this.poolId === -1)
+    if (this.poolId === BigInt(-1))
       throw new Error(
-        "MicroGrantsStrategy: No poolId provided. Please call `setPoolId` first."
+        "MicroGrantsStrategy: No poolId provided. Please call `setPoolId` first.",
       );
   }
 
   private checkStrategy(): void {
     if (!this.strategy)
       throw new Error(
-        "MicroGrantsStrategy: No strategy address provided. Please call `setContract` first."
+        "MicroGrantsStrategy: No strategy address provided. Please call `setContract` first.",
       );
   }
 
@@ -124,7 +124,7 @@ export class MicroGrantsStrategy {
 
   public async allocated(
     allocatorAddress: string,
-    recipientAddress: string
+    recipientAddress: string,
   ): Promise<boolean> {
     this.checkStrategy();
 
@@ -136,7 +136,7 @@ export class MicroGrantsStrategy {
     return allocated;
   }
 
-  public async allocationEndTime(): Promise<number> {
+  public async allocationEndTime(): Promise<bigint> {
     this.checkStrategy();
 
     const endTime = await this.contract.read.allocationEndTime();
@@ -144,7 +144,7 @@ export class MicroGrantsStrategy {
     return endTime;
   }
 
-  public async allocationStartTime(): Promise<number> {
+  public async allocationStartTime(): Promise<bigint> {
     this.checkStrategy();
 
     const startTime = await this.contract.read.allocationStartTime();
@@ -186,7 +186,7 @@ export class MicroGrantsStrategy {
     return payoutSummary;
   }
 
-  public async getPoolAmount(): Promise<number> {
+  public async getPoolAmount(): Promise<bigint> {
     this.checkStrategy();
 
     const amount = await this.contract.read.getPoolAmount();
@@ -194,7 +194,7 @@ export class MicroGrantsStrategy {
     return amount;
   }
 
-  public async getPoolId(): Promise<number> {
+  public async getPoolId(): Promise<bigint> {
     this.checkStrategy();
 
     const poolId = await this.contract.read.getPoolId();
@@ -244,7 +244,7 @@ export class MicroGrantsStrategy {
 
   public async recipientAllocations(
     recipientId: string,
-    status: Status
+    status: Status,
   ): Promise<string> {
     this.checkStrategy();
 
@@ -256,7 +256,7 @@ export class MicroGrantsStrategy {
     return allocations;
   }
 
-  public async maxRequestedAmount(): Promise<number> {
+  public async maxRequestedAmount(): Promise<bigint> {
     this.checkStrategy();
 
     const maxRequestedAmount = await this.contract.read.maxRequestedAmount();
@@ -347,7 +347,7 @@ export class MicroGrantsStrategy {
   }
 
   public async getStrategyContractId(
-    strategyContract: string
+    strategyContract: string,
   ): Promise<{ strategyId: `0x${string}` }> {
     const contractReader = getContract({
       address: strategyContract as `0x${string}`,
@@ -406,7 +406,7 @@ export class MicroGrantsStrategy {
   }
 
   public async getInitializeData(
-    params: InitializeParams
+    params: InitializeParams,
   ): Promise<`0x${string}`> {
     const encoded: `0x${string}` = encodeAbiParameters(
       parseAbiParameters("bool, uint64, uint64, uint256, uint256"),
@@ -416,18 +416,18 @@ export class MicroGrantsStrategy {
         params.allocationEndTime,
         params.approvalThreshold,
         params.maxRequestedAmount,
-      ]
+      ],
     );
 
     return encoded;
   }
 
   public async getInitializeDataHats(
-    params: InitializeParamsHats
+    params: InitializeParamsHats,
   ): Promise<`0x${string}`> {
     const encoded: `0x${string}` = encodeAbiParameters(
       parseAbiParameters(
-        "(bool, uint64, uint64, uint256, uint256), address, uint256"
+        "(bool, uint64, uint64, uint256, uint256), address, uint256",
       ),
       [
         [
@@ -439,18 +439,18 @@ export class MicroGrantsStrategy {
         ],
         params.hats,
         params.hatId,
-      ]
+      ],
     );
 
     return encoded;
   }
 
   public async getInitializeDataGov(
-    params: InitializeParamsGov
+    params: InitializeParamsGov,
   ): Promise<`0x${string}`> {
     const encoded: `0x${string}` = encodeAbiParameters(
       parseAbiParameters(
-        "bool, uint64, uint64, uint256, uint256, address, uint256, uint256"
+        "bool, uint64, uint64, uint256, uint256, address, uint256, uint256",
       ),
       [
         params.useRegistryAnchor,
@@ -461,7 +461,7 @@ export class MicroGrantsStrategy {
         params.gov,
         params.snapshotReference,
         params.minVotePower,
-      ]
+      ],
     );
 
     console.log(params);
@@ -472,7 +472,7 @@ export class MicroGrantsStrategy {
   public getDeployParams(strategyType: string): DeployParams {
     const constructorArgs: `0x${string}` = encodeAbiParameters(
       parseAbiParameters("address, string"),
-      [this.allo.address(), strategyType]
+      [this.allo.address(), strategyType],
     );
     const constructorArgsNo0x = constructorArgs.slice(2);
 
@@ -504,7 +504,7 @@ export class MicroGrantsStrategy {
     allocations.forEach((allocation) => {
       const encoded: `0x${string}` = encodeAbiParameters(
         parseAbiParameters("address, uint8"),
-        [allocation.recipientId, allocation.status]
+        [allocation.recipientId, allocation.status],
       );
 
       encodedParams.push(encoded);
@@ -527,12 +527,12 @@ export class MicroGrantsStrategy {
 
   public getAllocationData(
     recipientId: `0x${string}`,
-    status: Status
+    status: Status,
   ): TransactionData {
     this.checkPoolId();
     const encoded: `0x${string}` = encodeAbiParameters(
       parseAbiParameters("address, uint8"),
-      [recipientId, status]
+      [recipientId, status],
     );
 
     const encodedData = encodeFunctionData({
@@ -557,7 +557,7 @@ export class MicroGrantsStrategy {
         data.recipientAddress,
         data.requestedAmount,
         [data.metadata.protocol, data.metadata.pointer],
-      ]
+      ],
     );
 
     const encodedData = encodeFunctionData({
@@ -585,7 +585,7 @@ export class MicroGrantsStrategy {
           registerData.recipientAddress,
           registerData.requestedAmount,
           [registerData.metadata.protocol, registerData.metadata.pointer],
-        ]
+        ],
       );
 
       encodedParams.push(encoded);
@@ -609,15 +609,10 @@ export class MicroGrantsStrategy {
   public getIncreasemaxRequestedAmountData(amount: bigint): TransactionData {
     this.checkStrategy();
 
-    const encoded: `0x${string}` = encodeAbiParameters(
-      parseAbiParameters("uint256"),
-      [amount]
-    );
-
     const encodedData = encodeFunctionData({
       abi: microGrantsAbi,
-      functionName: "increasemaxRequestedAmount",
-      args: [encoded],
+      functionName: "increasemaxRequestedAmountAllowed",
+      args: [amount],
     });
 
     return {
@@ -633,7 +628,7 @@ export class MicroGrantsStrategy {
     const encodedData = encodeFunctionData({
       abi: microGrantsAbi,
       functionName: "setAllocator",
-      args: [data],
+      args: [data.allocatorAddress, data.flag],
     });
 
     return {
@@ -669,19 +664,14 @@ export class MicroGrantsStrategy {
 
   public getUpdatePoolTimestampsData(
     allocationStartTime: bigint,
-    allocationEndTime: bigint
+    allocationEndTime: bigint,
   ): TransactionData {
     this.checkStrategy();
-
-    const encoded: `0x${string}` = encodeAbiParameters(
-      parseAbiParameters("uint64, uint64"),
-      [allocationStartTime, allocationEndTime]
-    );
 
     const encodedData = encodeFunctionData({
       abi: microGrantsAbi,
       functionName: "updatePoolTimestamps",
-      args: [encoded],
+      args: [allocationStartTime, allocationEndTime],
     });
 
     return {

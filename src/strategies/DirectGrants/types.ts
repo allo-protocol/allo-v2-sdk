@@ -19,10 +19,10 @@ export type Recipient = {
 };
 
 export type Milestone = {
-  amountPercentage: number;
+  amountPercentage: bigint;
   metadata: Metadata;
   milestoneStatus: Status;
-}
+};
 
 export type Allocation = {
   recipientId: `0x${string}`;
