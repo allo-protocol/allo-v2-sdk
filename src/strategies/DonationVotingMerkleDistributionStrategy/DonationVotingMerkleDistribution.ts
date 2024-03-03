@@ -47,7 +47,7 @@ export class DonationVotingMerkleDistributionStrategy {
 
   private strategy: `0x${string}` | undefined;
 
-  private poolId: number;
+  private poolId: bigint;
 
   private allo: Allo;
 
@@ -70,14 +70,14 @@ export class DonationVotingMerkleDistributionStrategy {
       this.strategy = address;
     }
 
-    this.poolId = poolId || -1;
+    this.poolId = poolId || BigInt(-1);
   }
 
   public async getAllo(): Promise<Allo> {
     return this.allo;
   }
 
-  public async setPoolId(poolId: number): Promise<void> {
+  public async setPoolId(poolId: bigint): Promise<void> {
     this.poolId = poolId;
     const strategyAddress = await this.allo.getStrategy(poolId);
     this.setContract(strategyAddress as `0x${string}`);
@@ -95,7 +95,7 @@ export class DonationVotingMerkleDistributionStrategy {
 
   // Validation functions
   private checkPoolId(): void {
-    if (this.poolId === -1)
+    if (this.poolId === BigInt(-1))
       throw new Error(
         "DonationVotingMerkleDistributionStrategy: No poolId provided. Please call `setPoolId` first.",
       );
@@ -152,28 +152,28 @@ export class DonationVotingMerkleDistributionStrategy {
     return started;
   }
 
-  public async registrationStartTime(): Promise<number> {
+  public async registrationStartTime(): Promise<bigint> {
     this.checkStrategy();
     const startTime = await this.contract.read.registrationStartTime();
 
     return startTime;
   }
 
-  public async registrationEndTime(): Promise<number> {
+  public async registrationEndTime(): Promise<bigint> {
     this.checkStrategy();
     const endTime = await this.contract.read.registrationEndTime();
 
     return endTime;
   }
 
-  public async allocationStartTime(): Promise<number> {
+  public async allocationStartTime(): Promise<bigint> {
     this.checkStrategy();
     const startTime = await this.contract.read.allocationStartTime();
 
     return startTime;
   }
 
-  public async allocationEndTime(): Promise<number> {
+  public async allocationEndTime(): Promise<bigint> {
     this.checkStrategy();
     const endTime = await this.contract.read.allocationEndTime();
 
@@ -186,7 +186,7 @@ export class DonationVotingMerkleDistributionStrategy {
     return amount;
   }
 
-  public async recipientsCounter(): Promise<number> {
+  public async recipientsCounter(): Promise<bigint> {
     this.checkStrategy();
     const counter = await this.contract.read.recipientsCounter();
 
@@ -200,14 +200,14 @@ export class DonationVotingMerkleDistributionStrategy {
     return root;
   }
 
-  public async statusesBitMap(index: number): Promise<bigint> {
+  public async statusesBitMap(index: bigint): Promise<bigint> {
     this.checkStrategy();
     const bitMap = await this.contract.read.statusesBitMap([index]);
 
     return bitMap;
   }
 
-  public async recipientToStatusIndexes(recipient: string): Promise<number[]> {
+  public async recipientToStatusIndexes(recipient: string): Promise<bigint[]> {
     this.checkStrategy();
     const indexes = await this.contract.read.recipientToStatusIndexes([
       recipient,
@@ -262,7 +262,7 @@ export class DonationVotingMerkleDistributionStrategy {
     return amount;
   }
 
-  public async getPoolId(): Promise<number> {
+  public async getPoolId(): Promise<bigint> {
     this.checkStrategy();
     const id = await this.contract.read.getPoolId();
 
@@ -290,7 +290,7 @@ export class DonationVotingMerkleDistributionStrategy {
     return id;
   }
 
-  public async hasBeenDistributed(index: number): Promise<boolean> {
+  public async hasBeenDistributed(index: bigint): Promise<boolean> {
     this.checkStrategy();
     const distributed = await this.contract.read.hasBeenDistributed([index]);
 
@@ -471,7 +471,7 @@ export class DonationVotingMerkleDistributionStrategy {
    * @returns TransactionData: {to: `0x${string}`, data: `0x${string}`, value: string}
    */
   public getBatchAllocateDataMultiplePools(
-    poolIds: number[],
+    poolIds: bigint[],
     allocations: Allocation[],
   ): TransactionData {
     if (poolIds.length !== allocations.length) {
@@ -579,15 +579,10 @@ export class DonationVotingMerkleDistributionStrategy {
   public fundPool(amount: bigint): TransactionData {
     this.checkPoolId();
 
-    const encoded: `0x${string}` = encodeAbiParameters(
-      parseAbiParameters("uint256, uint256"),
-      [BigInt(this.poolId), amount],
-    );
-
     const encodedData = encodeFunctionData({
       abi: alloAbi,
       functionName: "fundPool",
-      args: [encoded],
+      args: [this.poolId, amount],
     });
 
     return {
@@ -616,15 +611,11 @@ export class DonationVotingMerkleDistributionStrategy {
       parseAbiParameters("Distribution[]"),
       [data],
     );
-    const encoded: `0x${string}` = encodeAbiParameters(
-      parseAbiParameters("uint256, address[], bytes"),
-      [BigInt(this.poolId), recipientIds, encodeDistribution],
-    );
 
     const encodedData = encodeFunctionData({
       abi: alloAbi,
       functionName: "distribute",
-      args: [encoded],
+      args: [this.poolId, recipientIds, encodeDistribution],
     });
 
     return {
@@ -698,12 +689,13 @@ export class DonationVotingMerkleDistributionStrategy {
    * @returns TransactionData
    */
   public reviewRecipients(
-    statuses: { index: number; statusRow: number }[],
+    statuses: { index: bigint; statusRow: bigint }[],
+    refRecipientsCounter: bigint,
   ): TransactionData {
     const data = encodeFunctionData({
       abi: strategyAbi,
       functionName: "reviewRecipients",
-      args: [statuses],
+      args: [statuses, refRecipientsCounter],
     });
 
     return {
@@ -754,7 +746,7 @@ export class DonationVotingMerkleDistributionStrategy {
     };
   }
 
-  public withdraw(amount: number): TransactionData {
+  public withdraw(amount: bigint): TransactionData {
     const data = encodeFunctionData({
       abi: strategyAbi,
       functionName: "withdraw",

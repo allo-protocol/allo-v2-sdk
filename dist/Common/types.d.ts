@@ -2,7 +2,7 @@ export type ConstructorArgs = {
     chain: number;
     rpc?: string;
     address?: `0x${string}`;
-    poolId?: number;
+    poolId?: bigint;
 };
 export type TransactionData = {
     to: `0x${string}`;
@@ -18,7 +18,7 @@ export type FunctionDataParams = {
     args: any[];
 };
 export type DeployParams = {
-    abi: any[];
+    abi: any;
     bytecode: `0x${string}`;
 };
 export declare const ZERO_ADDRESS: `0x${string}`;

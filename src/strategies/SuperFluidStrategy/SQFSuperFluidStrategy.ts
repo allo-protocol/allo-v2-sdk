@@ -37,7 +37,7 @@ export class SQFSuperFluidStrategy {
   private contract: any;
 
   private strategy: `0x${string}` | undefined;
-  private poolId: number;
+  private poolId: bigint;
 
   private allo: Allo;
 
@@ -60,10 +60,10 @@ export class SQFSuperFluidStrategy {
       this.strategy = address;
     }
 
-    this.poolId = poolId || -1;
+    this.poolId = poolId || BigInt(-1);
   }
 
-  public async setPoolId(poolId: number): Promise<void> {
+  public async setPoolId(poolId: bigint): Promise<void> {
     this.poolId = poolId;
     const strategyAddress = await this.allo.getStrategy(poolId);
     this.setContract(strategyAddress as `0x${string}`);
@@ -80,7 +80,7 @@ export class SQFSuperFluidStrategy {
   }
 
   private checkPoolId(): void {
-    if (this.poolId === -1)
+    if (this.poolId === BigInt(-1))
       throw new Error(
         "SQFSuperfluidStrategy: No poolId provided. Please call `setPoolId` first.",
       );
@@ -146,7 +146,7 @@ export class SQFSuperFluidStrategy {
     return native;
   }
 
-  public async getAllocationEndTime(): Promise<number> {
+  public async getAllocationEndTime(): Promise<bigint> {
     this.checkStrategy();
 
     const endTime = await this.contract.read.allocationEndTime();
@@ -154,7 +154,7 @@ export class SQFSuperFluidStrategy {
     return endTime;
   }
 
-  public async getAllocationStartTime(): Promise<number> {
+  public async getAllocationStartTime(): Promise<bigint> {
     this.checkStrategy();
 
     const startTime = await this.contract.read.allocationStartTime();
@@ -162,7 +162,7 @@ export class SQFSuperFluidStrategy {
     return startTime;
   }
 
-  public async getRegistrationEndTime(): Promise<number> {
+  public async getRegistrationEndTime(): Promise<bigint> {
     this.checkStrategy();
 
     const endTime = await this.contract.read.registrationEndTime();
@@ -170,7 +170,7 @@ export class SQFSuperFluidStrategy {
     return endTime;
   }
 
-  public async getRegistrationStartTime(): Promise<number> {
+  public async getRegistrationStartTime(): Promise<bigint> {
     this.checkStrategy();
 
     const startTime = await this.contract.read.registrationStartTime();
@@ -204,7 +204,7 @@ export class SQFSuperFluidStrategy {
     return payoutSummary;
   }
 
-  public async getPoolAmount(): Promise<number> {
+  public async getPoolAmount(): Promise<bigint> {
     this.checkStrategy();
 
     const amount = await this.contract.read.getPoolAmount();
@@ -212,7 +212,7 @@ export class SQFSuperFluidStrategy {
     return amount;
   }
 
-  public async getPoolId(): Promise<number> {
+  public async getPoolId(): Promise<bigint> {
     this.checkStrategy();
 
     const poolId = await this.contract.read.getPoolId();
@@ -356,20 +356,17 @@ export class SQFSuperFluidStrategy {
     allocationStartTime: bigint,
     allocationEndTime: bigint,
   ): TransactionData {
-    const encoded: `0x${string}` = encodeAbiParameters(
-      parseAbiParameters("uint64, uint64, uint64, uint64"),
-      [
+    this.checkStrategy();
+
+    const encodedData = encodeFunctionData({
+      abi: superfluidAbi,
+      functionName: "updatePoolTimestamps",
+      args: [
         registrationStartTime,
         registrationEndTime,
         allocationStartTime,
         allocationEndTime,
       ],
-    );
-
-    const encodedData = encodeFunctionData({
-      abi: superfluidAbi,
-      functionName: "updatePoolTimestamps",
-      args: [encoded],
     });
 
     return {
@@ -382,15 +379,12 @@ export class SQFSuperFluidStrategy {
   public getUpdateMinPassportScoreData(
     minPassportScore: bigint,
   ): TransactionData {
-    const encoded: `0x${string}` = encodeAbiParameters(
-      parseAbiParameters("uint256"),
-      [minPassportScore],
-    );
+    this.checkStrategy();
 
     const encodedData = encodeFunctionData({
       abi: superfluidAbi,
       functionName: "updateMinPassportScore",
-      args: [encoded],
+      args: [minPassportScore],
     });
 
     return {
@@ -582,15 +576,10 @@ export class SQFSuperFluidStrategy {
   ): TransactionData {
     this.checkStrategy();
 
-    const encoded: `0x${string}` = encodeAbiParameters(
-      parseAbiParameters("address, uint256"),
-      [token, amount],
-    );
-
     const encodedData = encodeFunctionData({
       abi: superfluidAbi,
       functionName: "withdraw",
-      args: [encoded],
+      args: [token, amount],
     });
 
     return {
@@ -606,7 +595,6 @@ export class SQFSuperFluidStrategy {
     const encodedData = encodeFunctionData({
       abi: superfluidAbi,
       functionName: "closeStream",
-      args: [],
     });
 
     return {

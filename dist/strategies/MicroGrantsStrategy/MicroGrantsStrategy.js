@@ -36,7 +36,7 @@ class MicroGrantsStrategy {
             });
             this.strategy = address;
         }
-        this.poolId = poolId || -1;
+        this.poolId = poolId || BigInt(-1);
     }
     setPoolId(poolId) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -54,7 +54,7 @@ class MicroGrantsStrategy {
         this.strategy = address;
     }
     checkPoolId() {
-        if (this.poolId === -1)
+        if (this.poolId === BigInt(-1))
             throw new Error("MicroGrantsStrategy: No poolId provided. Please call `setPoolId` first.");
     }
     checkStrategy() {
@@ -451,11 +451,10 @@ class MicroGrantsStrategy {
     }
     getIncreasemaxRequestedAmountData(amount) {
         this.checkStrategy();
-        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("uint256"), [amount]);
         const encodedData = (0, viem_1.encodeFunctionData)({
             abi: microGrants_config_1.abi,
-            functionName: "increasemaxRequestedAmount",
-            args: [encoded],
+            functionName: "increasemaxRequestedAmountAllowed",
+            args: [amount],
         });
         return {
             to: this.strategy,
@@ -468,7 +467,7 @@ class MicroGrantsStrategy {
         const encodedData = (0, viem_1.encodeFunctionData)({
             abi: microGrants_config_1.abi,
             functionName: "setAllocator",
-            args: [data],
+            args: [data.allocatorAddress, data.flag],
         });
         return {
             to: this.strategy,
@@ -497,11 +496,10 @@ class MicroGrantsStrategy {
     }
     getUpdatePoolTimestampsData(allocationStartTime, allocationEndTime) {
         this.checkStrategy();
-        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("uint64, uint64"), [allocationStartTime, allocationEndTime]);
         const encodedData = (0, viem_1.encodeFunctionData)({
             abi: microGrants_config_1.abi,
             functionName: "updatePoolTimestamps",
-            args: [encoded],
+            args: [allocationStartTime, allocationEndTime],
         });
         return {
             to: this.strategy,

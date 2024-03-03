@@ -37,20 +37,20 @@ export class Allo {
 
   // Read only funcitons
 
-  public async getFeeDenominator(): Promise<number> {
+  public async getFeeDenominator(): Promise<bigint> {
     const denominator = await this.contract.read.getFeeDenominator();
 
     return denominator;
   }
 
-  public async isPoolAdmin(poolId: number, address: string): Promise<boolean> {
+  public async isPoolAdmin(poolId: bigint, address: string): Promise<boolean> {
     const isAdmin = await this.contract.read.isPoolAdmin([poolId, address]);
 
     return isAdmin;
   }
 
   public async isPoolManager(
-    poolId: number,
+    poolId: bigint,
     address: string,
   ): Promise<boolean> {
     const isManager = await this.contract.read.isPoolManager([poolId, address]);
@@ -58,19 +58,19 @@ export class Allo {
     return isManager;
   }
 
-  public async getStrategy(poolId: number): Promise<string> {
+  public async getStrategy(poolId: bigint): Promise<string> {
     const strategyAddress = this.contract.read.getStrategy([poolId]);
 
     return strategyAddress;
   }
 
-  public async getPercentFee(): Promise<number> {
+  public async getPercentFee(): Promise<bigint> {
     const percentage = this.contract.read.getPercentFee();
 
     return percentage;
   }
 
-  public async getBaseFee(): Promise<number> {
+  public async getBaseFee(): Promise<bigint> {
     const baseFee = this.contract.read.getBaseFee();
 
     return baseFee;
@@ -94,7 +94,7 @@ export class Allo {
     return isCloneable;
   }
 
-  public async getPool(poolId: number): Promise<Pool> {
+  public async getPool(poolId: bigint): Promise<Pool> {
     const pool = this.contract.read.getPool([poolId]);
 
     return pool;
@@ -120,7 +120,7 @@ export class Allo {
         initStrategyData,
         token,
         amount,
-        [metadata.protocol, metadata.pointer],
+        metadata,
         managers,
       ],
     });
@@ -192,7 +192,7 @@ export class Allo {
     };
   }
 
-  public updateRegistry(registry: string): TransactionData {
+  public updateRegistry(registry: `0x${string}`): TransactionData {
     const data = encodeFunctionData({
       abi: abi,
       functionName: "updateRegistry",
@@ -206,7 +206,7 @@ export class Allo {
     };
   }
 
-  public updateTreasury(registry: string): TransactionData {
+  public updateTreasury(registry: `0x${string}`): TransactionData {
     const data = encodeFunctionData({
       abi: abi,
       functionName: "updateRegistry",
@@ -220,7 +220,7 @@ export class Allo {
     };
   }
 
-  public updatePercentFee(percentage: number): TransactionData {
+  public updatePercentFee(percentage: bigint): TransactionData {
     const data = encodeFunctionData({
       abi: abi,
       functionName: "updatePercentFee",
@@ -234,7 +234,7 @@ export class Allo {
     };
   }
 
-  public updateBaseFee(percentage: number): TransactionData {
+  public updateBaseFee(percentage: bigint): TransactionData {
     const data = encodeFunctionData({
       abi: abi,
       functionName: "updateBaseFee",
@@ -248,7 +248,7 @@ export class Allo {
     };
   }
 
-  public addToCloneableStrategies(strategy: string): TransactionData {
+  public addToCloneableStrategies(strategy: `0x${string}`): TransactionData {
     const data = encodeFunctionData({
       abi: abi,
       functionName: "addToCloneableStrategies",
@@ -262,7 +262,9 @@ export class Allo {
     };
   }
 
-  public removeFromCloneableStrategies(strategy: string): TransactionData {
+  public removeFromCloneableStrategies(
+    strategy: `0x${string}`,
+  ): TransactionData {
     const data = encodeFunctionData({
       abi: abi,
       functionName: "removeFromCloneableStrategies",
@@ -276,7 +278,10 @@ export class Allo {
     };
   }
 
-  public addPoolManager(poolId: number, manager: string): TransactionData {
+  public addPoolManager(
+    poolId: bigint,
+    manager: `0x${string}`,
+  ): TransactionData {
     const data = encodeFunctionData({
       abi: abi,
       functionName: "addPoolManager",
@@ -290,7 +295,10 @@ export class Allo {
     };
   }
 
-  public removePoolManager(poolId: number, manager: string): TransactionData {
+  public removePoolManager(
+    poolId: bigint,
+    manager: `0x${string}`,
+  ): TransactionData {
     const data = encodeFunctionData({
       abi: abi,
       functionName: "removePoolManager",
@@ -304,7 +312,10 @@ export class Allo {
     };
   }
 
-  public recoverFunds(token: string, recipient: string): TransactionData {
+  public recoverFunds(
+    token: `0x${string}`,
+    recipient: `0x${string}`,
+  ): TransactionData {
     const data = encodeFunctionData({
       abi: abi,
       functionName: "recoverFunds",
@@ -320,8 +331,8 @@ export class Allo {
 
   // Strategy functions
   public registerRecipient(
-    poolId: number,
-    strategyData: string,
+    poolId: bigint,
+    strategyData: `0x${string}`,
   ): TransactionData {
     const data = encodeFunctionData({
       abi: abi,
@@ -337,8 +348,8 @@ export class Allo {
   }
 
   public batchRegisterRecipient(
-    poolIds: number[],
-    strategyData: string[],
+    poolIds: bigint[],
+    strategyData: `0x${string}`[],
   ): TransactionData {
     const data = encodeFunctionData({
       abi: abi,
@@ -353,7 +364,7 @@ export class Allo {
     };
   }
 
-  public fundPool(poolId: number, amount: number): TransactionData {
+  public fundPool(poolId: bigint, amount: bigint): TransactionData {
     const data = encodeFunctionData({
       abi: abi,
       functionName: "fundPool",
@@ -367,7 +378,10 @@ export class Allo {
     };
   }
 
-  public allocate(poolId: number, strategyData: string): TransactionData {
+  public allocate(
+    poolId: bigint,
+    strategyData: `0x${string}`,
+  ): TransactionData {
     const data = encodeFunctionData({
       abi: abi,
       functionName: "allocate",
@@ -382,8 +396,8 @@ export class Allo {
   }
 
   public batchAllocate(
-    poolIds: number[],
-    strategyData: string[],
+    poolIds: bigint[],
+    strategyData: `0x${string}`[],
   ): TransactionData {
     const data = encodeFunctionData({
       abi: abi,
@@ -399,9 +413,9 @@ export class Allo {
   }
 
   public distribute(
-    poolId: number,
-    recipientId: string[],
-    strategyData: string,
+    poolId: bigint,
+    recipientId: `0x${string}`[],
+    strategyData: `0x${string}`,
   ): TransactionData {
     const data = encodeFunctionData({
       abi: abi,

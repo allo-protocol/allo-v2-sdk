@@ -6,7 +6,7 @@ var PermitType;
     PermitType[PermitType["Permit"] = 0] = "Permit";
     PermitType[PermitType["PermitDAI"] = 1] = "PermitDAI";
     PermitType[PermitType["Permit2"] = 2] = "Permit2";
-})(PermitType || (exports.PermitType = PermitType = {}));
+})(PermitType = exports.PermitType || (exports.PermitType = {}));
 ;
 exports.StrategyType = {
     Vault: "Vault",

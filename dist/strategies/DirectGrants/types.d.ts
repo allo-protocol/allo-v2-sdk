@@ -16,7 +16,7 @@ export type Recipient = {
     milestoneReviewStatus: Status;
 };
 export type Milestone = {
-    amountPercentage: number;
+    amountPercentage: bigint;
     metadata: Metadata;
     milestoneStatus: Status;
 };

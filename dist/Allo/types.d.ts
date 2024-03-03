@@ -1,22 +1,22 @@
 import { Metadata } from "../Common/types";
 export type CreatePoolArgs = {
-    profileId: string;
+    profileId: `0x${string}`;
     strategy: any;
-    initStrategyData: string;
-    token: string;
+    initStrategyData: `0x${string}`;
+    token: `0x${string}`;
     amount: bigint;
     metadata: Metadata;
-    managers: string[];
+    managers: `0x${string}`[];
 };
 export type UpdateMetaDataArgs = {
-    poolId: number;
+    poolId: bigint;
     metadata: Metadata;
 };
 export type Pool = {
-    profileId: string;
+    profileId: `0x${string}`;
     strategy: any;
-    token: string;
+    token: `0x${string}`;
     metadata: Metadata;
-    managerRole: string;
-    adminRole: string;
+    managerRole: `0x${string}`;
+    adminRole: `0x${string}`;
 };

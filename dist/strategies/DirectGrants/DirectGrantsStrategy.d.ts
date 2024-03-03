@@ -10,7 +10,7 @@ export declare class DirectGrantsStrategy {
     constructor({ chain, rpc, address, poolId }: ConstructorArgs);
     getInitializeData(params: InitializeParams): `0x${string}`;
     getDeployParams(): DeployParams;
-    setPoolId(poolId: number): Promise<void>;
+    setPoolId(poolId: bigint): Promise<void>;
     setContract(address: `0x${string}`): void;
     private checkPoolId;
     private checkStrategy;
@@ -31,7 +31,6 @@ export declare class DirectGrantsStrategy {
     getMilestones(recipientAddress: `0x${string}`): Promise<`0x${string}`>;
     getUpcomingMilestone(recipientAddress: `0x${string}`): Promise<any>;
     getPayouts(recipientIds: `0x${string}`[]): Promise<PayoutSummary[]>;
-    getIncreaseMaxRequestedAmountData(amount: number): TransactionData;
     getSetMilestonesData(recipientId: `0x${string}`, milestones: Milestone[]): TransactionData;
     getReviewSetMilestonesData(recipientId: `0x${string}`, status: Status): TransactionData;
     getSubmitMilestonesData(recipientId: `0x${string}`, milestoneId: number, metadata: Metadata): TransactionData;

@@ -43,37 +43,39 @@ export class Registry {
 
   // Read only Functions
 
-  public async getAlloOwner(): Promise<string> {
+  public async getAlloOwner(): Promise<`0x${string}`> {
     const owner = await this.contract.read.ALLO_OWNER();
     return owner;
   }
 
-  public async getDefaultAdminRole(): Promise<string> {
+  public async getDefaultAdminRole(): Promise<`0x${string}`> {
     const admin = await this.contract.read.DEFAULT_ADMIN_ROLE();
     return admin;
   }
 
-  public async getNative(): Promise<string> {
+  public async getNative(): Promise<`0x${string}`> {
     const native = await this.contract.read.NATIVE();
     return native;
   }
 
-  public async getAnchorToProfileId(anchor: string): Promise<string> {
+  public async getAnchorToProfileId(
+    anchor: `0x${string}`,
+  ): Promise<`0x${string}`> {
     const profileId = await this.contract.read.anchorToProfileId([anchor]);
     return profileId;
   }
 
-  public async getProfileByAnchor(anchor: string): Promise<Profile> {
+  public async getProfileByAnchor(anchor: `0x${string}`): Promise<Profile> {
     const profile = await this.contract.read.getProfileByAnchor([anchor]);
     return profile;
   }
 
-  public async getProfileById(profileId: string): Promise<Profile> {
+  public async getProfileById(profileId: `0x${string}`): Promise<Profile> {
     const profile = await this.contract.read.getProfileById([profileId]);
     return profile;
   }
 
-  public async getRoleAdmin(role: string): Promise<string> {
+  public async getRoleAdmin(role: `0x${string}`): Promise<`0x${string}`> {
     const admin = await this.contract.read.getRoleAdmin([role]);
     return admin;
   }
@@ -116,14 +118,16 @@ export class Registry {
     return isOwnerOrMember;
   }
 
-  public async profileIdToPendingOwner(profileId: string): Promise<string> {
+  public async profileIdToPendingOwner(
+    profileId: `0x${string}`,
+  ): Promise<`0x${string}`> {
     const pendingOwner = await this.contract.read.profileIdToPendingOwner([
       profileId,
     ]);
     return pendingOwner;
   }
 
-  public async profilesById(profileId: string): Promise<any> {
+  public async profilesById(profileId: `0x${string}`): Promise<any> {
     const profile = await this.contract.read.profilesById([profileId]);
     return profile;
   }
@@ -150,7 +154,7 @@ export class Registry {
     };
   }
 
-  public acceptProfileOwnership(profileId: string): TransactionData {
+  public acceptProfileOwnership(profileId: `0x${string}`): TransactionData {
     const data = encodeFunctionData({
       abi: abi,
       functionName: "acceptProfileOwnership",

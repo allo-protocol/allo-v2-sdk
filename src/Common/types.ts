@@ -2,7 +2,7 @@ export type ConstructorArgs = {
   chain: number;
   rpc?: string;
   address?: `0x${string}`;
-  poolId?: number;
+  poolId?: bigint;
 };
 
 export type TransactionData = {
@@ -22,7 +22,7 @@ export type FunctionDataParams = {
 };
 
 export type DeployParams = {
-  abi: any[];
+  abi: any;
   bytecode: `0x${string}`;
 };
 
