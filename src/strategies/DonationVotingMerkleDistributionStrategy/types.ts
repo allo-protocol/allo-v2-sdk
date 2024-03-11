@@ -51,9 +51,10 @@ export type Permit2Data = {
 };
 
 export enum PermitType {
+  None,
   Permit,
   PermitDAI,
-  Permit2,
+  Permit2
 };
 
 export type Allocation = {
