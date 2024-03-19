@@ -4,6 +4,8 @@ import { MicroGrantsStrategy } from "./strategies/MicroGrantsStrategy/MicroGrant
 import { SQFSuperFluidStrategy } from "./strategies/SuperFluidStrategy/SQFSuperFluidStrategy";
 import { DonationVotingMerkleDistributionStrategy } from "./strategies/DonationVotingMerkleDistributionStrategy/DonationVotingMerkleDistribution";
 import { DirectGrantsStrategy } from "./strategies/DirectGrants/DirectGrantsStrategy";
+import { QVSimpleStrategy } from "./strategies/QVSimpleStrategy/QVSimpleStrategy";
+import { RFPSimpleStrategy } from "./strategies/RFPSimpleStrategy/RFPSimpleStrategy";
 
 export * from "./types";
 export * from "./strategies/types";
@@ -13,6 +15,8 @@ export * as DonationVotingMerkleDistributionStrategyTypes from "./strategies/Don
 export * as MicroGrantsStrategyTypes from "./strategies/MicroGrantsStrategy/types";
 export * as SQFSuperFluidStrategyTypes from "./strategies/SuperFluidStrategy/types";
 export * as DirectGrantsStrategyTypes from "./strategies/DirectGrants/types";
+export * as QVSimpleStrategyTypes from "./strategies/QVSimpleStrategy/types";
+export * as RFPSimpleStrategyTypes from "./strategies/RFPSimpleStrategy/types";
 
 export { abi as AlloAbi } from "./Allo/allo.config";
 export { abi as RegistryAbi } from "./Registry/registry.config";
@@ -21,6 +25,8 @@ export { abi as DonationVotingMerkleDistributionVaultStrategyAbi } from "./strat
 export { abi as MicroGrantsStrategyAbi } from "./strategies/MicroGrantsStrategy/microGrants.config";
 export { abi as SQFSuperFluidStrategyAbi } from "./strategies/SuperFluidStrategy/superfluid.config";
 export { abi as DirectGrantsStrategyAbi } from "./strategies/DirectGrants/directGrants.config";
+export { abi as QVSimpleStrategyAbi } from "./strategies/QVSimpleStrategy/qvSimple.config";
+export { abi as RFPSimpleStrategyAbi } from "./strategies/RFPSimpleStrategy/rfpSimple.config";
 
 export {
   Allo,
@@ -29,4 +35,6 @@ export {
   SQFSuperFluidStrategy,
   DonationVotingMerkleDistributionStrategy,
   DirectGrantsStrategy,
+  QVSimpleStrategy,
+  RFPSimpleStrategy,
 };
