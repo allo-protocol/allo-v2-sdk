@@ -1,20 +1,22 @@
 import { Chain } from "viem";
 import {
   arbitrum,
-  arbitrumGoerli,
   arbitrumSepolia,
   base,
-  celoAlfajores,
-  celo,
-  goerli,
   sepolia,
   mainnet,
   optimism,
   polygon,
   polygonMumbai,
   optimismSepolia,
+  avalanche,
+  fantom,
+  scroll,
+  avalancheFuji,
+  fantomTestnet,
 } from "viem/chains";
 
+/** Local development chain support */
 const devChain1: Chain = {
   id: 1337,
   name: "Development 1",
@@ -36,19 +38,21 @@ const devChain1: Chain = {
   },
 };
 
+/** Reference for supported chains: https://github.com/gitcoinco/grants-stack/issues/3107 */
 export const supportedChains: Chain[] = [
-  arbitrum,
-  arbitrumGoerli,
-  arbitrumSepolia,
-  base,
-  celoAlfajores,
-  celo,
-  goerli,
-  sepolia,
   mainnet,
   optimism,
+  arbitrum,
   polygon,
-  polygonMumbai,
+  scroll,
+  base,
+  avalanche,
+  fantom,
+  sepolia,
   optimismSepolia,
+  arbitrumSepolia,
+  polygonMumbai,
+  avalancheFuji,
+  fantomTestnet,
   devChain1,
 ];
