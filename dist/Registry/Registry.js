@@ -21,7 +21,6 @@ class Registry {
             id: chain,
         });
         this.client = (0, Client_1.create)(usedChain, rpc);
-        this.client = (0, Client_1.create)(usedChain, rpc);
         this.contract = (0, viem_1.getContract)({
             address: registry_config_1.address,
             abi: registry_config_1.abi,
