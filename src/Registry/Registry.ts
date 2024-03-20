@@ -32,8 +32,6 @@ export class Registry {
 
     this.client = create(usedChain, rpc);
 
-    this.client = create(usedChain, rpc);
-
     this.contract = getContract({
       address: address,
       abi: abi,
