@@ -54,7 +54,7 @@ export declare class DonationVotingMerkleDistributionStrategy {
     getInitializeData(data: InitializeData): Promise<`0x${string}`>;
     /**
      *
-     * @param data - Allocation: (address,(((address,uint256),uint256,uint256),bytes32))
+     * @param data - Allocation: (address,(((address,uint256),uint256,uint256),bytes))
      * @returns `0x${string}`
      */
     getEncodedAllocation(data: Allocation): `0x${string}`;
@@ -135,7 +135,7 @@ export declare class DonationVotingMerkleDistributionStrategy {
         index: bigint;
         statusRow: bigint;
     }[], refRecipientsCounter: bigint): TransactionData;
-    updateDistribution(merkleRoot: string, distributionMetadata: Metadata): TransactionData;
+    updateDistribution(merkleRoot: `0x${string}`, distributionMetadata: Metadata): TransactionData;
     updatePoolTimestamps(registrationStartTime: bigint, registrationEndTime: bigint, allocationStartTime: bigint, allocationEndTime: bigint): TransactionData;
-    withdraw(amount: bigint): TransactionData;
+    withdraw(address: `0x${string}`): TransactionData;
 }
