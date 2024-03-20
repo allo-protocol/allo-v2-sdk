@@ -32,7 +32,7 @@ export declare class DirectGrantsStrategy {
     getUpcomingMilestone(recipientAddress: `0x${string}`): Promise<any>;
     getPayouts(recipientIds: `0x${string}`[]): Promise<PayoutSummary[]>;
     getSetMilestonesData(recipientId: `0x${string}`, milestones: Milestone[]): TransactionData;
-    getReviewSetMilestonesData(recipientId: `0x${string}`, status: Status): TransactionData;
+    getReviewSetMilestonesData(recipientId: `0x${string}`, status: Status, milestoneHash: `0x${string}`): TransactionData;
     getSubmitMilestonesData(recipientId: `0x${string}`, milestoneId: number, metadata: Metadata): TransactionData;
     getRejectMilestoneData(recipientId: `0x${string}`, milestoneId: number): TransactionData;
     getSetRecipientStatusToInReviewData(recipientIds: `0x${string}`[]): TransactionData;

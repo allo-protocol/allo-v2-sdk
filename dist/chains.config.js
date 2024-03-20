@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.supportedChains = void 0;
 const chains_1 = require("viem/chains");
+/** Local development chain support */
 const devChain1 = {
     id: 1337,
     name: "Development 1",
@@ -22,6 +23,7 @@ const devChain1 = {
         },
     },
 };
+/** Reference for supported chains: https://github.com/gitcoinco/grants-stack/issues/3107 */
 exports.supportedChains = [
     chains_1.mainnet,
     chains_1.optimism,

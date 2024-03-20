@@ -37,7 +37,7 @@ class DirectGrantsStrategy {
     }
     //  Get the DirectGrants strategy InitializeData
     getInitializeData(params) {
-        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("bool, bool, bool, uint128, uint128"), [
+        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("bool,bool,bool,uint128,uint128"), [
             params.registryGating,
             params.metadataRequired,
             params.grantAmountRequired,
@@ -47,7 +47,7 @@ class DirectGrantsStrategy {
         return encoded;
     }
     getDeployParams() {
-        const constructorArgs = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, string"), [this.allo.address(), "DirectGrantsSimpleStrategy1.1"]);
+        const constructorArgs = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address,string"), [this.allo.address(), "DirectGrantsSimpleStrategy1.1"]);
         const constructorArgsNo0x = constructorArgs.slice(2);
         return {
             abi: directGrants_config_1.abi,
@@ -227,9 +227,14 @@ class DirectGrantsStrategy {
             value: "0",
         };
     }
-    getReviewSetMilestonesData(recipientId, status) {
+    getReviewSetMilestonesData(recipientId, status, milestoneHash) {
         this.checkPoolId();
-        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, uint256"), [recipientId, BigInt(status)]);
+        // todo: add milestone hash logic
+        const encoded = (0, viem_1.encodeFunctionData)({
+            abi: directGrants_config_1.abi,
+            functionName: "reviewSetMilestones",
+            args: [recipientId, status, milestoneHash],
+        });
         return {
             to: this.strategy,
             data: encoded,
@@ -290,7 +295,7 @@ class DirectGrantsStrategy {
     }
     getRegisterRecipientData(data) {
         this.checkPoolId();
-        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, address, uint256, (uint256, string)"), [
+        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address,address,uint256,(uint256,string)"), [
             data.registryAnchor || types_1.ZERO_ADDRESS,
             data.recipientAddress,
             data.grantAmount,
@@ -311,7 +316,7 @@ class DirectGrantsStrategy {
         this.checkPoolId();
         const encodedParams = [];
         data.forEach((registerData) => {
-            const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, address, uint256, (uint256, string)"), [
+            const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address,address,uint256,(uint256,string)"), [
                 registerData.registryAnchor || types_1.ZERO_ADDRESS,
                 registerData.recipientAddress,
                 registerData.grantAmount,
@@ -333,7 +338,7 @@ class DirectGrantsStrategy {
     }
     getAllocationData(recipientId, status, grantAmount) {
         this.checkPoolId();
-        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, uint8, uint256"), [recipientId, status, grantAmount]);
+        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address,uint8,uint256"), [recipientId, status, grantAmount]);
         const encodedData = (0, viem_1.encodeFunctionData)({
             abi: allo_config_1.abi,
             functionName: "allocate",
@@ -349,7 +354,7 @@ class DirectGrantsStrategy {
         this.checkPoolId();
         const encodedParams = [];
         allocations.forEach((allocation) => {
-            const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, uint8, uint256"), [
+            const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address,uint8,uint256"), [
                 allocation.recipientId,
                 allocation.status,
                 BigInt(allocation.grantAmount),

@@ -64,7 +64,7 @@ export class DirectGrantsStrategy {
   //  Get the DirectGrants strategy InitializeData
   public getInitializeData(params: InitializeParams): `0x${string}` {
     const encoded: `0x${string}` = encodeAbiParameters(
-      parseAbiParameters("bool, bool, bool, uint128, uint128"),
+      parseAbiParameters("bool,bool,bool,uint128,uint128"),
       [
         params.registryGating,
         params.metadataRequired,
@@ -79,7 +79,7 @@ export class DirectGrantsStrategy {
 
   public getDeployParams(): DeployParams {
     const constructorArgs: `0x${string}` = encodeAbiParameters(
-      parseAbiParameters("address, string"),
+      parseAbiParameters("address,string"),
       [this.allo.address(), "DirectGrantsSimpleStrategy1.1"],
     );
     const constructorArgsNo0x = constructorArgs.slice(2);
@@ -305,12 +305,17 @@ export class DirectGrantsStrategy {
   public getReviewSetMilestonesData(
     recipientId: `0x${string}`,
     status: Status,
+    milestoneHash: `0x${string}`,
   ): TransactionData {
     this.checkPoolId();
-    const encoded = encodeAbiParameters(
-      parseAbiParameters("address, uint256"),
-      [recipientId, BigInt(status)],
-    );
+
+    // todo: add milestone hash logic
+
+    const encoded = encodeFunctionData({
+      abi: directGrantsAbi,
+      functionName: "reviewSetMilestones",
+      args: [recipientId, status, milestoneHash],
+    });
 
     return {
       to: this.strategy as `0x${string}`,
@@ -395,7 +400,7 @@ export class DirectGrantsStrategy {
   public getRegisterRecipientData(data: RegisterData): TransactionData {
     this.checkPoolId();
     const encoded: `0x${string}` = encodeAbiParameters(
-      parseAbiParameters("address, address, uint256, (uint256, string)"),
+      parseAbiParameters("address,address,uint256,(uint256,string)"),
       [
         data.registryAnchor || ZERO_ADDRESS,
         data.recipientAddress,
@@ -423,7 +428,7 @@ export class DirectGrantsStrategy {
 
     data.forEach((registerData) => {
       const encoded: `0x${string}` = encodeAbiParameters(
-        parseAbiParameters("address, address, uint256, (uint256, string)"),
+        parseAbiParameters("address,address,uint256,(uint256,string)"),
         [
           registerData.registryAnchor || ZERO_ADDRESS,
           registerData.recipientAddress,
@@ -457,7 +462,7 @@ export class DirectGrantsStrategy {
   ): TransactionData {
     this.checkPoolId();
     const encoded: `0x${string}` = encodeAbiParameters(
-      parseAbiParameters("address, uint8, uint256"),
+      parseAbiParameters("address,uint8,uint256"),
       [recipientId, status, grantAmount],
     );
 
@@ -481,7 +486,7 @@ export class DirectGrantsStrategy {
 
     allocations.forEach((allocation) => {
       const encoded: `0x${string}` = encodeAbiParameters(
-        parseAbiParameters("address, uint8, uint256"),
+        parseAbiParameters("address,uint8,uint256"),
         [
           allocation.recipientId,
           allocation.status,

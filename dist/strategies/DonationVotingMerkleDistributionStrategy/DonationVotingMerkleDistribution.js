@@ -17,7 +17,6 @@ const Client_1 = require("../../Client/Client");
 const types_1 = require("../../Common/types");
 const chains_config_1 = require("../../chains.config");
 const types_2 = require("../../types");
-const donationVoting_config_1 = require("./donationVoting.config");
 const donationVotingDirect_config_1 = require("./donationVotingDirect.config");
 const donationVotingVault_config_1 = require("./donationVotingVault.config");
 const types_3 = require("./types");
@@ -32,7 +31,7 @@ class DonationVotingMerkleDistributionStrategy {
         if (address) {
             this.contract = (0, viem_1.getContract)({
                 address: address,
-                abi: donationVoting_config_1.abi,
+                abi: donationVotingVault_config_1.abi,
                 publicClient: this.client,
             });
             this.strategy = address;
@@ -54,7 +53,7 @@ class DonationVotingMerkleDistributionStrategy {
     setContract(address) {
         this.contract = (0, viem_1.getContract)({
             address: address,
-            abi: donationVoting_config_1.abi,
+            abi: donationVotingVault_config_1.abi,
             publicClient: this.client,
         });
         this.strategy = address;
@@ -317,11 +316,11 @@ class DonationVotingMerkleDistributionStrategy {
     }
     /**
      *
-     * @param data - Allocation: (address,(((address,uint256),uint256,uint256),bytes32))
+     * @param data - Allocation: (address,(((address,uint256),uint256,uint256),bytes))
      * @returns `0x${string}`
      */
     getEncodedAllocation(data) {
-        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, uint8, (((address, uint256), uint256, uint256), bytes32)"), [
+        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address,uint8,(((address,uint256),uint256,uint256),bytes)"), [
             data.recipientId,
             data.permitType,
             [
@@ -515,15 +514,10 @@ class DonationVotingMerkleDistributionStrategy {
      */
     getClaimData(claims) {
         this.checkPoolId();
-        const encoded = [];
-        claims.forEach((claim) => {
-            const encodedClaimParams = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, address"), [claim.recipientId, claim.token]);
-            encoded.push(encodedClaimParams);
-        });
         const encodedData = (0, viem_1.encodeFunctionData)({
-            abi: donationVoting_config_1.abi,
+            abi: donationVotingVault_config_1.abi,
             functionName: "claim",
-            args: [encoded],
+            args: [claims],
         });
         return {
             to: this.strategy,
@@ -541,7 +535,7 @@ class DonationVotingMerkleDistributionStrategy {
     multicall(data) {
         this.checkPoolId();
         const encodedData = (0, viem_1.encodeFunctionData)({
-            abi: donationVoting_config_1.abi,
+            abi: donationVotingVault_config_1.abi,
             functionName: "multicall",
             args: [data],
         });
@@ -560,7 +554,7 @@ class DonationVotingMerkleDistributionStrategy {
      */
     reviewRecipients(statuses, refRecipientsCounter) {
         const data = (0, viem_1.encodeFunctionData)({
-            abi: donationVoting_config_1.abi,
+            abi: donationVotingVault_config_1.abi,
             functionName: "reviewRecipients",
             args: [statuses, refRecipientsCounter],
         });
@@ -572,7 +566,7 @@ class DonationVotingMerkleDistributionStrategy {
     }
     updateDistribution(merkleRoot, distributionMetadata) {
         const data = (0, viem_1.encodeFunctionData)({
-            abi: donationVoting_config_1.abi,
+            abi: donationVotingVault_config_1.abi,
             functionName: "updateDistribution",
             args: [merkleRoot, distributionMetadata],
         });
@@ -584,7 +578,7 @@ class DonationVotingMerkleDistributionStrategy {
     }
     updatePoolTimestamps(registrationStartTime, registrationEndTime, allocationStartTime, allocationEndTime) {
         const data = (0, viem_1.encodeFunctionData)({
-            abi: donationVoting_config_1.abi,
+            abi: donationVotingVault_config_1.abi,
             functionName: "updatePoolTimestamps",
             args: [
                 registrationStartTime,
@@ -599,11 +593,11 @@ class DonationVotingMerkleDistributionStrategy {
             value: "0",
         };
     }
-    withdraw(amount) {
+    withdraw(address) {
         const data = (0, viem_1.encodeFunctionData)({
-            abi: donationVoting_config_1.abi,
+            abi: donationVotingVault_config_1.abi,
             functionName: "withdraw",
-            args: [amount],
+            args: [address],
         });
         return {
             to: this.strategy,
