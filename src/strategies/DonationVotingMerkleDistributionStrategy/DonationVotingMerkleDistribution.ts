@@ -380,7 +380,7 @@ export class DonationVotingMerkleDistributionStrategy {
 
   /**
    *
-   * @param data - Allocation: (address,(((address,uint256),uint256,uint256),bytes32))
+   * @param data - Allocation: (address,(((address,uint256),uint256,uint256),bytes))
    * @returns `0x${string}`
    */
   public getEncodedAllocation(data: Allocation): `0x${string}` {
