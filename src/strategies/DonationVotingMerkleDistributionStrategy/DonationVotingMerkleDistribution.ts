@@ -21,7 +21,6 @@ import {
 import { supportedChains } from "../../chains.config";
 import { NATIVE } from "../../types";
 import { PayoutSummary, Status } from "../types";
-import { abi as strategyAbi } from "./donationVoting.config";
 import {
   abi as directAbi,
   bytecode as directBytecode,
@@ -64,7 +63,7 @@ export class DonationVotingMerkleDistributionStrategy {
     if (address) {
       this.contract = getContract({
         address: address,
-        abi: strategyAbi,
+        abi: vaultAbi,
         publicClient: this.client,
       });
       this.strategy = address;
@@ -86,7 +85,7 @@ export class DonationVotingMerkleDistributionStrategy {
   public setContract(address: `0x${string}`): void {
     this.contract = getContract({
       address: address,
-      abi: strategyAbi,
+      abi: vaultAbi,
       publicClient: this.client,
     });
 
@@ -635,20 +634,10 @@ export class DonationVotingMerkleDistributionStrategy {
   public getClaimData(claims: Claim[]): TransactionData {
     this.checkPoolId();
 
-    const encoded: `0x${string}`[] = [];
-    claims.forEach((claim: Claim) => {
-      const encodedClaimParams = encodeAbiParameters(
-        parseAbiParameters("address, address"),
-        [claim.recipientId, claim.token],
-      );
-
-      encoded.push(encodedClaimParams);
-    });
-
     const encodedData = encodeFunctionData({
-      abi: strategyAbi,
+      abi: vaultAbi,
       functionName: "claim",
-      args: [encoded],
+      args: [claims],
     });
 
     return {
@@ -669,7 +658,7 @@ export class DonationVotingMerkleDistributionStrategy {
     this.checkPoolId();
 
     const encodedData = encodeFunctionData({
-      abi: strategyAbi,
+      abi: vaultAbi,
       functionName: "multicall",
       args: [data],
     });
@@ -693,7 +682,7 @@ export class DonationVotingMerkleDistributionStrategy {
     refRecipientsCounter: bigint,
   ): TransactionData {
     const data = encodeFunctionData({
-      abi: strategyAbi,
+      abi: vaultAbi,
       functionName: "reviewRecipients",
       args: [statuses, refRecipientsCounter],
     });
@@ -706,11 +695,11 @@ export class DonationVotingMerkleDistributionStrategy {
   }
 
   public updateDistribution(
-    merkleRoot: string,
+    merkleRoot: `0x${string}`,
     distributionMetadata: Metadata,
   ): TransactionData {
     const data = encodeFunctionData({
-      abi: strategyAbi,
+      abi: vaultAbi,
       functionName: "updateDistribution",
       args: [merkleRoot, distributionMetadata],
     });
@@ -729,7 +718,7 @@ export class DonationVotingMerkleDistributionStrategy {
     allocationEndTime: bigint,
   ): TransactionData {
     const data = encodeFunctionData({
-      abi: strategyAbi,
+      abi: vaultAbi,
       functionName: "updatePoolTimestamps",
       args: [
         registrationStartTime,
@@ -746,11 +735,11 @@ export class DonationVotingMerkleDistributionStrategy {
     };
   }
 
-  public withdraw(amount: bigint): TransactionData {
+  public withdraw(address: `0x${string}`): TransactionData {
     const data = encodeFunctionData({
-      abi: strategyAbi,
+      abi: vaultAbi,
       functionName: "withdraw",
-      args: [amount],
+      args: [address],
     });
 
     return {
