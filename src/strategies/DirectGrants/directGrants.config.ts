@@ -1,703 +1,1169 @@
 export const abi = [
   {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_allo",
+        type: "address",
+      },
+      {
+        internalType: "string",
+        name: "_name",
+        type: "string",
+      },
+    ],
+    stateMutability: "nonpayable",
     type: "constructor",
-    inputs: [
-      { name: "_allo", type: "address", internalType: "address" },
-      { name: "_name", type: "string", internalType: "string" },
-    ],
-    stateMutability: "nonpayable",
   },
-  { type: "receive", stateMutability: "payable" },
   {
-    type: "function",
-    name: "NATIVE",
     inputs: [],
-    outputs: [{ name: "", type: "address", internalType: "address" }],
-    stateMutability: "view",
+    name: "ALLOCATION_ACTIVE",
+    type: "error",
   },
   {
-    type: "function",
-    name: "allocate",
-    inputs: [
-      { name: "_data", type: "bytes", internalType: "bytes" },
-      { name: "_sender", type: "address", internalType: "address" },
-    ],
-    outputs: [],
-    stateMutability: "payable",
-  },
-  {
-    type: "function",
-    name: "allocatedGrantAmount",
     inputs: [],
-    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
-    stateMutability: "view",
+    name: "ALLOCATION_EXCEEDS_POOL_AMOUNT",
+    type: "error",
   },
   {
-    type: "function",
-    name: "distribute",
-    inputs: [
-      { name: "_recipientIds", type: "address[]", internalType: "address[]" },
-      { name: "_data", type: "bytes", internalType: "bytes" },
-      { name: "_sender", type: "address", internalType: "address" },
-    ],
-    outputs: [],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "getAllo",
     inputs: [],
-    outputs: [{ name: "", type: "address", internalType: "contract IAllo" }],
-    stateMutability: "view",
+    name: "ALLOCATION_NOT_ACTIVE",
+    type: "error",
   },
   {
-    type: "function",
-    name: "getMilestoneStatus",
-    inputs: [
-      { name: "_recipientId", type: "address", internalType: "address" },
-      { name: "_milestoneId", type: "uint256", internalType: "uint256" },
-    ],
-    outputs: [
-      { name: "", type: "uint8", internalType: "enum IStrategy.Status" },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "getMilestones",
-    inputs: [
-      { name: "_recipientId", type: "address", internalType: "address" },
-    ],
-    outputs: [
-      {
-        name: "",
-        type: "tuple[]",
-        internalType: "struct DirectGrantsSimpleStrategy.Milestone[]",
-        components: [
-          {
-            name: "amountPercentage",
-            type: "uint256",
-            internalType: "uint256",
-          },
-          {
-            name: "metadata",
-            type: "tuple",
-            internalType: "struct Metadata",
-            components: [
-              { name: "protocol", type: "uint256", internalType: "uint256" },
-              { name: "pointer", type: "string", internalType: "string" },
-            ],
-          },
-          {
-            name: "milestoneStatus",
-            type: "uint8",
-            internalType: "enum IStrategy.Status",
-          },
-        ],
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "getPayouts",
-    inputs: [
-      { name: "_recipientIds", type: "address[]", internalType: "address[]" },
-      { name: "_data", type: "bytes[]", internalType: "bytes[]" },
-    ],
-    outputs: [
-      {
-        name: "",
-        type: "tuple[]",
-        internalType: "struct IStrategy.PayoutSummary[]",
-        components: [
-          {
-            name: "recipientAddress",
-            type: "address",
-            internalType: "address",
-          },
-          { name: "amount", type: "uint256", internalType: "uint256" },
-        ],
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "getPoolAmount",
     inputs: [],
-    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
-    stateMutability: "view",
+    name: "ALLOCATION_NOT_ENDED",
+    type: "error",
   },
   {
-    type: "function",
-    name: "getPoolId",
     inputs: [],
-    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
-    stateMutability: "view",
+    name: "ALREADY_INITIALIZED",
+    type: "error",
   },
   {
-    type: "function",
-    name: "getRecipient",
-    inputs: [
-      { name: "_recipientId", type: "address", internalType: "address" },
-    ],
-    outputs: [
-      {
-        name: "",
-        type: "tuple",
-        internalType: "struct DirectGrantsSimpleStrategy.Recipient",
-        components: [
-          { name: "useRegistryAnchor", type: "bool", internalType: "bool" },
-          {
-            name: "recipientAddress",
-            type: "address",
-            internalType: "address",
-          },
-          { name: "grantAmount", type: "uint256", internalType: "uint256" },
-          {
-            name: "metadata",
-            type: "tuple",
-            internalType: "struct Metadata",
-            components: [
-              { name: "protocol", type: "uint256", internalType: "uint256" },
-              { name: "pointer", type: "string", internalType: "string" },
-            ],
-          },
-          {
-            name: "recipientStatus",
-            type: "uint8",
-            internalType: "enum IStrategy.Status",
-          },
-          {
-            name: "milestonesReviewStatus",
-            type: "uint8",
-            internalType: "enum IStrategy.Status",
-          },
-        ],
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "getRecipientStatus",
-    inputs: [
-      { name: "_recipientId", type: "address", internalType: "address" },
-    ],
-    outputs: [
-      { name: "", type: "uint8", internalType: "enum IStrategy.Status" },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "getStrategyId",
     inputs: [],
-    outputs: [{ name: "", type: "bytes32", internalType: "bytes32" }],
-    stateMutability: "view",
+    name: "AMOUNT_MISMATCH",
+    type: "error",
   },
   {
-    type: "function",
-    name: "grantAmountRequired",
     inputs: [],
-    outputs: [{ name: "", type: "bool", internalType: "bool" }],
-    stateMutability: "view",
+    name: "ANCHOR_ERROR",
+    type: "error",
   },
   {
-    type: "function",
-    name: "increasePoolAmount",
-    inputs: [{ name: "_amount", type: "uint256", internalType: "uint256" }],
-    outputs: [],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "initialize",
-    inputs: [
-      { name: "_poolId", type: "uint256", internalType: "uint256" },
-      { name: "_data", type: "bytes", internalType: "bytes" },
-    ],
-    outputs: [],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "isPoolActive",
     inputs: [],
-    outputs: [{ name: "", type: "bool", internalType: "bool" }],
-    stateMutability: "view",
+    name: "ARRAY_MISMATCH",
+    type: "error",
   },
   {
-    type: "function",
-    name: "isValidAllocator",
-    inputs: [{ name: "_allocator", type: "address", internalType: "address" }],
-    outputs: [{ name: "", type: "bool", internalType: "bool" }],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "metadataRequired",
     inputs: [],
-    outputs: [{ name: "", type: "bool", internalType: "bool" }],
-    stateMutability: "view",
+    name: "INVALID",
+    type: "error",
   },
   {
-    type: "function",
-    name: "milestones",
-    inputs: [
-      { name: "", type: "address", internalType: "address" },
-      { name: "", type: "uint256", internalType: "uint256" },
-    ],
-    outputs: [
-      { name: "amountPercentage", type: "uint256", internalType: "uint256" },
-      {
-        name: "metadata",
-        type: "tuple",
-        internalType: "struct Metadata",
-        components: [
-          { name: "protocol", type: "uint256", internalType: "uint256" },
-          { name: "pointer", type: "string", internalType: "string" },
-        ],
-      },
-      {
-        name: "milestoneStatus",
-        type: "uint8",
-        internalType: "enum IStrategy.Status",
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "registerRecipient",
-    inputs: [
-      { name: "_data", type: "bytes", internalType: "bytes" },
-      { name: "_sender", type: "address", internalType: "address" },
-    ],
-    outputs: [
-      { name: "recipientId", type: "address", internalType: "address" },
-    ],
-    stateMutability: "payable",
-  },
-  {
-    type: "function",
-    name: "registrationEndTime",
     inputs: [],
-    outputs: [{ name: "", type: "uint64", internalType: "uint64" }],
-    stateMutability: "view",
+    name: "INVALID_ADDRESS",
+    type: "error",
   },
   {
-    type: "function",
-    name: "registrationStartTime",
     inputs: [],
-    outputs: [{ name: "", type: "uint64", internalType: "uint64" }],
-    stateMutability: "view",
+    name: "INVALID_FEE",
+    type: "error",
   },
   {
-    type: "function",
-    name: "registryGating",
     inputs: [],
-    outputs: [{ name: "", type: "bool", internalType: "bool" }],
-    stateMutability: "view",
+    name: "INVALID_METADATA",
+    type: "error",
   },
   {
-    type: "function",
-    name: "rejectMilestone",
-    inputs: [
-      { name: "_recipientId", type: "address", internalType: "address" },
-      { name: "_milestoneId", type: "uint256", internalType: "uint256" },
-    ],
-    outputs: [],
-    stateMutability: "nonpayable",
+    inputs: [],
+    name: "INVALID_MILESTONE",
+    type: "error",
   },
   {
-    type: "function",
-    name: "reviewSetMilestones",
-    inputs: [
-      { name: "_recipientId", type: "address", internalType: "address" },
-      { name: "_status", type: "uint8", internalType: "enum IStrategy.Status" },
-      { name: "milestonesHash", type: "bytes32", internalType: "bytes32" },
-    ],
-    outputs: [],
-    stateMutability: "nonpayable",
+    inputs: [],
+    name: "INVALID_REGISTRATION",
+    type: "error",
   },
   {
-    type: "function",
-    name: "setMilestones",
-    inputs: [
-      { name: "_recipientId", type: "address", internalType: "address" },
-      {
-        name: "_milestones",
-        type: "tuple[]",
-        internalType: "struct DirectGrantsSimpleStrategy.Milestone[]",
-        components: [
-          {
-            name: "amountPercentage",
-            type: "uint256",
-            internalType: "uint256",
-          },
-          {
-            name: "metadata",
-            type: "tuple",
-            internalType: "struct Metadata",
-            components: [
-              { name: "protocol", type: "uint256", internalType: "uint256" },
-              { name: "pointer", type: "string", internalType: "string" },
-            ],
-          },
-          {
-            name: "milestoneStatus",
-            type: "uint8",
-            internalType: "enum IStrategy.Status",
-          },
-        ],
-      },
-    ],
-    outputs: [],
-    stateMutability: "nonpayable",
+    inputs: [],
+    name: "IS_APPROVED_STRATEGY",
+    type: "error",
   },
   {
-    type: "function",
-    name: "setPoolActive",
-    inputs: [{ name: "_flag", type: "bool", internalType: "bool" }],
-    outputs: [],
-    stateMutability: "nonpayable",
+    inputs: [],
+    name: "MILESTONES_ALREADY_SET",
+    type: "error",
   },
   {
-    type: "function",
-    name: "setRecipientStatusToInReview",
-    inputs: [
-      { name: "_recipientIds", type: "address[]", internalType: "address[]" },
-    ],
-    outputs: [],
-    stateMutability: "nonpayable",
+    inputs: [],
+    name: "MILESTONE_ALREADY_ACCEPTED",
+    type: "error",
   },
   {
-    type: "function",
-    name: "submitMilestone",
-    inputs: [
-      { name: "_recipientId", type: "address", internalType: "address" },
-      { name: "_milestoneId", type: "uint256", internalType: "uint256" },
-      {
-        name: "_metadata",
-        type: "tuple",
-        internalType: "struct Metadata",
-        components: [
-          { name: "protocol", type: "uint256", internalType: "uint256" },
-          { name: "pointer", type: "string", internalType: "string" },
-        ],
-      },
-    ],
-    outputs: [],
-    stateMutability: "nonpayable",
+    inputs: [],
+    name: "MISMATCH",
+    type: "error",
   },
   {
-    type: "function",
-    name: "upcomingMilestone",
-    inputs: [{ name: "", type: "address", internalType: "address" }],
-    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
-    stateMutability: "view",
+    inputs: [],
+    name: "NONCE_NOT_AVAILABLE",
+    type: "error",
   },
   {
-    type: "function",
-    name: "updatePoolTimestamps",
+    inputs: [],
+    name: "NON_ZERO_VALUE",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "NOT_APPROVED_STRATEGY",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "NOT_ENOUGH_FUNDS",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "NOT_IMPLEMENTED",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "NOT_INITIALIZED",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "NOT_PENDING_OWNER",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "POOL_ACTIVE",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "POOL_INACTIVE",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "RECIPIENT_ALREADY_ACCEPTED",
+    type: "error",
+  },
+  {
     inputs: [
       {
-        name: "_registrationStartTime",
-        type: "uint64",
-        internalType: "uint64",
-      },
-      { name: "_registrationEndTime", type: "uint64", internalType: "uint64" },
-    ],
-    outputs: [],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "withdraw",
-    inputs: [{ name: "_amount", type: "uint256", internalType: "uint256" }],
-    outputs: [],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "event",
-    name: "Allocated",
-    inputs: [
-      {
+        internalType: "address",
         name: "recipientId",
         type: "address",
+      },
+    ],
+    name: "RECIPIENT_ERROR",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "RECIPIENT_NOT_ACCEPTED",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "REGISTRATION_ACTIVE",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "REGISTRATION_NOT_ACTIVE",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "UNAUTHORIZED",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "ZERO_ADDRESS",
+    type: "error",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
         indexed: true,
         internalType: "address",
+        name: "recipientId",
+        type: "address",
       },
       {
-        name: "amount",
-        type: "uint256",
         indexed: false,
         internalType: "uint256",
+        name: "amount",
+        type: "uint256",
       },
       {
+        indexed: false,
+        internalType: "address",
         name: "token",
         type: "address",
-        indexed: false,
-        internalType: "address",
       },
       {
+        indexed: false,
+        internalType: "address",
         name: "sender",
         type: "address",
-        indexed: false,
-        internalType: "address",
       },
     ],
-    anonymous: false,
+    name: "Allocated",
+    type: "event",
   },
   {
-    type: "event",
-    name: "Distributed",
+    anonymous: false,
     inputs: [
       {
-        name: "recipientId",
-        type: "address",
         indexed: true,
         internalType: "address",
+        name: "recipientId",
+        type: "address",
       },
       {
+        indexed: false,
+        internalType: "address",
         name: "recipientAddress",
         type: "address",
-        indexed: false,
-        internalType: "address",
       },
       {
+        indexed: false,
+        internalType: "uint256",
         name: "amount",
         type: "uint256",
-        indexed: false,
-        internalType: "uint256",
       },
       {
-        name: "sender",
-        type: "address",
         indexed: false,
         internalType: "address",
+        name: "sender",
+        type: "address",
       },
     ],
-    anonymous: false,
+    name: "Distributed",
+    type: "event",
   },
   {
-    type: "event",
-    name: "Initialized",
+    anonymous: false,
     inputs: [
       {
+        indexed: false,
+        internalType: "uint256",
         name: "poolId",
         type: "uint256",
-        indexed: false,
-        internalType: "uint256",
       },
-      { name: "data", type: "bytes", indexed: false, internalType: "bytes" },
+      {
+        indexed: false,
+        internalType: "bytes",
+        name: "data",
+        type: "bytes",
+      },
     ],
-    anonymous: false,
+    name: "Initialized",
+    type: "event",
   },
   {
-    type: "event",
-    name: "MilestoneStatusChanged",
+    anonymous: false,
     inputs: [
       {
-        name: "recipientId",
-        type: "address",
         indexed: false,
         internalType: "address",
+        name: "recipientId",
+        type: "address",
       },
       {
-        name: "milestoneId",
-        type: "uint256",
         indexed: false,
         internalType: "uint256",
+        name: "milestoneId",
+        type: "uint256",
       },
       {
-        name: "status",
-        type: "uint8",
         indexed: false,
         internalType: "enum IStrategy.Status",
+        name: "status",
+        type: "uint8",
       },
     ],
-    anonymous: false,
+    name: "MilestoneStatusChanged",
+    type: "event",
   },
   {
-    type: "event",
-    name: "MilestoneSubmitted",
+    anonymous: false,
     inputs: [
       {
-        name: "recipientId",
-        type: "address",
         indexed: false,
         internalType: "address",
+        name: "recipientId",
+        type: "address",
       },
       {
-        name: "milestoneId",
-        type: "uint256",
         indexed: false,
         internalType: "uint256",
+        name: "milestoneId",
+        type: "uint256",
       },
       {
-        name: "metadata",
-        type: "tuple",
+        components: [
+          {
+            internalType: "uint256",
+            name: "protocol",
+            type: "uint256",
+          },
+          {
+            internalType: "string",
+            name: "pointer",
+            type: "string",
+          },
+        ],
         indexed: false,
         internalType: "struct Metadata",
-        components: [
-          { name: "protocol", type: "uint256", internalType: "uint256" },
-          { name: "pointer", type: "string", internalType: "string" },
-        ],
+        name: "metadata",
+        type: "tuple",
       },
     ],
-    anonymous: false,
+    name: "MilestoneSubmitted",
+    type: "event",
   },
   {
-    type: "event",
-    name: "MilestonesReviewed",
+    anonymous: false,
     inputs: [
       {
-        name: "recipientId",
-        type: "address",
         indexed: false,
         internalType: "address",
+        name: "recipientId",
+        type: "address",
       },
       {
-        name: "status",
-        type: "uint8",
         indexed: false,
         internalType: "enum IStrategy.Status",
+        name: "status",
+        type: "uint8",
       },
     ],
-    anonymous: false,
+    name: "MilestonesReviewed",
+    type: "event",
   },
   {
-    type: "event",
-    name: "MilestonesSet",
+    anonymous: false,
     inputs: [
       {
-        name: "recipientId",
-        type: "address",
         indexed: false,
         internalType: "address",
+        name: "recipientId",
+        type: "address",
       },
       {
-        name: "milestonesLength",
-        type: "uint256",
         indexed: false,
         internalType: "uint256",
+        name: "milestonesLength",
+        type: "uint256",
       },
     ],
-    anonymous: false,
+    name: "MilestonesSet",
+    type: "event",
   },
   {
-    type: "event",
-    name: "PoolActive",
-    inputs: [
-      { name: "active", type: "bool", indexed: false, internalType: "bool" },
-    ],
     anonymous: false,
-  },
-  {
-    type: "event",
-    name: "RecipientStatusChanged",
     inputs: [
       {
-        name: "recipientId",
-        type: "address",
+        indexed: false,
+        internalType: "bool",
+        name: "active",
+        type: "bool",
+      },
+    ],
+    name: "PoolActive",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
         indexed: false,
         internalType: "address",
+        name: "recipientId",
+        type: "address",
       },
       {
-        name: "status",
-        type: "uint8",
         indexed: false,
         internalType: "enum IStrategy.Status",
+        name: "status",
+        type: "uint8",
       },
     ],
-    anonymous: false,
+    name: "RecipientStatusChanged",
+    type: "event",
   },
   {
-    type: "event",
-    name: "Registered",
+    anonymous: false,
     inputs: [
       {
-        name: "recipientId",
-        type: "address",
         indexed: true,
         internalType: "address",
-      },
-      { name: "data", type: "bytes", indexed: false, internalType: "bytes" },
-      {
-        name: "sender",
+        name: "recipientId",
         type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "bytes",
+        name: "data",
+        type: "bytes",
+      },
+      {
         indexed: false,
         internalType: "address",
+        name: "sender",
+        type: "address",
       },
     ],
-    anonymous: false,
+    name: "Registered",
+    type: "event",
   },
   {
-    type: "event",
-    name: "TimestampsUpdated",
+    anonymous: false,
     inputs: [
       {
+        indexed: false,
+        internalType: "uint64",
         name: "registrationStartTime",
         type: "uint64",
-        indexed: false,
-        internalType: "uint64",
       },
       {
+        indexed: false,
+        internalType: "uint64",
         name: "registrationEndTime",
         type: "uint64",
-        indexed: false,
-        internalType: "uint64",
       },
       {
-        name: "sender",
-        type: "address",
         indexed: false,
         internalType: "address",
+        name: "sender",
+        type: "address",
       },
     ],
-    anonymous: false,
+    name: "TimestampsUpdated",
+    type: "event",
   },
-  { type: "error", name: "ALLOCATION_ACTIVE", inputs: [] },
-  { type: "error", name: "ALLOCATION_EXCEEDS_POOL_AMOUNT", inputs: [] },
-  { type: "error", name: "ALLOCATION_NOT_ACTIVE", inputs: [] },
-  { type: "error", name: "ALLOCATION_NOT_ENDED", inputs: [] },
-  { type: "error", name: "ALREADY_INITIALIZED", inputs: [] },
-  { type: "error", name: "AMOUNT_MISMATCH", inputs: [] },
-  { type: "error", name: "ANCHOR_ERROR", inputs: [] },
-  { type: "error", name: "ARRAY_MISMATCH", inputs: [] },
-  { type: "error", name: "INVALID", inputs: [] },
-  { type: "error", name: "INVALID_ADDRESS", inputs: [] },
-  { type: "error", name: "INVALID_FEE", inputs: [] },
-  { type: "error", name: "INVALID_METADATA", inputs: [] },
-  { type: "error", name: "INVALID_MILESTONE", inputs: [] },
-  { type: "error", name: "INVALID_REGISTRATION", inputs: [] },
-  { type: "error", name: "IS_APPROVED_STRATEGY", inputs: [] },
-  { type: "error", name: "MILESTONES_ALREADY_SET", inputs: [] },
-  { type: "error", name: "MILESTONE_ALREADY_ACCEPTED", inputs: [] },
-  { type: "error", name: "MISMATCH", inputs: [] },
-  { type: "error", name: "NONCE_NOT_AVAILABLE", inputs: [] },
-  { type: "error", name: "NON_ZERO_VALUE", inputs: [] },
-  { type: "error", name: "NOT_APPROVED_STRATEGY", inputs: [] },
-  { type: "error", name: "NOT_ENOUGH_FUNDS", inputs: [] },
-  { type: "error", name: "NOT_IMPLEMENTED", inputs: [] },
-  { type: "error", name: "NOT_INITIALIZED", inputs: [] },
-  { type: "error", name: "NOT_PENDING_OWNER", inputs: [] },
-  { type: "error", name: "POOL_ACTIVE", inputs: [] },
-  { type: "error", name: "POOL_INACTIVE", inputs: [] },
-  { type: "error", name: "RECIPIENT_ALREADY_ACCEPTED", inputs: [] },
   {
-    type: "error",
-    name: "RECIPIENT_ERROR",
-    inputs: [{ name: "recipientId", type: "address", internalType: "address" }],
+    inputs: [],
+    name: "NATIVE",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
   },
-  { type: "error", name: "RECIPIENT_NOT_ACCEPTED", inputs: [] },
-  { type: "error", name: "REGISTRATION_ACTIVE", inputs: [] },
-  { type: "error", name: "REGISTRATION_NOT_ACTIVE", inputs: [] },
-  { type: "error", name: "UNAUTHORIZED", inputs: [] },
-  { type: "error", name: "ZERO_ADDRESS", inputs: [] },
+  {
+    inputs: [
+      {
+        internalType: "bytes",
+        name: "_data",
+        type: "bytes",
+      },
+      {
+        internalType: "address",
+        name: "_sender",
+        type: "address",
+      },
+    ],
+    name: "allocate",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "allocatedGrantAmount",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address[]",
+        name: "_recipientIds",
+        type: "address[]",
+      },
+      {
+        internalType: "bytes",
+        name: "_data",
+        type: "bytes",
+      },
+      {
+        internalType: "address",
+        name: "_sender",
+        type: "address",
+      },
+    ],
+    name: "distribute",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getAllo",
+    outputs: [
+      {
+        internalType: "contract IAllo",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_recipientId",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_milestoneId",
+        type: "uint256",
+      },
+    ],
+    name: "getMilestoneStatus",
+    outputs: [
+      {
+        internalType: "enum IStrategy.Status",
+        name: "",
+        type: "uint8",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_recipientId",
+        type: "address",
+      },
+    ],
+    name: "getMilestones",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "amountPercentage",
+            type: "uint256",
+          },
+          {
+            components: [
+              {
+                internalType: "uint256",
+                name: "protocol",
+                type: "uint256",
+              },
+              {
+                internalType: "string",
+                name: "pointer",
+                type: "string",
+              },
+            ],
+            internalType: "struct Metadata",
+            name: "metadata",
+            type: "tuple",
+          },
+          {
+            internalType: "enum IStrategy.Status",
+            name: "milestoneStatus",
+            type: "uint8",
+          },
+        ],
+        internalType: "struct DirectGrantsSimpleStrategy.Milestone[]",
+        name: "",
+        type: "tuple[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address[]",
+        name: "_recipientIds",
+        type: "address[]",
+      },
+      {
+        internalType: "bytes[]",
+        name: "_data",
+        type: "bytes[]",
+      },
+    ],
+    name: "getPayouts",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "address",
+            name: "recipientAddress",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "amount",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct IStrategy.PayoutSummary[]",
+        name: "",
+        type: "tuple[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getPoolAmount",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getPoolId",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_recipientId",
+        type: "address",
+      },
+    ],
+    name: "getRecipient",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "bool",
+            name: "useRegistryAnchor",
+            type: "bool",
+          },
+          {
+            internalType: "address",
+            name: "recipientAddress",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "grantAmount",
+            type: "uint256",
+          },
+          {
+            components: [
+              {
+                internalType: "uint256",
+                name: "protocol",
+                type: "uint256",
+              },
+              {
+                internalType: "string",
+                name: "pointer",
+                type: "string",
+              },
+            ],
+            internalType: "struct Metadata",
+            name: "metadata",
+            type: "tuple",
+          },
+          {
+            internalType: "enum IStrategy.Status",
+            name: "recipientStatus",
+            type: "uint8",
+          },
+          {
+            internalType: "enum IStrategy.Status",
+            name: "milestonesReviewStatus",
+            type: "uint8",
+          },
+        ],
+        internalType: "struct DirectGrantsSimpleStrategy.Recipient",
+        name: "",
+        type: "tuple",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_recipientId",
+        type: "address",
+      },
+    ],
+    name: "getRecipientStatus",
+    outputs: [
+      {
+        internalType: "enum IStrategy.Status",
+        name: "",
+        type: "uint8",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getStrategyId",
+    outputs: [
+      {
+        internalType: "bytes32",
+        name: "",
+        type: "bytes32",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "grantAmountRequired",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256",
+      },
+    ],
+    name: "increasePoolAmount",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_poolId",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes",
+        name: "_data",
+        type: "bytes",
+      },
+    ],
+    name: "initialize",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "isPoolActive",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_allocator",
+        type: "address",
+      },
+    ],
+    name: "isValidAllocator",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "metadataRequired",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "milestones",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "amountPercentage",
+        type: "uint256",
+      },
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "protocol",
+            type: "uint256",
+          },
+          {
+            internalType: "string",
+            name: "pointer",
+            type: "string",
+          },
+        ],
+        internalType: "struct Metadata",
+        name: "metadata",
+        type: "tuple",
+      },
+      {
+        internalType: "enum IStrategy.Status",
+        name: "milestoneStatus",
+        type: "uint8",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes",
+        name: "_data",
+        type: "bytes",
+      },
+      {
+        internalType: "address",
+        name: "_sender",
+        type: "address",
+      },
+    ],
+    name: "registerRecipient",
+    outputs: [
+      {
+        internalType: "address",
+        name: "recipientId",
+        type: "address",
+      },
+    ],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "registrationEndTime",
+    outputs: [
+      {
+        internalType: "uint64",
+        name: "",
+        type: "uint64",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "registrationStartTime",
+    outputs: [
+      {
+        internalType: "uint64",
+        name: "",
+        type: "uint64",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "registryGating",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_recipientId",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_milestoneId",
+        type: "uint256",
+      },
+    ],
+    name: "rejectMilestone",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_recipientId",
+        type: "address",
+      },
+      {
+        internalType: "enum IStrategy.Status",
+        name: "_status",
+        type: "uint8",
+      },
+      {
+        internalType: "bytes32",
+        name: "milestonesHash",
+        type: "bytes32",
+      },
+    ],
+    name: "reviewSetMilestones",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_recipientId",
+        type: "address",
+      },
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "amountPercentage",
+            type: "uint256",
+          },
+          {
+            components: [
+              {
+                internalType: "uint256",
+                name: "protocol",
+                type: "uint256",
+              },
+              {
+                internalType: "string",
+                name: "pointer",
+                type: "string",
+              },
+            ],
+            internalType: "struct Metadata",
+            name: "metadata",
+            type: "tuple",
+          },
+          {
+            internalType: "enum IStrategy.Status",
+            name: "milestoneStatus",
+            type: "uint8",
+          },
+        ],
+        internalType: "struct DirectGrantsSimpleStrategy.Milestone[]",
+        name: "_milestones",
+        type: "tuple[]",
+      },
+    ],
+    name: "setMilestones",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bool",
+        name: "_flag",
+        type: "bool",
+      },
+    ],
+    name: "setPoolActive",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address[]",
+        name: "_recipientIds",
+        type: "address[]",
+      },
+    ],
+    name: "setRecipientStatusToInReview",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_recipientId",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_milestoneId",
+        type: "uint256",
+      },
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "protocol",
+            type: "uint256",
+          },
+          {
+            internalType: "string",
+            name: "pointer",
+            type: "string",
+          },
+        ],
+        internalType: "struct Metadata",
+        name: "_metadata",
+        type: "tuple",
+      },
+    ],
+    name: "submitMilestone",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "upcomingMilestone",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint64",
+        name: "_registrationStartTime",
+        type: "uint64",
+      },
+      {
+        internalType: "uint64",
+        name: "_registrationEndTime",
+        type: "uint64",
+      },
+    ],
+    name: "updatePoolTimestamps",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256",
+      },
+    ],
+    name: "withdraw",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    stateMutability: "payable",
+    type: "receive",
+  },
 ] as const;
 
 export const bytecode =
