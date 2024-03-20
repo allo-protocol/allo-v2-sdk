@@ -386,7 +386,7 @@ export class DonationVotingMerkleDistributionStrategy {
   public getEncodedAllocation(data: Allocation): `0x${string}` {
     const encoded: `0x${string}` = encodeAbiParameters(
       parseAbiParameters(
-        "address, uint8, (((address, uint256), uint256, uint256), bytes32)",
+        "address,uint8,(((address,uint256),uint256,uint256),bytes)",
       ),
       [
         data.recipientId,
