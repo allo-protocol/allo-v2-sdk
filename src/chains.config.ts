@@ -14,8 +14,9 @@ import {
   scroll,
   avalancheFuji,
   fantomTestnet,
+  lukso,
 } from "viem/chains";
-import { devChain1, seiDevnet } from "./Client/customChains";
+import { devChain1, seiDevnet, luksoTestnet } from "./Client/customChains";
 
 /** Reference for supported chains: https://github.com/gitcoinco/grants-stack/issues/3107 */
 export const supportedChains: Chain[] = [
@@ -35,4 +36,6 @@ export const supportedChains: Chain[] = [
   fantomTestnet,
   devChain1,
   seiDevnet,
+  luksoTestnet,
+  lukso,
 ];

@@ -51,3 +51,28 @@ export const seiDevnet = {
     },
   },
 };
+
+export const luksoTestnet: Chain = {
+  id: 4201,
+  name: "LUKSO Testnet",
+  network: "LUKSO Testnet",
+  nativeCurrency: {
+    decimals: 18,
+    name: "LYKt",
+    symbol: "LYKt",
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://rpc.testnet.lukso.network/"],
+    },
+    public: {
+      http: ["https://rpc.testnet.lukso.network/"],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "LUKSO Explorer",
+      url: "https://explorer.execution.mainnet.lukso.network",
+    },
+  },
+};
