@@ -8,7 +8,7 @@ import {
 } from "viem";
 import { create } from "../Client/Client";
 import { ConstructorArgs, TransactionData } from "../Common/types";
-import { abi, address } from "./registry.config";
+import { abi, getAddress } from "./registry.config";
 import {
   CreateProfileArgs,
   HasRoleArgs,
@@ -23,6 +23,7 @@ import { supportedChains } from "../chains.config";
 export class Registry {
   private client: PublicClient<Transport, Chain>;
   private contract: any;
+  private addr: `0x${string}`;
 
   constructor({ chain, rpc }: ConstructorArgs) {
     const usedChain = extractChain({
@@ -30,13 +31,19 @@ export class Registry {
       id: chain as any,
     });
 
+    this.addr = getAddress(usedChain);
+
     this.client = create(usedChain, rpc);
 
     this.contract = getContract({
-      address: address,
+      address: this.addr,
       abi: abi,
       publicClient: this.client,
     });
+  }
+
+  public address(): `0x${string}` {
+    return this.addr;
   }
 
   // Read only Functions
@@ -146,7 +153,7 @@ export class Registry {
     });
 
     return {
-      to: address,
+      to: this.addr,
       data: data,
       value: "0",
     };
@@ -160,7 +167,7 @@ export class Registry {
     });
 
     return {
-      to: address,
+      to: this.addr,
       data: data,
       value: "0",
     };
@@ -174,7 +181,7 @@ export class Registry {
     });
 
     return {
-      to: address,
+      to: this.addr,
       data: data,
       value: "0",
     };
@@ -188,7 +195,7 @@ export class Registry {
     });
 
     return {
-      to: address,
+      to: this.addr,
       data: data,
       value: "0",
     };
@@ -205,7 +212,7 @@ export class Registry {
     });
 
     return {
-      to: address,
+      to: this.addr,
       data: data,
       value: "0",
     };
@@ -222,7 +229,7 @@ export class Registry {
     });
 
     return {
-      to: address,
+      to: this.addr,
       data: data,
       value: "0",
     };
@@ -239,7 +246,7 @@ export class Registry {
     });
 
     return {
-      to: address,
+      to: this.addr,
       data: data,
       value: "0",
     };

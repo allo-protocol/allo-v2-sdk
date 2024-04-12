@@ -1,5 +1,5 @@
-import { Address } from "viem";
-export declare const address: Address;
+import { Chain } from "viem";
+export declare const getAddress: (chain: Chain) => `0x${string}`;
 export declare const abi: readonly [{
     readonly inputs: readonly [];
     readonly name: "ALLOCATION_ACTIVE";

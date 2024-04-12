@@ -20,12 +20,16 @@ class Registry {
             chains: chains_config_1.supportedChains,
             id: chain,
         });
+        this.addr = (0, registry_config_1.getAddress)(usedChain);
         this.client = (0, Client_1.create)(usedChain, rpc);
         this.contract = (0, viem_1.getContract)({
-            address: registry_config_1.address,
+            address: this.addr,
             abi: registry_config_1.abi,
             publicClient: this.client,
         });
+    }
+    address() {
+        return this.addr;
     }
     // Read only Functions
     getAlloOwner() {
@@ -125,7 +129,7 @@ class Registry {
             args: [nonce, name, metadata, owner, members],
         });
         return {
-            to: registry_config_1.address,
+            to: this.addr,
             data: data,
             value: "0",
         };
@@ -137,7 +141,7 @@ class Registry {
             args: [profileId],
         });
         return {
-            to: registry_config_1.address,
+            to: this.addr,
             data: data,
             value: "0",
         };
@@ -149,7 +153,7 @@ class Registry {
             args: [profileId, members],
         });
         return {
-            to: registry_config_1.address,
+            to: this.addr,
             data: data,
             value: "0",
         };
@@ -161,7 +165,7 @@ class Registry {
             args: [profileId, members],
         });
         return {
-            to: registry_config_1.address,
+            to: this.addr,
             data: data,
             value: "0",
         };
@@ -173,7 +177,7 @@ class Registry {
             args: [profileId, metadata],
         });
         return {
-            to: registry_config_1.address,
+            to: this.addr,
             data: data,
             value: "0",
         };
@@ -185,7 +189,7 @@ class Registry {
             args: [profileId, name],
         });
         return {
-            to: registry_config_1.address,
+            to: this.addr,
             data: data,
             value: "0",
         };
@@ -197,7 +201,7 @@ class Registry {
             args: [profileId, account],
         });
         return {
-            to: registry_config_1.address,
+            to: this.addr,
             data: data,
             value: "0",
         };

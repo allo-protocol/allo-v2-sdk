@@ -3,6 +3,7 @@ import { CreatePoolArgs, Pool, UpdateMetaDataArgs } from "./types";
 export declare class Allo {
     private client;
     private contract;
+    private addr;
     constructor({ chain, rpc }: ConstructorArgs);
     address(): `0x${string}`;
     getFeeDenominator(): Promise<bigint>;

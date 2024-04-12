@@ -8,13 +8,14 @@ import {
 } from "viem";
 import { ConstructorArgs, TransactionData } from "../Common/types";
 import { create } from "../Client/Client";
-import { abi, address } from "./allo.config";
+import { abi, getAddress } from "./allo.config";
 import { CreatePoolArgs, Pool, UpdateMetaDataArgs } from "./types";
 import { supportedChains } from "../chains.config";
 
 export class Allo {
   private client: PublicClient<Transport, Chain>;
   private contract: any;
+  private addr: `0x${string}`;
 
   constructor({ chain, rpc }: ConstructorArgs) {
     const usedChain = extractChain({
@@ -22,17 +23,19 @@ export class Allo {
       id: chain as any,
     });
 
+    this.addr = getAddress(usedChain);
+
     this.client = create(usedChain, rpc);
 
     this.contract = getContract({
-      address: address,
+      address: this.addr,
       abi: abi,
       publicClient: this.client,
     });
   }
 
   public address(): `0x${string}` {
-    return address;
+    return this.addr;
   }
 
   // Read only funcitons
@@ -132,7 +135,7 @@ export class Allo {
         : "0";
 
     return {
-      to: address,
+      to: this.addr,
       data: data,
       value: value,
     };
@@ -168,7 +171,7 @@ export class Allo {
         : "0";
 
     return {
-      to: address,
+      to: this.addr,
       data: data,
       value: value,
     };
@@ -186,7 +189,7 @@ export class Allo {
     });
 
     return {
-      to: address,
+      to: this.addr,
       data: data,
       value: "0",
     };
@@ -200,7 +203,7 @@ export class Allo {
     });
 
     return {
-      to: address,
+      to: this.addr,
       data: data,
       value: "0",
     };
@@ -214,7 +217,7 @@ export class Allo {
     });
 
     return {
-      to: address,
+      to: this.addr,
       data: data,
       value: "0",
     };
@@ -228,7 +231,7 @@ export class Allo {
     });
 
     return {
-      to: address,
+      to: this.addr,
       data: data,
       value: "0",
     };
@@ -242,7 +245,7 @@ export class Allo {
     });
 
     return {
-      to: address,
+      to: this.addr,
       data: data,
       value: "0",
     };
@@ -256,7 +259,7 @@ export class Allo {
     });
 
     return {
-      to: address,
+      to: this.addr,
       data: data,
       value: "0",
     };
@@ -272,7 +275,7 @@ export class Allo {
     });
 
     return {
-      to: address,
+      to: this.addr,
       data: data,
       value: "0",
     };
@@ -289,7 +292,7 @@ export class Allo {
     });
 
     return {
-      to: address,
+      to: this.addr,
       data: data,
       value: "0",
     };
@@ -306,7 +309,7 @@ export class Allo {
     });
 
     return {
-      to: address,
+      to: this.addr,
       data: data,
       value: "0",
     };
@@ -323,7 +326,7 @@ export class Allo {
     });
 
     return {
-      to: address,
+      to: this.addr,
       data: data,
       value: "0",
     };
@@ -341,7 +344,7 @@ export class Allo {
     });
 
     return {
-      to: address,
+      to: this.addr,
       data: data,
       value: "0",
     };
@@ -358,7 +361,7 @@ export class Allo {
     });
 
     return {
-      to: address,
+      to: this.addr,
       data: data,
       value: "0",
     };
@@ -372,7 +375,7 @@ export class Allo {
     });
 
     return {
-      to: address,
+      to: this.addr,
       data: data,
       value: "0",
     };
@@ -389,7 +392,7 @@ export class Allo {
     });
 
     return {
-      to: address,
+      to: this.addr,
       data: data,
       value: "0",
     };
@@ -406,7 +409,7 @@ export class Allo {
     });
 
     return {
-      to: address,
+      to: this.addr,
       data: data,
       value: "0",
     };
@@ -424,7 +427,7 @@ export class Allo {
     });
 
     return {
-      to: address,
+      to: this.addr,
       data: data,
       value: "0",
     };

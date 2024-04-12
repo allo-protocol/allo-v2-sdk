@@ -45,7 +45,7 @@ exports.seiDevnet = {
     blockExplorers: {
         default: {
             name: "SEI Explorer",
-            url: "https://seistream.app/",
+            url: "https://seitrace.com/",
         },
     },
 };

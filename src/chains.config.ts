@@ -14,6 +14,8 @@ import {
   scroll,
   avalancheFuji,
   fantomTestnet,
+  zkSync,
+  zkSyncSepoliaTestnet,
 } from "viem/chains";
 import { devChain1, seiDevnet } from "./Client/customChains";
 
@@ -35,4 +37,6 @@ export const supportedChains: Chain[] = [
   fantomTestnet,
   devChain1,
   seiDevnet,
+  zkSync,
+  zkSyncSepoliaTestnet,
 ];
