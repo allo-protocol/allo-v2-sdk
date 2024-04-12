@@ -1,7 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.abi = exports.address = void 0;
-exports.address = "0x1133eA7Af70876e64665ecD07C0A0476d09465a1";
+exports.abi = exports.getAddress = void 0;
+const DEFAULT_ADDRESS = "0x1133eA7Af70876e64665ecD07C0A0476d09465a1";
+const getAddress = (chain) => {
+    switch (chain.id) {
+        case 300: // ZkSync Era Testnet
+        case 324: // ZkSync Era Mainnet
+            return "0x9D1D1BF2835935C291C0f5228c86d5C4e235A249";
+        default:
+            return DEFAULT_ADDRESS;
+    }
+};
+exports.getAddress = getAddress;
 exports.abi = [
     {
         inputs: [],

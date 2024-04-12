@@ -20,15 +20,16 @@ class Allo {
             chains: chains_config_1.supportedChains,
             id: chain,
         });
+        this.addr = (0, allo_config_1.getAddress)(usedChain);
         this.client = (0, Client_1.create)(usedChain, rpc);
         this.contract = (0, viem_1.getContract)({
-            address: allo_config_1.address,
+            address: this.addr,
             abi: allo_config_1.abi,
             publicClient: this.client,
         });
     }
     address() {
-        return allo_config_1.address;
+        return this.addr;
     }
     // Read only funcitons
     getFeeDenominator() {
@@ -111,7 +112,7 @@ class Allo {
             ? amount.toString()
             : "0";
         return {
-            to: allo_config_1.address,
+            to: this.addr,
             data: data,
             value: value,
         };
@@ -135,7 +136,7 @@ class Allo {
             ? amount.toString()
             : "0";
         return {
-            to: allo_config_1.address,
+            to: this.addr,
             data: data,
             value: value,
         };
@@ -148,7 +149,7 @@ class Allo {
             args: [poolId, metadata],
         });
         return {
-            to: allo_config_1.address,
+            to: this.addr,
             data: data,
             value: "0",
         };
@@ -160,7 +161,7 @@ class Allo {
             args: [registry],
         });
         return {
-            to: allo_config_1.address,
+            to: this.addr,
             data: data,
             value: "0",
         };
@@ -172,7 +173,7 @@ class Allo {
             args: [registry],
         });
         return {
-            to: allo_config_1.address,
+            to: this.addr,
             data: data,
             value: "0",
         };
@@ -184,7 +185,7 @@ class Allo {
             args: [percentage],
         });
         return {
-            to: allo_config_1.address,
+            to: this.addr,
             data: data,
             value: "0",
         };
@@ -196,7 +197,7 @@ class Allo {
             args: [percentage],
         });
         return {
-            to: allo_config_1.address,
+            to: this.addr,
             data: data,
             value: "0",
         };
@@ -208,7 +209,7 @@ class Allo {
             args: [strategy],
         });
         return {
-            to: allo_config_1.address,
+            to: this.addr,
             data: data,
             value: "0",
         };
@@ -220,7 +221,7 @@ class Allo {
             args: [strategy],
         });
         return {
-            to: allo_config_1.address,
+            to: this.addr,
             data: data,
             value: "0",
         };
@@ -232,7 +233,7 @@ class Allo {
             args: [poolId, manager],
         });
         return {
-            to: allo_config_1.address,
+            to: this.addr,
             data: data,
             value: "0",
         };
@@ -244,7 +245,7 @@ class Allo {
             args: [poolId, manager],
         });
         return {
-            to: allo_config_1.address,
+            to: this.addr,
             data: data,
             value: "0",
         };
@@ -256,7 +257,7 @@ class Allo {
             args: [token, recipient],
         });
         return {
-            to: allo_config_1.address,
+            to: this.addr,
             data: data,
             value: "0",
         };
@@ -269,7 +270,7 @@ class Allo {
             args: [poolId, strategyData],
         });
         return {
-            to: allo_config_1.address,
+            to: this.addr,
             data: data,
             value: "0",
         };
@@ -281,7 +282,7 @@ class Allo {
             args: [poolIds, strategyData],
         });
         return {
-            to: allo_config_1.address,
+            to: this.addr,
             data: data,
             value: "0",
         };
@@ -293,7 +294,7 @@ class Allo {
             args: [poolId, amount],
         });
         return {
-            to: allo_config_1.address,
+            to: this.addr,
             data: data,
             value: "0",
         };
@@ -305,7 +306,7 @@ class Allo {
             args: [poolId, strategyData],
         });
         return {
-            to: allo_config_1.address,
+            to: this.addr,
             data: data,
             value: "0",
         };
@@ -317,7 +318,7 @@ class Allo {
             args: [poolIds, strategyData],
         });
         return {
-            to: allo_config_1.address,
+            to: this.addr,
             data: data,
             value: "0",
         };
@@ -329,7 +330,7 @@ class Allo {
             args: [poolId, recipientId, strategyData],
         });
         return {
-            to: allo_config_1.address,
+            to: this.addr,
             data: data,
             value: "0",
         };

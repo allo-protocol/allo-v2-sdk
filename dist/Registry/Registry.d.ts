@@ -3,7 +3,9 @@ import { CreateProfileArgs, HasRoleArgs, MemberArgs, Profile, ProfileAndAddressA
 export declare class Registry {
     private client;
     private contract;
+    private addr;
     constructor({ chain, rpc }: ConstructorArgs);
+    address(): `0x${string}`;
     getAlloOwner(): Promise<`0x${string}`>;
     getDefaultAdminRole(): Promise<`0x${string}`>;
     getNative(): Promise<`0x${string}`>;

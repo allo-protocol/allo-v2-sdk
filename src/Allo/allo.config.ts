@@ -1,7 +1,16 @@
-import { Address } from "viem";
+import { Address, Chain } from "viem";
 
-export const address: Address = "0x1133eA7Af70876e64665ecD07C0A0476d09465a1";
+const DEFAULT_ADDRESS: Address = "0x1133eA7Af70876e64665ecD07C0A0476d09465a1";
 
+export const getAddress = (chain: Chain): `0x${string}` => {
+  switch (chain.id) {
+    case 300: // ZkSync Era Testnet
+    case 324: // ZkSync Era Mainnet
+      return "0x9D1D1BF2835935C291C0f5228c86d5C4e235A249";
+    default:
+      return DEFAULT_ADDRESS;
+  }
+};
 export const abi = [
   {
     inputs: [],
