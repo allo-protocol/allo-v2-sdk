@@ -21,4 +21,6 @@ exports.supportedChains = [
     chains_1.fantomTestnet,
     customChains_1.devChain1,
     customChains_1.seiDevnet,
+    chains_1.zkSync,
+    chains_1.zkSyncSepoliaTestnet,
 ];
