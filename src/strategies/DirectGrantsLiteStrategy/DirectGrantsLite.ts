@@ -14,7 +14,6 @@ import { create } from "../../Client/Client";
 import {
   ConstructorArgs,
   DeployParams,
-  Metadata,
   TransactionData,
   ZERO_ADDRESS,
 } from "../../Common/types";
@@ -101,12 +100,6 @@ export class DirectGrantsLiteStrategy {
   }
 
   /* Public Storage Variables */
-  public async getDistributionMetadata(): Promise<Metadata> {
-    this.checkStrategy();
-    const metadata: Metadata = await this.contract.read.distributionMetadata();
-
-    return metadata;
-  }
 
   public async useRegistryAnchor(): Promise<boolean> {
     this.checkStrategy();
@@ -120,13 +113,6 @@ export class DirectGrantsLiteStrategy {
     const required = await this.contract.read.metadataRequired();
 
     return required;
-  }
-
-  public async distributionStarted(): Promise<boolean> {
-    this.checkStrategy();
-    const started = await this.contract.read.distributionStarted();
-
-    return started;
   }
 
   public async registrationStartTime(): Promise<bigint> {
@@ -143,38 +129,11 @@ export class DirectGrantsLiteStrategy {
     return endTime;
   }
 
-  public async allocationStartTime(): Promise<bigint> {
-    this.checkStrategy();
-    const startTime = await this.contract.read.allocationStartTime();
-
-    return startTime;
-  }
-
-  public async allocationEndTime(): Promise<bigint> {
-    this.checkStrategy();
-    const endTime = await this.contract.read.allocationEndTime();
-
-    return endTime;
-  }
-
-  public async totalPayoutAmount(): Promise<bigint> {
-    this.checkStrategy();
-    const amount = await this.contract.read.totalPayoutAmount();
-    return amount;
-  }
-
   public async recipientsCounter(): Promise<bigint> {
     this.checkStrategy();
     const counter = await this.contract.read.recipientsCounter();
 
     return counter;
-  }
-
-  public async getMerkleRoot(): Promise<string> {
-    this.checkStrategy();
-    const root = await this.contract.read.merkleRoot();
-
-    return root;
   }
 
   public async statusesBitMap(index: bigint): Promise<bigint> {
@@ -191,25 +150,6 @@ export class DirectGrantsLiteStrategy {
     ]);
 
     return indexes;
-  }
-
-  public async isTokenAllowed(token: string): Promise<boolean> {
-    this.checkStrategy();
-    const allowed = await this.contract.read.allowedTokens(token);
-
-    return allowed;
-  }
-
-  public async getClaims(recipient: string, token: string): Promise<bigint> {
-    const claims = await this.contract.read.claims([recipient, token]);
-
-    return claims;
-  }
-
-  public async getTotalClaimableAmount(recipient: string): Promise<bigint> {
-    const claims = await this.contract.read.totalClaimableAmount([recipient]);
-
-    return claims;
   }
 
   public async getPoolAmount(): Promise<bigint> {
@@ -245,20 +185,6 @@ export class DirectGrantsLiteStrategy {
     const id = await this.contract.read.getStrategyId();
 
     return id;
-  }
-
-  public async hasBeenDistributed(index: bigint): Promise<boolean> {
-    this.checkStrategy();
-    const distributed = await this.contract.read.hasBeenDistributed([index]);
-
-    return distributed;
-  }
-
-  public async isDistributionSet(): Promise<boolean> {
-    this.checkStrategy();
-    const set = await this.contract.read.isDistributionSet();
-
-    return set;
   }
 
   public async isPoolActive(): Promise<boolean> {
