@@ -81,14 +81,14 @@ export class DirectGrantsLiteStrategy {
   private checkPoolId(): void {
     if (this.poolId === BigInt(-1))
       throw new Error(
-        "DonationVotingMerkleDistributionStrategy: No poolId provided. Please call `setPoolId` first.",
+        "DirectGrantsLiteStrategy: No poolId provided. Please call `setPoolId` first.",
       );
   }
 
   private checkStrategy(): void {
     if (!this.strategy)
       throw new Error(
-        "DonationVotingMerkleDistributionStrategy: No strategy address provided. Please call `setContract` first.",
+        "DirectGrantsLiteStrategy: No strategy address provided. Please call `setContract` first.",
       );
   }
 
@@ -393,7 +393,7 @@ export class DirectGrantsLiteStrategy {
   /**
    * Batch register recipients
    *
-   * @param data - Array of RegisterDataDonationVoting
+   * @param data - Array of RegisterDataDirectGrantsLiteVoting
    *
    * @returns TransactionData
    */
