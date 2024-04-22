@@ -226,7 +226,7 @@ export class DirectGrantsLiteStrategy {
 
   public async getInitializeData(data: InitializeData): Promise<`0x${string}`> {
     const encodedData: `0x${string}` = encodeAbiParameters(
-      parseAbiParameters("(bool, bool, uint64, uint64])"),
+      parseAbiParameters("(bool, bool, uint64, uint64)"),
       [
         [
           data.useRegistryAnchor,
