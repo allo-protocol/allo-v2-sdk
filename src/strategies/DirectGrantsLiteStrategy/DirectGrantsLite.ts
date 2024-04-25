@@ -247,7 +247,7 @@ export class DirectGrantsLiteStrategy {
    */
   public getEncodedAllocation(data: Allocation): `0x${string}` {
     const encoded: `0x${string}` = encodeAbiParameters(
-      parseAbiParameters("address,address,uint256"),
+      parseAbiParameters("address, address, uint256"),
       [data.token, data.recipientId, data.amount],
     );
 
@@ -262,21 +262,24 @@ export class DirectGrantsLiteStrategy {
   public getAllocateData(allocations: Allocation[]): TransactionData {
     this.checkPoolId();
 
-    const encodedAllocations = encodeAbiParameters(
-      parseAbiParameters("Allocation[]"),
+    let totalNativeAmount = BigInt(0);
+
+    for (const allocation of allocations) {
+      if (allocation.token.toLowerCase() === NATIVE.toLowerCase())
+        totalNativeAmount += allocation.amount;
+    }
+
+    const encoded = encodeAbiParameters(
+      parseAbiParameters(
+        "(address token, address recipientId, uint256 amount)[]",
+      ),
       [allocations],
     );
 
     const encodedData = encodeFunctionData({
       abi: alloAbi,
       functionName: "allocate",
-      args: [this.poolId, encodedAllocations],
-    });
-
-    let totalNativeAmount = BigInt(0);
-    allocations.forEach((allocation) => {
-      if (allocation.token.toLowerCase() === NATIVE)
-        totalNativeAmount += allocation.amount;
+      args: [this.poolId, encoded],
     });
 
     return {
