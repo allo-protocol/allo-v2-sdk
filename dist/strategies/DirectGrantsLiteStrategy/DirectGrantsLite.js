@@ -209,7 +209,7 @@ class DirectGrantsLiteStrategy {
      * @returns `0x${string}`
      */
     getEncodedAllocation(data) {
-        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address,address,uint256"), [data.token, data.recipientId, data.amount]);
+        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, address, uint256"), [data.token, data.recipientId, data.amount]);
         return encoded;
     }
     /**
@@ -219,16 +219,16 @@ class DirectGrantsLiteStrategy {
      */
     getAllocateData(allocations) {
         this.checkPoolId();
-        const encodedAllocations = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("Allocation[]"), [allocations]);
+        let totalNativeAmount = BigInt(0);
+        for (const allocation of allocations) {
+            if (allocation.token.toLowerCase() === types_2.NATIVE.toLowerCase())
+                totalNativeAmount += allocation.amount;
+        }
+        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("(address token, address recipientId, uint256 amount)[]"), [allocations]);
         const encodedData = (0, viem_1.encodeFunctionData)({
             abi: allo_config_1.abi,
             functionName: "allocate",
-            args: [this.poolId, encodedAllocations],
-        });
-        let totalNativeAmount = BigInt(0);
-        allocations.forEach((allocation) => {
-            if (allocation.token.toLowerCase() === types_2.NATIVE)
-                totalNativeAmount += allocation.amount;
+            args: [this.poolId, encoded],
         });
         return {
             to: this.allo.address(),

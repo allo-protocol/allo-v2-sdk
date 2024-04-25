@@ -18,9 +18,9 @@ export type RegisterData = {
 };
 
 export type Distribution = {
-  index: number;
+  index: bigint;
   recipientId: `0x${string}`;
-  amount: string;
+  amount: bigint;
   merkleProof: `0x${string}`[];
 };
 
