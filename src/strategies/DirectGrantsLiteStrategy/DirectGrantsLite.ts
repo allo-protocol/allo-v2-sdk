@@ -298,10 +298,11 @@ export class DirectGrantsLiteStrategy {
     this.checkPoolId();
 
     const encoded: `0x${string}` = encodeAbiParameters(
-      parseAbiParameters("address, address, (uint256, string)"),
+      parseAbiParameters("address, address, uint256, (uint256, string)"),
       [
         data.registryAnchor || ZERO_ADDRESS,
         data.recipientAddress,
+        data.grantAmount,
         [data.metadata.protocol, data.metadata.pointer],
       ],
     );

@@ -9,6 +9,7 @@ export type Recipient = {
 export type RegisterData = {
   registryAnchor?: `0x${string}`;
   recipientAddress: `0x${string}`;
+  grantAmount: bigint;
   metadata: Metadata;
 };
 
