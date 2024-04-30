@@ -243,9 +243,10 @@ class DirectGrantsLiteStrategy {
      */
     getRegisterRecipientData(data) {
         this.checkPoolId();
-        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, address, (uint256, string)"), [
+        const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, address, uint256, (uint256, string)"), [
             data.registryAnchor || types_1.ZERO_ADDRESS,
             data.recipientAddress,
+            data.grantAmount,
             [data.metadata.protocol, data.metadata.pointer],
         ]);
         const encodedData = (0, viem_1.encodeFunctionData)({
@@ -270,9 +271,10 @@ class DirectGrantsLiteStrategy {
         this.checkPoolId();
         const encodedParams = [];
         data.forEach((registerData) => {
-            const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, address, (uint256, string)"), [
+            const encoded = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("address, address, uint256, (uint256, string)"), [
                 registerData.registryAnchor || types_1.ZERO_ADDRESS,
                 registerData.recipientAddress,
+                registerData.grantAmount,
                 [registerData.metadata.protocol, registerData.metadata.pointer],
             ]);
             encodedParams.push(encoded);

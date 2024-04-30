@@ -333,10 +333,11 @@ export class DirectGrantsLiteStrategy {
 
     data.forEach((registerData) => {
       const encoded: `0x${string}` = encodeAbiParameters(
-        parseAbiParameters("address, address, (uint256, string)"),
+        parseAbiParameters("address, address, uint256, (uint256, string)"),
         [
           registerData.registryAnchor || ZERO_ADDRESS,
           registerData.recipientAddress,
+          registerData.grantAmount,
           [registerData.metadata.protocol, registerData.metadata.pointer],
         ],
       );
