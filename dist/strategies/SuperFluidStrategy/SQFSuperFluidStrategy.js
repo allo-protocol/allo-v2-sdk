@@ -28,7 +28,9 @@ class SQFSuperFluidStrategy {
             this.contract = (0, viem_1.getContract)({
                 address: address,
                 abi: superfluid_config_1.abi,
-                publicClient: this.client,
+                client: {
+                    public: this.client,
+                }
             });
             this.strategy = address;
         }
@@ -45,7 +47,9 @@ class SQFSuperFluidStrategy {
         this.contract = (0, viem_1.getContract)({
             address: address,
             abi: superfluid_config_1.abi,
-            publicClient: this.client,
+            client: {
+                public: this.client,
+            }
         });
         this.strategy = address;
     }

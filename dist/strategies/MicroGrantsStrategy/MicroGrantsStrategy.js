@@ -32,7 +32,9 @@ class MicroGrantsStrategy {
             this.contract = (0, viem_1.getContract)({
                 address: address,
                 abi: microGrants_config_1.abi,
-                publicClient: this.client,
+                client: {
+                    public: this.client,
+                }
             });
             this.strategy = address;
         }
@@ -49,7 +51,9 @@ class MicroGrantsStrategy {
         this.contract = (0, viem_1.getContract)({
             address: address,
             abi: microGrants_config_1.abi,
-            publicClient: this.client,
+            client: {
+                public: this.client,
+            }
         });
         this.strategy = address;
     }
@@ -208,7 +212,9 @@ class MicroGrantsStrategy {
             const contractReader = (0, viem_1.getContract)({
                 address: this.strategy,
                 abi: microGrantsHats_config_1.abi,
-                publicClient: this.client,
+                client: {
+                    public: this.client,
+                }
             });
             const hatsAddress = (yield contractReader.read.hats());
             return hatsAddress;
@@ -220,7 +226,9 @@ class MicroGrantsStrategy {
             const contractReader = (0, viem_1.getContract)({
                 address: this.strategy,
                 abi: microGrantsHats_config_1.abi,
-                publicClient: this.client,
+                client: {
+                    public: this.client,
+                }
             });
             const hatId = (yield contractReader.read.hatId());
             return hatId;
@@ -232,7 +240,9 @@ class MicroGrantsStrategy {
             const contractReader = (0, viem_1.getContract)({
                 address: this.strategy,
                 abi: microGrantsGov_config_1.abi,
-                publicClient: this.client,
+                client: {
+                    public: this.client,
+                }
             });
             const govAddress = (yield contractReader.read.gov());
             return govAddress;
@@ -244,7 +254,9 @@ class MicroGrantsStrategy {
             const contractReader = (0, viem_1.getContract)({
                 address: this.strategy,
                 abi: microGrantsGov_config_1.abi,
-                publicClient: this.client,
+                client: {
+                    public: this.client,
+                }
             });
             const reference = (yield contractReader.read.snapshotReference());
             return reference;
@@ -256,7 +268,9 @@ class MicroGrantsStrategy {
             const contractReader = (0, viem_1.getContract)({
                 address: this.strategy,
                 abi: microGrantsGov_config_1.abi,
-                publicClient: this.client,
+                client: {
+                    public: this.client,
+                }
             });
             const votePower = (yield contractReader.read.minVotePower());
             return votePower;
@@ -267,7 +281,9 @@ class MicroGrantsStrategy {
             const contractReader = (0, viem_1.getContract)({
                 address: strategyContract,
                 abi: microGrantsGov_config_1.abi,
-                publicClient: this.client,
+                client: {
+                    public: this.client,
+                }
             });
             const strategyId = yield contractReader.read.getStrategyId();
             switch (strategyId) {

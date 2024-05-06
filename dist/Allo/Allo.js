@@ -25,7 +25,9 @@ class Allo {
         this.contract = (0, viem_1.getContract)({
             address: this.addr,
             abi: allo_config_1.abi,
-            publicClient: this.client,
+            client: {
+                public: this.client,
+            }
         });
     }
     address() {

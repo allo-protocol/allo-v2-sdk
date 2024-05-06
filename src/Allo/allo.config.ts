@@ -4,9 +4,13 @@ const DEFAULT_ADDRESS: Address = "0x1133eA7Af70876e64665ecD07C0A0476d09465a1";
 
 export const getAddress = (chain: Chain): `0x${string}` => {
   switch (chain.id) {
+    case 42: // Lukso Mainnet
+      return "0xB087535DB0df98fC4327136e897A5985E5Cfbd66";
     case 300: // ZkSync Era Testnet
     case 324: // ZkSync Era Mainnet
       return "0x9D1D1BF2835935C291C0f5228c86d5C4e235A249";
+    case 314159: // Filecoin Calibration
+      return "0x26827C474a276bb25bc414c9FF8c55962cAe3fb9";
     default:
       return DEFAULT_ADDRESS;
   }
