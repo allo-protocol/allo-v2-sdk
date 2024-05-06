@@ -70,7 +70,9 @@ export class MicroGrantsStrategy {
       this.contract = getContract({
         address: address,
         abi: microGrantsAbi,
-        publicClient: this.client,
+        client: {
+          public: this.client,
+        }
       });
       this.strategy = address;
     }
@@ -88,7 +90,9 @@ export class MicroGrantsStrategy {
     this.contract = getContract({
       address: address,
       abi: microGrantsAbi,
-      publicClient: this.client,
+      client: {
+        public: this.client,
+      }
     });
 
     this.strategy = address;
@@ -278,7 +282,9 @@ export class MicroGrantsStrategy {
     const contractReader = getContract({
       address: this.strategy!,
       abi: microGrantsHatsAbi,
-      publicClient: this.client,
+      client: {
+        public: this.client,
+      }
     });
 
     const hatsAddress: `0x${string}` =
@@ -293,7 +299,9 @@ export class MicroGrantsStrategy {
     const contractReader = getContract({
       address: this.strategy!,
       abi: microGrantsHatsAbi,
-      publicClient: this.client,
+      client: {
+        public: this.client,
+      }
     });
 
     const hatId: bigint = (await contractReader.read.hatId()) as bigint;
@@ -307,7 +315,9 @@ export class MicroGrantsStrategy {
     const contractReader = getContract({
       address: this.strategy!,
       abi: microGrantsGovAbi,
-      publicClient: this.client,
+      client: {
+        public: this.client,
+      }
     });
 
     const govAddress: `0x${string}` =
@@ -322,7 +332,9 @@ export class MicroGrantsStrategy {
     const contractReader = getContract({
       address: this.strategy!,
       abi: microGrantsGovAbi,
-      publicClient: this.client,
+      client: {
+        public: this.client,
+      }
     });
 
     const reference: bigint =
@@ -337,7 +349,9 @@ export class MicroGrantsStrategy {
     const contractReader = getContract({
       address: this.strategy!,
       abi: microGrantsGovAbi,
-      publicClient: this.client,
+      client: {
+        public: this.client,
+      }
     });
 
     const votePower: bigint =
@@ -352,7 +366,9 @@ export class MicroGrantsStrategy {
     const contractReader = getContract({
       address: strategyContract as `0x${string}`,
       abi: microGrantsGovAbi,
-      publicClient: this.client,
+      client: {
+        public: this.client,
+      }
     });
 
     const strategyId = await contractReader.read.getStrategyId();

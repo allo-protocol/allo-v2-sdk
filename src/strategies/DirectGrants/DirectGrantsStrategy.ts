@@ -53,7 +53,9 @@ export class DirectGrantsStrategy {
       this.contract = getContract({
         address: address,
         abi: directGrantsAbi,
-        publicClient: this.client,
+        client: {
+          public: this.client,
+        }
       });
       this.strategy = address;
     }
@@ -102,7 +104,9 @@ export class DirectGrantsStrategy {
     this.contract = getContract({
       address: address,
       abi: directGrantsAbi,
-      publicClient: this.client,
+      client: {
+        public: this.client,
+      }
     });
 
     this.strategy = address;

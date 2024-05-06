@@ -55,7 +55,9 @@ export class SQFSuperFluidStrategy {
       this.contract = getContract({
         address: address,
         abi: superfluidAbi,
-        publicClient: this.client,
+        client: {
+          public: this.client,
+        }
       });
       this.strategy = address;
     }
@@ -73,7 +75,9 @@ export class SQFSuperFluidStrategy {
     this.contract = getContract({
       address: address,
       abi: superfluidAbi,
-      publicClient: this.client,
+      client: {
+        public: this.client,
+      }
     });
 
     this.strategy = address;

@@ -64,7 +64,9 @@ export class DonationVotingMerkleDistributionStrategy {
       this.contract = getContract({
         address: address,
         abi: vaultAbi,
-        publicClient: this.client,
+        client: {
+          public: this.client,
+        }
       });
       this.strategy = address;
     }
@@ -86,7 +88,9 @@ export class DonationVotingMerkleDistributionStrategy {
     this.contract = getContract({
       address: address,
       abi: vaultAbi,
-      publicClient: this.client,
+      client: {
+        public: this.client,
+      }
     });
 
     this.strategy = address;

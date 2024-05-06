@@ -30,7 +30,9 @@ export class Allo {
     this.contract = getContract({
       address: this.addr,
       abi: abi,
-      publicClient: this.client,
+      client: {
+        public: this.client,
+      }
     });
   }
 

@@ -39,7 +39,7 @@
     "events": "^3.3.0",
     "hardhat": "^2.19.5",
     "mocha": "^10.3.0",
-    "viem": "^1.19.9"
+    "viem": "^2.9.32"
   },
   "repository": {
     "type": "git",

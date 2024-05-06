@@ -3,6 +3,8 @@ import {
   arbitrum,
   arbitrumSepolia,
   base,
+  celo,
+  celoAlfajores,
   sepolia,
   mainnet,
   optimism,
