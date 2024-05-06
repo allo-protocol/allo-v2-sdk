@@ -25,7 +25,9 @@ class Registry {
         this.contract = (0, viem_1.getContract)({
             address: this.addr,
             abi: registry_config_1.abi,
-            publicClient: this.client,
+            client: {
+                public: this.client,
+            }
         });
     }
     address() {
@@ -74,14 +76,14 @@ class Registry {
             return admin;
         });
     }
-    hasRole({ role, account }) {
-        return __awaiter(this, void 0, void 0, function* () {
+    hasRole(_a) {
+        return __awaiter(this, arguments, void 0, function* ({ role, account }) {
             const hasRole = yield this.contract.read.hasRole([role, account]);
             return hasRole;
         });
     }
-    isMemberOfProfile({ profileId, account, }) {
-        return __awaiter(this, void 0, void 0, function* () {
+    isMemberOfProfile(_a) {
+        return __awaiter(this, arguments, void 0, function* ({ profileId, account, }) {
             const isMember = yield this.contract.read.isMemberOfProfile([
                 profileId,
                 account,
@@ -89,8 +91,8 @@ class Registry {
             return isMember;
         });
     }
-    isOwnerOfProfile({ profileId, account, }) {
-        return __awaiter(this, void 0, void 0, function* () {
+    isOwnerOfProfile(_a) {
+        return __awaiter(this, arguments, void 0, function* ({ profileId, account, }) {
             const isOwner = yield this.contract.read.isOwnerOfProfile([
                 profileId,
                 account,
@@ -98,8 +100,8 @@ class Registry {
             return isOwner;
         });
     }
-    isOwnerOrMemberOfProfile({ profileId, account, }) {
-        return __awaiter(this, void 0, void 0, function* () {
+    isOwnerOrMemberOfProfile(_a) {
+        return __awaiter(this, arguments, void 0, function* ({ profileId, account, }) {
             const isOwnerOrMember = yield this.contract.read.isOwnerOrMemberOfProfile([
                 profileId,
                 account,
