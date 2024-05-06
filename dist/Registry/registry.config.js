@@ -7,6 +7,8 @@ const getAddress = (chain) => {
         case 300: // ZkSync Era Testnet
         case 324: // ZkSync Era Mainnet
             return "0xaa376Ef759c1f5A8b0B5a1e2FEC5C23f3bF30246";
+        case 314159: // Filecoin Calibration
+            return "0xb91DBEb018789d712EDC1a9e6C6AdC891BD5Ec2c";
         default:
             return DEFAULT_ADDRESS;
     }
