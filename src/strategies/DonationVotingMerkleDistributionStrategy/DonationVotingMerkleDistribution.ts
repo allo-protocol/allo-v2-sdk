@@ -611,7 +611,9 @@ export class DonationVotingMerkleDistributionStrategy {
     this.checkPoolId();
 
     const encodeDistribution = encodeAbiParameters(
-      parseAbiParameters("Distribution[]"),
+      parseAbiParameters(
+        "(uint256 index, address recipientId, uint256 amount, bytes32[] merkleProof)[]",
+      ),
       [data],
     );
 
