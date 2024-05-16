@@ -497,7 +497,7 @@ class DonationVotingMerkleDistributionStrategy {
     // (uint256 _poolId, address[] memory _recipientIds, bytes memory _data)
     data) {
         this.checkPoolId();
-        const encodeDistribution = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("Distribution[]"), [data]);
+        const encodeDistribution = (0, viem_1.encodeAbiParameters)((0, viem_1.parseAbiParameters)("(uint256 index, address recipientId, uint256 amount, bytes32[] merkleProof)[]"), [data]);
         const encodedData = (0, viem_1.encodeFunctionData)({
             abi: allo_config_1.abi,
             functionName: "distribute",
