@@ -14,7 +14,8 @@ class StrategyFactory {
         });
         this.factoryType = factoryType;
         this.client = (0, Client_1.create)(usedChain, rpc);
-        this.setFactoryAddress(address);
+        if (address)
+            this.setFactoryAddress(address);
     }
     checkFactoryAddress() {
         if (!this.factory) {

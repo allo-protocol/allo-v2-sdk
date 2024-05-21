@@ -1,11 +1,9 @@
-import { Chain } from "viem";
-
 // Factory for DonationVotingMerkleDistributionDirectTransferStrategy v2.1
 export const getAddress = (chainId: number): `0x${string}` => {
   switch (chainId) {
     case 300: // ZkSync Era Testnet
     case 324: // ZkSync Era Mainnet
-      return "0x2b7d0c8260964210e98BA35bD413f86042a004a7";
+      return "0x4eed0E5f18059057fE00308773eE6D804A0Dc5Fe";
     default:
       throw new Error("Chain not supported by SDK");
   }
@@ -133,6 +131,19 @@ export const abi = [
     type: "event",
   },
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "strategy",
+        type: "address",
+      },
+    ],
+    name: "StrategyCreated",
+    type: "event",
+  },
+  {
     inputs: [],
     name: "allo",
     outputs: [
@@ -171,7 +182,7 @@ export const abi = [
     outputs: [
       {
         internalType: "address",
-        name: "",
+        name: "strategy",
         type: "address",
       },
     ],
@@ -200,7 +211,7 @@ export const abi = [
     outputs: [
       {
         internalType: "address",
-        name: "",
+        name: "strategy",
         type: "address",
       },
     ],

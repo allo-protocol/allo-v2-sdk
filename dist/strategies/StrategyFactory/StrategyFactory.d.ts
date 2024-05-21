@@ -8,12 +8,12 @@ export declare class StrategyFactory {
     constructor({ chain, factoryType, address, rpc, }: {
         chain: number;
         factoryType: StrategyFactoryType;
-        address: `0x${string}`;
+        address?: `0x${string}`;
         rpc?: string;
     });
     private checkFactoryAddress;
     private getAbi;
-    getAddress(chainId: number): `0x${string}`;
+    private getAddress;
     setFactoryAddress(address: `0x${string}`): void;
     getCreateStrategyData(): TransactionData;
     getCreateStrategyDataByChainId(chainId: number): TransactionData;

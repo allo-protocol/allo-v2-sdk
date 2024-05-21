@@ -93,6 +93,16 @@ export declare const abi: readonly [{
     readonly name: "Permit2Updated";
     readonly type: "event";
 }, {
+    readonly anonymous: false;
+    readonly inputs: readonly [{
+        readonly indexed: false;
+        readonly internalType: "address";
+        readonly name: "strategy";
+        readonly type: "address";
+    }];
+    readonly name: "StrategyCreated";
+    readonly type: "event";
+}, {
     readonly inputs: readonly [];
     readonly name: "allo";
     readonly outputs: readonly [{
@@ -123,7 +133,7 @@ export declare const abi: readonly [{
     readonly name: "createStrategy";
     readonly outputs: readonly [{
         readonly internalType: "address";
-        readonly name: "";
+        readonly name: "strategy";
         readonly type: "address";
     }];
     readonly stateMutability: "nonpayable";
@@ -145,7 +155,7 @@ export declare const abi: readonly [{
     readonly name: "createStrategyCustom";
     readonly outputs: readonly [{
         readonly internalType: "address";
-        readonly name: "";
+        readonly name: "strategy";
         readonly type: "address";
     }];
     readonly stateMutability: "nonpayable";

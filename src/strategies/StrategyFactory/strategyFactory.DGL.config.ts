@@ -1,11 +1,9 @@
-import { Chain } from "viem";
-
 // Factory for DirectGrantsLiteStrategy v1.0
 export const getAddress = (chainId: number): `0x${string}` => {
   switch (chainId) {
     case 300: // ZkSync Era Testnet
     case 324: // ZkSync Era Mainnet
-      return "0xa029A4cED20b2Eec7aC35892FAD6E4564e27FE7A";
+      return "0x235bd2A867056Ba72d48ceC08d82b418fA977D1c";
     default:
       throw new Error("Chain not supported by SDK");
   }
@@ -115,6 +113,19 @@ export const abi = [
     type: "event",
   },
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "strategy",
+        type: "address",
+      },
+    ],
+    name: "StrategyCreated",
+    type: "event",
+  },
+  {
     inputs: [],
     name: "allo",
     outputs: [
@@ -164,7 +175,7 @@ export const abi = [
     outputs: [
       {
         internalType: "address",
-        name: "",
+        name: "strategy",
         type: "address",
       },
     ],
@@ -177,7 +188,7 @@ export const abi = [
     outputs: [
       {
         internalType: "address",
-        name: "",
+        name: "strategy",
         type: "address",
       },
     ],

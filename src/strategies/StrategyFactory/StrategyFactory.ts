@@ -1,7 +1,6 @@
 import {
   Chain,
   PublicClient,
-  Transaction,
   Transport,
   encodeFunctionData,
   extractChain,
@@ -37,7 +36,7 @@ export class StrategyFactory {
   }: {
     chain: number;
     factoryType: StrategyFactoryType;
-    address: `0x${string}`;
+    address?: `0x${string}`;
     rpc?: string;
   }) {
     const usedChain = extractChain({
@@ -48,7 +47,7 @@ export class StrategyFactory {
     this.factoryType = factoryType;
     this.client = create(usedChain, rpc);
 
-    this.setFactoryAddress(address);
+    if (address) this.setFactoryAddress(address);
   }
 
   private checkFactoryAddress(): void {
@@ -68,7 +67,7 @@ export class StrategyFactory {
     }
   }
 
-  public getAddress(chainId: number): `0x${string}` {
+  private getAddress(chainId: number): `0x${string}` {
     switch (this.factoryType) {
       case "DGL":
         return getAddressDGL(chainId);
