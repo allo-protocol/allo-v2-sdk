@@ -1,3 +1,16 @@
+import { Chain } from "viem";
+
+// Factory for DonationVotingMerkleDistributionDirectTransferStrategy v2.1
+export const getAddress = (chainId: number): `0x${string}` => {
+  switch (chainId) {
+    case 300: // ZkSync Era Testnet
+    case 324: // ZkSync Era Mainnet
+      return "0x2b7d0c8260964210e98BA35bD413f86042a004a7";
+    default:
+      throw new Error("Chain not supported by SDK");
+  }
+};
+
 export const abi = [
   {
     inputs: [
@@ -10,6 +23,11 @@ export const abi = [
         internalType: "string",
         name: "_name",
         type: "string",
+      },
+      {
+        internalType: "contract ISignatureTransfer",
+        name: "_permit2",
+        type: "address",
       },
     ],
     stateMutability: "nonpayable",
@@ -102,6 +120,19 @@ export const abi = [
     type: "event",
   },
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "contract ISignatureTransfer",
+        name: "permit2",
+        type: "address",
+      },
+    ],
+    name: "Permit2Updated",
+    type: "event",
+  },
+  {
     inputs: [],
     name: "allo",
     outputs: [
@@ -135,19 +166,8 @@ export const abi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_allo",
-        type: "address",
-      },
-      {
-        internalType: "string",
-        name: "_name",
-        type: "string",
-      },
-    ],
-    name: "createCustomStrategy",
+    inputs: [],
+    name: "createStrategy",
     outputs: [
       {
         internalType: "address",
@@ -159,8 +179,24 @@ export const abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "createStrategy",
+    inputs: [
+      {
+        internalType: "address",
+        name: "_allo",
+        type: "address",
+      },
+      {
+        internalType: "string",
+        name: "_name",
+        type: "string",
+      },
+      {
+        internalType: "contract ISignatureTransfer",
+        name: "_permit2",
+        type: "address",
+      },
+    ],
+    name: "createStrategyCustom",
     outputs: [
       {
         internalType: "address",
@@ -218,6 +254,19 @@ export const abi = [
   },
   {
     inputs: [],
+    name: "permit2",
+    outputs: [
+      {
+        internalType: "contract ISignatureTransfer",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "renounceOwnership",
     outputs: [],
     stateMutability: "payable",
@@ -265,6 +314,19 @@ export const abi = [
       },
     ],
     name: "updateName",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "contract ISignatureTransfer",
+        name: "_permit2",
+        type: "address",
+      },
+    ],
+    name: "updatePermit2",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

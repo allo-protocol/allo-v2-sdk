@@ -1,3 +1,16 @@
+import { Chain } from "viem";
+
+// Factory for DirectGrantsLiteStrategy v1.0
+export const getAddress = (chainId: number): `0x${string}` => {
+  switch (chainId) {
+    case 300: // ZkSync Era Testnet
+    case 324: // ZkSync Era Mainnet
+      return "0xa029A4cED20b2Eec7aC35892FAD6E4564e27FE7A";
+    default:
+      throw new Error("Chain not supported by SDK");
+  }
+};
+
 export const abi = [
   {
     inputs: [
@@ -11,14 +24,24 @@ export const abi = [
         name: "_name",
         type: "string",
       },
-      {
-        internalType: "contract ISignatureTransfer",
-        name: "_permit2",
-        type: "address",
-      },
     ],
     stateMutability: "nonpayable",
     type: "constructor",
+  },
+  {
+    inputs: [],
+    name: "NewOwnerIsZeroAddress",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "NoHandoverRequest",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "Unauthorized",
+    type: "error",
   },
   {
     anonymous: false,
@@ -50,13 +73,45 @@ export const abi = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
-        internalType: "contract ISignatureTransfer",
-        name: "permit2",
+        indexed: true,
+        internalType: "address",
+        name: "pendingOwner",
         type: "address",
       },
     ],
-    name: "Permit2Updated",
+    name: "OwnershipHandoverCanceled",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "pendingOwner",
+        type: "address",
+      },
+    ],
+    name: "OwnershipHandoverRequested",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "oldOwner",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "OwnershipTransferred",
     type: "event",
   },
   {
@@ -74,15 +129,22 @@ export const abi = [
   },
   {
     inputs: [],
-    name: "createStrategy",
-    outputs: [
+    name: "cancelOwnershipHandover",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [
       {
         internalType: "address",
-        name: "",
+        name: "pendingOwner",
         type: "address",
       },
     ],
-    stateMutability: "nonpayable",
+    name: "completeOwnershipHandover",
+    outputs: [],
+    stateMutability: "payable",
     type: "function",
   },
   {
@@ -97,13 +159,21 @@ export const abi = [
         name: "_name",
         type: "string",
       },
+    ],
+    name: "createCustomStrategy",
+    outputs: [
       {
-        internalType: "contract ISignatureTransfer",
-        name: "_permit2",
+        internalType: "address",
+        name: "",
         type: "address",
       },
     ],
-    name: "createStrategyCustom",
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "createStrategy",
     outputs: [
       {
         internalType: "address",
@@ -129,15 +199,61 @@ export const abi = [
   },
   {
     inputs: [],
-    name: "permit2",
+    name: "owner",
     outputs: [
       {
-        internalType: "contract ISignatureTransfer",
-        name: "",
+        internalType: "address",
+        name: "result",
         type: "address",
       },
     ],
     stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "pendingOwner",
+        type: "address",
+      },
+    ],
+    name: "ownershipHandoverExpiresAt",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "result",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "renounceOwnership",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "requestOwnershipHandover",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "transferOwnership",
+    outputs: [],
+    stateMutability: "payable",
     type: "function",
   },
   {
@@ -162,19 +278,6 @@ export const abi = [
       },
     ],
     name: "updateName",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "contract ISignatureTransfer",
-        name: "_permit2",
-        type: "address",
-      },
-    ],
-    name: "updatePermit2",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

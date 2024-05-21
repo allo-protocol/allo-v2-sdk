@@ -9,8 +9,14 @@ import {
 } from "viem";
 import { supportedChains } from "../../chains.config";
 import { create } from "../../Client/Client";
-import { abi as DGLabi } from "./strategyFactory.DGL.config";
-import { abi as DVMDTabi } from "./strategyFactory.DVMDT.config";
+import {
+  abi as DGLabi,
+  getAddress as getAddressDGL,
+} from "./strategyFactory.DGL.config";
+import {
+  abi as DVMDTabi,
+  getAddress as getAddressDVMDT,
+} from "./strategyFactory.DVMDT.config";
 import { TransactionData } from "../../types";
 
 export type StrategyFactoryType = "DGL" | "DVMDT";
@@ -62,6 +68,17 @@ export class StrategyFactory {
     }
   }
 
+  public getAddress(chainId: number): `0x${string}` {
+    switch (this.factoryType) {
+      case "DGL":
+        return getAddressDGL(chainId);
+      case "DVMDT":
+        return getAddressDVMDT(chainId);
+      default:
+        throw new Error("Invalid factory type");
+    }
+  }
+
   public setFactoryAddress(address: `0x${string}`): void {
     if (address) {
       this.contract = getContract({
@@ -86,6 +103,22 @@ export class StrategyFactory {
 
     return {
       to: this.factory!,
+      data: encodedData,
+      value: "0",
+    };
+  }
+
+  public getCreateStrategyDataByChainId(chainId: number): TransactionData {
+    this.checkFactoryAddress();
+
+    const encodedData = encodeFunctionData({
+      abi: this.getAbi(),
+      functionName: "createStrategy",
+      args: [],
+    });
+
+    return {
+      to: this.getAddress(chainId),
       data: encodedData,
       value: "0",
     };
