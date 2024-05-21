@@ -14,13 +14,9 @@ class StrategyFactory {
         });
         this.factoryType = factoryType;
         this.client = (0, Client_1.create)(usedChain, rpc);
+        this.chainId = chain;
         if (address)
             this.setFactoryAddress(address);
-    }
-    checkFactoryAddress() {
-        if (!this.factory) {
-            throw new Error("No factory address provided");
-        }
     }
     getAbi() {
         switch (this.factoryType) {
@@ -55,20 +51,18 @@ class StrategyFactory {
         }
     }
     getCreateStrategyData() {
-        this.checkFactoryAddress();
         const encodedData = (0, viem_1.encodeFunctionData)({
             abi: this.getAbi(),
             functionName: "createStrategy",
             args: [],
         });
         return {
-            to: this.factory,
+            to: this.factory || this.getAddress(this.chainId),
             data: encodedData,
             value: "0",
         };
     }
     getCreateStrategyDataByChainId(chainId) {
-        this.checkFactoryAddress();
         const encodedData = (0, viem_1.encodeFunctionData)({
             abi: this.getAbi(),
             functionName: "createStrategy",

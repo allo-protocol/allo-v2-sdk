@@ -24,6 +24,7 @@ export class StrategyFactory {
   private client: PublicClient<Transport, Chain>;
 
   private contract: any;
+  private chainId: number;
 
   private factory: `0x${string}` | undefined;
   private factoryType: StrategyFactoryType;
@@ -46,14 +47,9 @@ export class StrategyFactory {
 
     this.factoryType = factoryType;
     this.client = create(usedChain, rpc);
+    this.chainId = chain;
 
     if (address) this.setFactoryAddress(address);
-  }
-
-  private checkFactoryAddress(): void {
-    if (!this.factory) {
-      throw new Error("No factory address provided");
-    }
   }
 
   private getAbi(): any {
@@ -92,8 +88,6 @@ export class StrategyFactory {
   }
 
   public getCreateStrategyData(): TransactionData {
-    this.checkFactoryAddress();
-
     const encodedData = encodeFunctionData({
       abi: this.getAbi(),
       functionName: "createStrategy",
@@ -101,15 +95,13 @@ export class StrategyFactory {
     });
 
     return {
-      to: this.factory!,
+      to: this.factory || this.getAddress(this.chainId),
       data: encodedData,
       value: "0",
     };
   }
 
   public getCreateStrategyDataByChainId(chainId: number): TransactionData {
-    this.checkFactoryAddress();
-
     const encodedData = encodeFunctionData({
       abi: this.getAbi(),
       functionName: "createStrategy",
