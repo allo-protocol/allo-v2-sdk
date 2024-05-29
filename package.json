@@ -1,6 +1,6 @@
 {
   "name": "@allo-team/allo-v2-sdk",
-  "version": "1.0.75",
+  "version": "1.0.74",
   "description": "sdk for allo v2",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
