@@ -1,7 +1,30 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.supportedChains = void 0;
+exports.supportedChains = exports.sei = void 0;
+const viem_1 = require("viem");
 const chains_1 = require("viem/chains");
+exports.sei = (0, viem_1.defineChain)({
+    id: 1329,
+    name: "Sei",
+    nativeCurrency: { name: "Sei", symbol: "SEI", decimals: 18 },
+    rpcUrls: {
+        default: {
+            http: ["https://evm-rpc.sei-apis.com/"],
+            webSocket: ["wss://evm-ws.sei-apis.com/"],
+        },
+    },
+    blockExplorers: {
+        default: {
+            name: "Seitrace",
+            url: "https://seitrace.com",
+        },
+    },
+    contracts: {
+        multicall3: {
+            address: "0xcb2436774C3e191c85056d248EF4260ce5f27A9D",
+        },
+    },
+});
 exports.supportedChains = [
     chains_1.arbitrum,
     chains_1.arbitrumSepolia,
@@ -21,6 +44,7 @@ exports.supportedChains = [
     chains_1.fantom,
     chains_1.scroll,
     chains_1.seiDevnet,
+    exports.sei,
     chains_1.avalancheFuji,
     chains_1.fantomTestnet,
     chains_1.zkSync,
