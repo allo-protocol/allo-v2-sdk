@@ -72,7 +72,7 @@ To perform operations that require a specific pool and strategy contract, set th
 
 ```javascript
 const poolId = 1;
-const strategyAddress = "0xYourStrategyContractAddress";
+const strategyAddress = "0x938d8338cb06d0F789b66F46642C8ed67782CE16";
 
 await strategy.setPoolId(poolId);
 strategy.setContract(strategyAddress);
@@ -95,7 +95,7 @@ console.log(`Native Token Address: ${nativeToken}`);
 Check if a specific allocator has already cast their allocation to a specific recipient
 
 ```javascript
-const recipientId = "0xYourRecipientAddress";
+const recipientId = "0x938d8338cb06d0F789b66F46642C8ed67782CE16";
 const status = await strategy.getRecipientStatus(recipientId);
 
 console.log(`Recipient Status: ${status}`);
@@ -352,7 +352,7 @@ Generate transaction data for registering a new recipient:
 ```javascript
 const registerData = {
   registryAnchor: "0xYourRegistryAnchor", // Optional
-  recipientAddress: "0xRecipientAddress",
+  recipientAddress: "0x938d8338cb06d0F789b66F46642C8ed67782CE16",
   grantAmount: BigInt(1),
   metadata: {
     protocol: BigInt(0),
@@ -378,7 +378,7 @@ Generate transaction data for batch registering multiple recipients:
 const batchRegisterData = [
   {
     registryAnchor: "0xYourRegistryAnchor1", // Optional
-    recipientAddress: "0xRecipientAddress1",
+    recipientAddress: "0x938d8338cb06d0F789b66F46642C8ed67782CE16",
     grantAmount: BigInt(1),
     metadata: {
       protocol:  BigInt(1),
@@ -387,7 +387,7 @@ const batchRegisterData = [
   },
   {
     registryAnchor: "0xYourRegistryAnchor2", // Optional
-    recipientAddress: "0xRecipientAddress2",
+    0x938d8338cb06d0F789b66F46642C8ed67782CE16: "0xRecipientAddress2",
     grantAmount:  BigInt(2),
     metadata: {
       protocol: BigInt(1),
