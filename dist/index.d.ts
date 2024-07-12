@@ -5,6 +5,7 @@ import { SQFSuperFluidStrategy } from "./strategies/SuperFluidStrategy/SQFSuperF
 import { DonationVotingMerkleDistributionStrategy } from "./strategies/DonationVotingMerkleDistributionStrategy/DonationVotingMerkleDistribution";
 import { DirectGrantsStrategy } from "./strategies/DirectGrants/DirectGrantsStrategy";
 import { DirectGrantsLiteStrategy } from "./strategies/DirectGrantsLiteStrategy/DirectGrantsLite";
+import { DirectAllocationStrategy } from "./strategies/DirectAllocationStrategy/DirectAllocationStrategy";
 import { StrategyFactory } from "./strategies/StrategyFactory/StrategyFactory";
 export * from "./types";
 export * from "./strategies/types";
@@ -26,4 +27,5 @@ export { abi as DirectGrantsStrategyAbi } from "./strategies/DirectGrants/direct
 export { abi as DirectGrantsLiteStrategyAbi } from "./strategies/DirectGrantsLiteStrategy/directGrantsLite.config";
 export { abi as StrategyFactoryDGLAbi } from "./strategies/StrategyFactory/strategyFactory.DGL.config";
 export { abi as StrategyFactoryDVMDTAbi } from "./strategies/StrategyFactory/strategyFactory.DVMDT.config";
-export { Allo, Registry, MicroGrantsStrategy, SQFSuperFluidStrategy, DonationVotingMerkleDistributionStrategy, DirectGrantsStrategy, DirectGrantsLiteStrategy, StrategyFactory, };
+export { abi as DirectAllocationStrategyAbi } from "./strategies/DirectAllocationStrategy/directAllocation.config";
+export { Allo, Registry, MicroGrantsStrategy, SQFSuperFluidStrategy, DonationVotingMerkleDistributionStrategy, DirectGrantsStrategy, DirectGrantsLiteStrategy, StrategyFactory, DirectAllocationStrategy, };

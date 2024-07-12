@@ -14,7 +14,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.StrategyFactory = exports.DirectGrantsLiteStrategy = exports.DirectGrantsStrategy = exports.DonationVotingMerkleDistributionStrategy = exports.SQFSuperFluidStrategy = exports.MicroGrantsStrategy = exports.Registry = exports.Allo = exports.StrategyFactoryDVMDTAbi = exports.StrategyFactoryDGLAbi = exports.DirectGrantsLiteStrategyAbi = exports.DirectGrantsStrategyAbi = exports.SQFSuperFluidStrategyAbi = exports.MicroGrantsStrategyAbi = exports.DonationVotingMerkleDistributionVaultStrategyAbi = exports.DonationVotingMerkleDistributionDirectTransferStrategyAbi = exports.RegistryAbi = exports.AlloAbi = exports.DirectGrantsLiteStrategyTypes = exports.DirectGrantsStrategyTypes = exports.SQFSuperFluidStrategyTypes = exports.MicroGrantsStrategyTypes = exports.DonationVotingMerkleDistributionStrategyTypes = void 0;
+exports.DirectAllocationStrategy = exports.StrategyFactory = exports.DirectGrantsLiteStrategy = exports.DirectGrantsStrategy = exports.DonationVotingMerkleDistributionStrategy = exports.SQFSuperFluidStrategy = exports.MicroGrantsStrategy = exports.Registry = exports.Allo = exports.DirectAllocationStrategyAbi = exports.StrategyFactoryDVMDTAbi = exports.StrategyFactoryDGLAbi = exports.DirectGrantsLiteStrategyAbi = exports.DirectGrantsStrategyAbi = exports.SQFSuperFluidStrategyAbi = exports.MicroGrantsStrategyAbi = exports.DonationVotingMerkleDistributionVaultStrategyAbi = exports.DonationVotingMerkleDistributionDirectTransferStrategyAbi = exports.RegistryAbi = exports.AlloAbi = exports.DirectGrantsLiteStrategyTypes = exports.DirectGrantsStrategyTypes = exports.SQFSuperFluidStrategyTypes = exports.MicroGrantsStrategyTypes = exports.DonationVotingMerkleDistributionStrategyTypes = void 0;
 const Allo_1 = require("./Allo/Allo");
 Object.defineProperty(exports, "Allo", { enumerable: true, get: function () { return Allo_1.Allo; } });
 const Registry_1 = require("./Registry/Registry");
@@ -29,6 +29,8 @@ const DirectGrantsStrategy_1 = require("./strategies/DirectGrants/DirectGrantsSt
 Object.defineProperty(exports, "DirectGrantsStrategy", { enumerable: true, get: function () { return DirectGrantsStrategy_1.DirectGrantsStrategy; } });
 const DirectGrantsLite_1 = require("./strategies/DirectGrantsLiteStrategy/DirectGrantsLite");
 Object.defineProperty(exports, "DirectGrantsLiteStrategy", { enumerable: true, get: function () { return DirectGrantsLite_1.DirectGrantsLiteStrategy; } });
+const DirectAllocationStrategy_1 = require("./strategies/DirectAllocationStrategy/DirectAllocationStrategy");
+Object.defineProperty(exports, "DirectAllocationStrategy", { enumerable: true, get: function () { return DirectAllocationStrategy_1.DirectAllocationStrategy; } });
 const StrategyFactory_1 = require("./strategies/StrategyFactory/StrategyFactory");
 Object.defineProperty(exports, "StrategyFactory", { enumerable: true, get: function () { return StrategyFactory_1.StrategyFactory; } });
 __exportStar(require("./types"), exports);
@@ -60,3 +62,5 @@ var strategyFactory_DGL_config_1 = require("./strategies/StrategyFactory/strateg
 Object.defineProperty(exports, "StrategyFactoryDGLAbi", { enumerable: true, get: function () { return strategyFactory_DGL_config_1.abi; } });
 var strategyFactory_DVMDT_config_1 = require("./strategies/StrategyFactory/strategyFactory.DVMDT.config");
 Object.defineProperty(exports, "StrategyFactoryDVMDTAbi", { enumerable: true, get: function () { return strategyFactory_DVMDT_config_1.abi; } });
+var directAllocation_config_1 = require("./strategies/DirectAllocationStrategy/directAllocation.config");
+Object.defineProperty(exports, "DirectAllocationStrategyAbi", { enumerable: true, get: function () { return directAllocation_config_1.abi; } });
