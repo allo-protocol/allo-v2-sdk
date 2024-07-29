@@ -36,6 +36,7 @@ exports.supportedChains = [
     chains_1.lukso,
     chains_1.luksoTestnet,
     chains_1.mainnet,
+    chains_1.metis,
     chains_1.optimism,
     chains_1.polygon,
     chains_1.polygonMumbai,
