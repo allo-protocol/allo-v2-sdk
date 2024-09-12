@@ -32,6 +32,7 @@ exports.supportedChains = [
     chains_1.celo,
     chains_1.celoAlfajores,
     chains_1.sepolia,
+    chains_1.gnosis,
     chains_1.localhost,
     chains_1.lukso,
     chains_1.luksoTestnet,
