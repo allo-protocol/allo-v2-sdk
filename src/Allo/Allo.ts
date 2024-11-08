@@ -115,6 +115,11 @@ export class Allo {
     return owner;
   }
 
+  public async getAllo(): Promise<`0x${string}`> {
+    const alloAddress = await this.contract.read.getAllo();
+    return alloAddress;
+  }
+
   // Write functions
 
   public createPoolWithCustomStrategy({

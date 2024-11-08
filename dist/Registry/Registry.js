@@ -33,7 +33,7 @@ class Registry {
     address() {
         return this.addr;
     }
-    // Read only Functions
+    // Read-only functions
     getAlloOwner() {
         return __awaiter(this, void 0, void 0, function* () {
             const owner = yield this.contract.read.ALLO_OWNER();
@@ -44,12 +44,6 @@ class Registry {
         return __awaiter(this, void 0, void 0, function* () {
             const admin = yield this.contract.read.DEFAULT_ADMIN_ROLE();
             return admin;
-        });
-    }
-    getNative() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const native = yield this.contract.read.NATIVE();
-            return native;
         });
     }
     getAnchorToProfileId(anchor) {
@@ -121,6 +115,18 @@ class Registry {
         return __awaiter(this, void 0, void 0, function* () {
             const profile = yield this.contract.read.profilesById([profileId]);
             return profile;
+        });
+    }
+    DEFAULT_ADMIN_ROLE() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const admin = yield this.contract.read.DEFAULT_ADMIN_ROLE();
+            return admin;
+        });
+    }
+    supportsInterface(interfaceId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const supports = yield this.contract.read.supportsInterface([interfaceId]);
+            return supports;
         });
     }
     // Write functions
@@ -201,6 +207,54 @@ class Registry {
             abi: registry_config_1.abi,
             functionName: "updateProfilePendingOwner",
             args: [profileId, account],
+        });
+        return {
+            to: this.addr,
+            data: data,
+            value: "0",
+        };
+    }
+    grantRole(role, account) {
+        const data = (0, viem_1.encodeFunctionData)({
+            abi: registry_config_1.abi,
+            functionName: "grantRole",
+            args: [role, account],
+        });
+        return {
+            to: this.addr,
+            data: data,
+            value: "0",
+        };
+    }
+    renounceRole(role, account) {
+        const data = (0, viem_1.encodeFunctionData)({
+            abi: registry_config_1.abi,
+            functionName: "renounceRole",
+            args: [role, account],
+        });
+        return {
+            to: this.addr,
+            data: data,
+            value: "0",
+        };
+    }
+    revokeRole(role, account) {
+        const data = (0, viem_1.encodeFunctionData)({
+            abi: registry_config_1.abi,
+            functionName: "revokeRole",
+            args: [role, account],
+        });
+        return {
+            to: this.addr,
+            data: data,
+            value: "0",
+        };
+    }
+    recoverFunds(token, recipient) {
+        const data = (0, viem_1.encodeFunctionData)({
+            abi: registry_config_1.abi,
+            functionName: "recoverFunds",
+            args: [token, recipient],
         });
         return {
             to: this.addr,

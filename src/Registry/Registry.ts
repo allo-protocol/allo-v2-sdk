@@ -48,7 +48,7 @@ export class Registry {
     return this.addr;
   }
 
-  // Read only Functions
+  // Read-only functions
 
   public async getAlloOwner(): Promise<`0x${string}`> {
     const owner = await this.contract.read.ALLO_OWNER();
@@ -58,11 +58,6 @@ export class Registry {
   public async getDefaultAdminRole(): Promise<`0x${string}`> {
     const admin = await this.contract.read.DEFAULT_ADMIN_ROLE();
     return admin;
-  }
-
-  public async getNative(): Promise<`0x${string}`> {
-    const native = await this.contract.read.NATIVE();
-    return native;
   }
 
   public async getAnchorToProfileId(
@@ -137,6 +132,16 @@ export class Registry {
   public async profilesById(profileId: `0x${string}`): Promise<any> {
     const profile = await this.contract.read.profilesById([profileId]);
     return profile;
+  }
+
+  public async DEFAULT_ADMIN_ROLE(): Promise<`0x${string}`> {
+    const admin = await this.contract.read.DEFAULT_ADMIN_ROLE();
+    return admin;
+  }
+
+  public async supportsInterface(interfaceId: `0x${string}`): Promise<boolean> {
+    const supports = await this.contract.read.supportsInterface([interfaceId]);
+    return supports;
   }
 
   // Write functions
@@ -245,6 +250,62 @@ export class Registry {
       abi: abi,
       functionName: "updateProfilePendingOwner",
       args: [profileId, account],
+    });
+
+    return {
+      to: this.addr,
+      data: data,
+      value: "0",
+    };
+  }
+
+  public grantRole(role: `0x${string}`, account: `0x${string}`): TransactionData {
+    const data = encodeFunctionData({
+      abi: abi,
+      functionName: "grantRole",
+      args: [role, account],
+    });
+  
+    return {
+      to: this.addr,
+      data: data,
+      value: "0",
+    };
+  }
+  
+  public renounceRole(role: `0x${string}`, account: `0x${string}`): TransactionData {
+    const data = encodeFunctionData({
+      abi: abi,
+      functionName: "renounceRole",
+      args: [role, account],
+    });
+  
+    return {
+      to: this.addr,
+      data: data,
+      value: "0",
+    };
+  }
+  
+  public revokeRole(role: `0x${string}`, account: `0x${string}`): TransactionData {
+    const data = encodeFunctionData({
+      abi: abi,
+      functionName: "revokeRole",
+      args: [role, account],
+    });
+  
+    return {
+      to: this.addr,
+      data: data,
+      value: "0",
+    };
+  }
+
+  public recoverFunds(token: `0x${string}`, recipient: `0x${string}`): TransactionData {
+    const data = encodeFunctionData({
+      abi: abi,
+      functionName: "recoverFunds",
+      args: [token, recipient],
     });
 
     return {

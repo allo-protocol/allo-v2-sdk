@@ -33,7 +33,7 @@ class Allo {
     address() {
         return this.addr;
     }
-    // Read only funcitons
+    // Read-only functions
     getFeeDenominator() {
         return __awaiter(this, void 0, void 0, function* () {
             const denominator = yield this.contract.read.getFeeDenominator();
@@ -54,44 +54,62 @@ class Allo {
     }
     getStrategy(poolId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const strategyAddress = this.contract.read.getStrategy([poolId]);
+            const strategyAddress = yield this.contract.read.getStrategy([poolId]);
             return strategyAddress;
         });
     }
     getPercentFee() {
         return __awaiter(this, void 0, void 0, function* () {
-            const percentage = this.contract.read.getPercentFee();
+            const percentage = yield this.contract.read.getPercentFee();
             return percentage;
         });
     }
     getBaseFee() {
         return __awaiter(this, void 0, void 0, function* () {
-            const baseFee = this.contract.read.getBaseFee();
+            const baseFee = yield this.contract.read.getBaseFee();
             return baseFee;
         });
     }
     getTreasury() {
         return __awaiter(this, void 0, void 0, function* () {
-            const treasuryAddress = this.contract.read.getTreasury();
+            const treasuryAddress = yield this.contract.read.getTreasury();
             return treasuryAddress;
         });
     }
     getRegistry() {
         return __awaiter(this, void 0, void 0, function* () {
-            const registryAddress = this.contract.read.getRegistry();
+            const registryAddress = yield this.contract.read.getRegistry();
             return registryAddress;
         });
     }
-    isCloneableStrategy() {
+    isCloneableStrategy(strategy) {
         return __awaiter(this, void 0, void 0, function* () {
-            const isCloneable = this.contract.read.isCloneableStrategy();
+            const isCloneable = yield this.contract.read.isCloneableStrategy([strategy]);
             return isCloneable;
         });
     }
     getPool(poolId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const pool = this.contract.read.getPool([poolId]);
+            const pool = yield this.contract.read.getPool([poolId]);
             return pool;
+        });
+    }
+    isTrustedForwarder(forwarder) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const isTrusted = yield this.contract.read.isTrustedForwarder([forwarder]);
+            return isTrusted;
+        });
+    }
+    getOwner() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const owner = yield this.contract.read.owner();
+            return owner;
+        });
+    }
+    getAllo() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const alloAddress = yield this.contract.read.getAllo();
+            return alloAddress;
         });
     }
     // Write functions
@@ -148,7 +166,7 @@ class Allo {
         const data = (0, viem_1.encodeFunctionData)({
             abi: allo_config_1.abi,
             functionName: "updatePoolMetadata",
-            args: [poolId, metadata],
+            args: [poolId, [metadata.protocol, metadata.pointer]],
         });
         return {
             to: this.addr,
@@ -168,11 +186,11 @@ class Allo {
             value: "0",
         };
     }
-    updateTreasury(registry) {
+    updateTreasury(treasury) {
         const data = (0, viem_1.encodeFunctionData)({
             abi: allo_config_1.abi,
-            functionName: "updateRegistry",
-            args: [registry],
+            functionName: "updateTreasury",
+            args: [treasury],
         });
         return {
             to: this.addr,
@@ -228,11 +246,11 @@ class Allo {
             value: "0",
         };
     }
-    addPoolManager(poolId, manager) {
+    addPoolManagers(poolId, managers) {
         const data = (0, viem_1.encodeFunctionData)({
             abi: allo_config_1.abi,
-            functionName: "addPoolManager",
-            args: [poolId, manager],
+            functionName: "addPoolManagers",
+            args: [poolId, managers],
         });
         return {
             to: this.addr,
@@ -240,11 +258,35 @@ class Allo {
             value: "0",
         };
     }
-    removePoolManager(poolId, manager) {
+    removePoolManagers(poolId, managers) {
         const data = (0, viem_1.encodeFunctionData)({
             abi: allo_config_1.abi,
-            functionName: "removePoolManager",
-            args: [poolId, manager],
+            functionName: "removePoolManagers",
+            args: [poolId, managers],
+        });
+        return {
+            to: this.addr,
+            data: data,
+            value: "0",
+        };
+    }
+    addPoolManagersInMultiplePools(poolIds, managers) {
+        const data = (0, viem_1.encodeFunctionData)({
+            abi: allo_config_1.abi,
+            functionName: "addPoolManagersInMultiplePools",
+            args: [poolIds, managers],
+        });
+        return {
+            to: this.addr,
+            data: data,
+            value: "0",
+        };
+    }
+    removePoolManagersInMultiplePools(poolIds, managers) {
+        const data = (0, viem_1.encodeFunctionData)({
+            abi: allo_config_1.abi,
+            functionName: "removePoolManagersInMultiplePools",
+            args: [poolIds, managers],
         });
         return {
             to: this.addr,
@@ -265,27 +307,28 @@ class Allo {
         };
     }
     // Strategy functions
-    registerRecipient(poolId, strategyData) {
-        const data = (0, viem_1.encodeFunctionData)({
+    registerRecipient(poolId, recipientAddresses, data) {
+        const encodedData = (0, viem_1.encodeFunctionData)({
             abi: allo_config_1.abi,
             functionName: "registerRecipient",
-            args: [poolId, strategyData],
+            args: [poolId, recipientAddresses, data],
         });
         return {
             to: this.addr,
-            data: data,
+            data: encodedData,
             value: "0",
         };
     }
-    batchRegisterRecipient(poolIds, strategyData) {
-        const data = (0, viem_1.encodeFunctionData)({
+    batchRegisterRecipient(poolIds, recipientAddresses, // question: should this be updated to be an array of objects, one per pool?
+    data) {
+        const encodedData = (0, viem_1.encodeFunctionData)({
             abi: allo_config_1.abi,
             functionName: "batchRegisterRecipient",
-            args: [poolIds, strategyData],
+            args: [poolIds, recipientAddresses, data],
         });
         return {
             to: this.addr,
-            data: data,
+            data: encodedData,
             value: "0",
         };
     }
@@ -301,27 +344,28 @@ class Allo {
             value: "0",
         };
     }
-    allocate(poolId, strategyData) {
-        const data = (0, viem_1.encodeFunctionData)({
+    allocate(poolId, recipients, amounts, data) {
+        const encodedData = (0, viem_1.encodeFunctionData)({
             abi: allo_config_1.abi,
             functionName: "allocate",
-            args: [poolId, strategyData],
+            args: [poolId, recipients, amounts, data],
         });
         return {
             to: this.addr,
-            data: data,
+            data: encodedData,
             value: "0",
         };
     }
-    batchAllocate(poolIds, strategyData) {
-        const data = (0, viem_1.encodeFunctionData)({
+    batchAllocate(poolIds, recipients, // question: should this be updated to be an array of objects, one per pool?
+    amounts, values, datas) {
+        const encodedData = (0, viem_1.encodeFunctionData)({
             abi: allo_config_1.abi,
             functionName: "batchAllocate",
-            args: [poolIds, strategyData],
+            args: [poolIds, recipients, amounts, values, datas],
         });
         return {
             to: this.addr,
-            data: data,
+            data: encodedData,
             value: "0",
         };
     }

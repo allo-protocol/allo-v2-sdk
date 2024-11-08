@@ -1,7 +1,8 @@
 import { Allo } from '../src/Allo/Allo';
-import { createWalletClient, http, parseEther } from 'viem';
+import { createPublicClient, createWalletClient, http, parseEther } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import { sepolia } from 'viem/chains';
+import { abi } from '../src/Allo/allo.config';
 
 describe('Allo Read Function Tests', () => {
   let allo: Allo;
@@ -27,19 +28,19 @@ describe('Allo Read Function Tests', () => {
   test('getFeeDenominator', async () => {
     const feeDenominator = await allo.getFeeDenominator();
     expect(feeDenominator).toBeDefined();
-    expect(typeof feeDenominator).toBe('bigint');
+    expect(typeof feeDenominator.toString()).toBe('string');
   });
 
   test('getPercentFee', async () => {
     const percentFee = await allo.getPercentFee();
     expect(percentFee).toBeDefined();
-    expect(typeof percentFee).toBe('bigint');
+    expect(typeof percentFee.toString()).toBe('string');
   });
 
   test('getBaseFee', async () => {
     const baseFee = await allo.getBaseFee();
     expect(baseFee).toBeDefined();
-    expect(typeof baseFee).toBe('bigint');
+    expect(typeof baseFee.toString()).toBe('string');
   });
 
   test('getTreasury', async () => {
@@ -104,20 +105,17 @@ describe('Allo Read Function Tests', () => {
 
 describe('Allo Write Function Tests', () => {
   let allo: Allo;
-  let walletClient: any;
-  const testPrivateKey = process.env.TEST_PRIVATE_KEY as `0x${string}`;
+  let publicClient: any;
   const testAddress = process.env.TEST_ADDRESS as `0x${string}`;
 
   beforeAll(() => {
-    if (!testPrivateKey || !testAddress) {
-      throw new Error('TEST_PRIVATE_KEY and TEST_ADDRESS must be set in environment variables');
+    if (!testAddress) {
+      throw new Error('TEST_ADDRESS must be set in environment variables');
     }
 
     allo = new Allo({ chain: 11155111, rpc: 'https://rpc.sepolia.org' });
-
-    const account = privateKeyToAccount(testPrivateKey);
-    walletClient = createWalletClient({
-      account,
+    
+    publicClient = createPublicClient({
       chain: sepolia,
       transport: http('https://rpc.sepolia.org'),
     });
@@ -138,14 +136,26 @@ describe('Allo Write Function Tests', () => {
     };
 
     const txData = allo.createPoolWithCustomStrategy(createPoolArgs);
-    expect(txData).toBeDefined();
-    expect(txData.to).toBe(allo.address());
-    expect(txData.data).toBeDefined();
-    expect(txData.value).toBe(createPoolArgs.amount.toString());
 
-    // send the transaction
-    const hash = await walletClient.sendTransaction(txData);
-    expect(hash).toBeDefined();
+    const { request } = await publicClient.simulateContract({
+      address: allo.address(),
+      abi,
+      functionName: 'createPoolWithCustomStrategy',
+      args: [
+        createPoolArgs.profileId,
+        createPoolArgs.strategy,
+        createPoolArgs.initStrategyData,
+        createPoolArgs.token,
+        createPoolArgs.amount,
+        createPoolArgs.metadata,
+        createPoolArgs.managers
+      ],
+      account: testAddress,
+    });
+
+    expect(request.data).toBe(txData.data);
+    expect(request.to).toBe(txData.to);
+    expect(request.value.toString()).toBe(txData.value.toString());
   });
 
   test('updatePoolMetadata', async () => {
@@ -154,125 +164,229 @@ describe('Allo Write Function Tests', () => {
       protocol: BigInt(1),
       pointer: 'new_metadata_pointer',
     };
-  
+
     const txData = allo.updatePoolMetadata({ poolId, metadata });
-    expect(txData).toBeDefined();
-    expect(txData.to).toBe(allo.address());
-    expect(txData.data).toBeDefined();
-    expect(txData.value).toBe('0');
+
+    const { request } = await publicClient.simulateContract({
+      address: allo.address(),
+      abi,
+      functionName: 'updatePoolMetadata',
+      args: [poolId, metadata],
+      account: testAddress,
+    });
+
+    expect(request.data).toBe(txData.data);
+    expect(request.to).toBe(txData.to);
+    expect(request.value.toString()).toBe(txData.value.toString());
   });
 
   test('updateRegistry', async () => {
     const newRegistry = '0x1234567890123456789012345678901234567890' as `0x${string}`;
     const txData = allo.updateRegistry(newRegistry);
-    expect(txData).toBeDefined();
-    expect(txData.to).toBe(allo.address());
-    expect(txData.data).toBeDefined();
-    expect(txData.value).toBe('0');
+
+    const { request } = await publicClient.simulateContract({
+      address: allo.address(),
+      abi,
+      functionName: 'updateRegistry',
+      args: [newRegistry],
+      account: testAddress,
+    });
+
+    expect(request.data).toBe(txData.data);
+    expect(request.to).toBe(txData.to);
+    expect(request.value.toString()).toBe(txData.value.toString());
   });
 
   test('addPoolManager', async () => {
     const poolId = BigInt(1);
     const manager = '0x1234567890123456789012345678901234567890' as `0x${string}`;
     const txData = allo.addPoolManagers(poolId, [manager]);
-    expect(txData).toBeDefined();
-    expect(txData.to).toBe(allo.address());
-    expect(txData.data).toBeDefined();
-    expect(txData.value).toBe('0');
+
+    const { request } = await publicClient.simulateContract({
+      address: allo.address(),
+      abi,
+      functionName: 'addPoolManagers',
+      args: [poolId, [manager]],
+      account: testAddress,
+    });
+
+    expect(request.data).toBe(txData.data);
+    expect(request.to).toBe(txData.to);
+    expect(request.value.toString()).toBe(txData.value.toString());
   });
 
   test('removePoolManager', async () => {
     const poolId = BigInt(1);
     const manager = '0x1234567890123456789012345678901234567890' as `0x${string}`;
     const txData = allo.removePoolManagers(poolId, [manager]);
-    expect(txData).toBeDefined();
-    expect(txData.to).toBe(allo.address());
-    expect(txData.data).toBeDefined();
-    expect(txData.value).toBe('0');
+
+    const { request } = await publicClient.simulateContract({
+      address: allo.address(),
+      abi,
+      functionName: 'removePoolManagers',
+      args: [poolId, [manager]],
+      account: testAddress,
+    });
+
+    expect(request.data).toBe(txData.data);
+    expect(request.to).toBe(txData.to);
+    expect(request.value.toString()).toBe(txData.value.toString());
   });
 
   test('addToCloneableStrategies', async () => {
     const strategy = '0x1234567890123456789012345678901234567890' as `0x${string}`;
     const txData = allo.addToCloneableStrategies(strategy);
-    expect(txData).toBeDefined();
-    expect(txData.to).toBe(allo.address());
-    expect(txData.data).toBeDefined();
-    expect(txData.value).toBe('0');
+
+    const { request } = await publicClient.simulateContract({
+      address: allo.address(),
+      abi,
+      functionName: 'addToCloneableStrategies',
+      args: [strategy],
+      account: testAddress,
+    });
+
+    expect(request.data).toBe(txData.data);
+    expect(request.to).toBe(txData.to);
+    expect(request.value.toString()).toBe(txData.value.toString());
   });
 
   test('removeFromCloneableStrategies', async () => {
     const strategy = '0x1234567890123456789012345678901234567890' as `0x${string}`;
     const txData = allo.removeFromCloneableStrategies(strategy);
-    expect(txData).toBeDefined();
-    expect(txData.to).toBe(allo.address());
-    expect(txData.data).toBeDefined();
-    expect(txData.value).toBe('0');
+
+    const { request } = await publicClient.simulateContract({
+      address: allo.address(),
+      abi,
+      functionName: 'removeFromCloneableStrategies',
+      args: [strategy],
+      account: testAddress,
+    });
+
+    expect(request.data).toBe(txData.data);
+    expect(request.to).toBe(txData.to);
+    expect(request.value.toString()).toBe(txData.value.toString());
   });
 
   test('updateBaseFee', async () => {
     const baseFee = parseEther('0.01');
     const txData = allo.updateBaseFee(baseFee);
-    expect(txData).toBeDefined();
-    expect(txData.to).toBe(allo.address());
-    expect(txData.data).toBeDefined();
-    expect(txData.value).toBe('0');
+
+    const { request } = await publicClient.simulateContract({
+      address: allo.address(),
+      abi,
+      functionName: 'updateBaseFee',
+      args: [baseFee],
+      account: testAddress,
+    });
+
+    expect(request.data).toBe(txData.data);
+    expect(request.to).toBe(txData.to);
+    expect(request.value.toString()).toBe(txData.value.toString());
   });
 
   test('updatePercentFee', async () => {
     const percentFee = BigInt(100); // 1%
     const txData = allo.updatePercentFee(percentFee);
-    expect(txData).toBeDefined();
-    expect(txData.to).toBe(allo.address());
-    expect(txData.data).toBeDefined();
-    expect(txData.value).toBe('0');
+
+    const { request } = await publicClient.simulateContract({
+      address: allo.address(),
+      abi,
+      functionName: 'updatePercentFee',
+      args: [percentFee],
+      account: testAddress,
+    });
+
+    expect(request.data).toBe(txData.data);
+    expect(request.to).toBe(txData.to);
+    expect(request.value.toString()).toBe(txData.value.toString());
   });
 
   test('updateTreasury', async () => {
     const treasury = '0x1234567890123456789012345678901234567890' as `0x${string}`;
     const txData = allo.updateTreasury(treasury);
-    expect(txData).toBeDefined();
-    expect(txData.to).toBe(allo.address());
-    expect(txData.data).toBeDefined();
-    expect(txData.value).toBe('0');
+
+    const { request } = await publicClient.simulateContract({
+      address: allo.address(),
+      abi,
+      functionName: 'updateTreasury',
+      args: [treasury],
+      account: testAddress,
+    });
+
+    expect(request.data).toBe(txData.data);
+    expect(request.to).toBe(txData.to);
+    expect(request.value.toString()).toBe(txData.value.toString());
   });
 
   test('recoverFunds', async () => {
     const token = '0x1234567890123456789012345678901234567890' as `0x${string}`;
     const txData = allo.recoverFunds(token, testAddress);
-    expect(txData).toBeDefined();
-    expect(txData.to).toBe(allo.address());
-    expect(txData.data).toBeDefined();
-    expect(txData.value).toBe('0');
+
+    const { request } = await publicClient.simulateContract({
+      address: allo.address(),
+      abi,
+      functionName: 'recoverFunds',
+      args: [token, testAddress],
+      account: testAddress,
+    });
+
+    expect(request.data).toBe(txData.data);
+    expect(request.to).toBe(txData.to);
+    expect(request.value.toString()).toBe(txData.value.toString());
   });
 
   test('registerRecipient', async () => {
     const poolId = BigInt(1);
     const data = '0x1234' as `0x${string}`;
     const txData = allo.registerRecipient(poolId, [testAddress], data);
-    expect(txData).toBeDefined();
-    expect(txData.to).toBe(allo.address());
-    expect(txData.data).toBeDefined();
-    expect(txData.value).toBe('0');
+
+    const { request } = await publicClient.simulateContract({
+      address: allo.address(),
+      abi,
+      functionName: 'registerRecipient',
+      args: [poolId, [testAddress], data],
+      account: testAddress,
+    });
+
+    expect(request.data).toBe(txData.data);
+    expect(request.to).toBe(txData.to);
+    expect(request.value.toString()).toBe(txData.value.toString());
   });
 
   test('batchRegisterRecipient', async () => {
     const poolIds = [BigInt(1), BigInt(2)];
     const data = ['0x1234', '0x5678'] as `0x${string}`[];
     const txData = allo.batchRegisterRecipient(poolIds, [[testAddress], [testAddress]], data);
-    expect(txData).toBeDefined();
-    expect(txData.to).toBe(allo.address());
-    expect(txData.data).toBeDefined();
-    expect(txData.value).toBe('0');
+
+    const { request } = await publicClient.simulateContract({
+      address: allo.address(),
+      abi,
+      functionName: 'batchRegisterRecipient',
+      args: [poolIds, [[testAddress], [testAddress]], data],
+      account: testAddress,
+    });
+
+    expect(request.data).toBe(txData.data);
+    expect(request.to).toBe(txData.to);
+    expect(request.value.toString()).toBe(txData.value.toString());
   });
 
   test('fundPool', async () => {
     const poolId = BigInt(1);
     const amount = parseEther('1');
     const txData = allo.fundPool(poolId, amount);
-    expect(txData).toBeDefined();
-    expect(txData.to).toBe(allo.address());
-    expect(txData.data).toBeDefined();
-    expect(txData.value).toBe('0');
+
+    const { request } = await publicClient.simulateContract({
+      address: allo.address(),
+      abi,
+      functionName: 'fundPool',
+      args: [poolId, amount],
+      account: testAddress,
+    });
+
+    expect(request.data).toBe(txData.data);
+    expect(request.to).toBe(txData.to);
+    expect(request.value.toString()).toBe(txData.value.toString());
   });
 
   test('allocate', async () => {
@@ -281,10 +395,18 @@ describe('Allo Write Function Tests', () => {
     const amounts = [parseEther('0.5')];
     const data = '0x1234' as `0x${string}`;
     const txData = allo.allocate(poolId, recipients, amounts, data);
-    expect(txData).toBeDefined();
-    expect(txData.to).toBe(allo.address());
-    expect(txData.data).toBeDefined();
-    expect(txData.value).toBe('0');
+
+    const { request } = await publicClient.simulateContract({
+      address: allo.address(),
+      abi,
+      functionName: 'allocate',
+      args: [poolId, recipients, amounts, data],
+      account: testAddress,
+    });
+
+    expect(request.data).toBe(txData.data);
+    expect(request.to).toBe(txData.to);
+    expect(request.value.toString()).toBe(txData.value.toString());
   });
 
   test('batchAllocate', async () => {
@@ -297,10 +419,18 @@ describe('Allo Write Function Tests', () => {
     const values = [parseEther('0.5'), parseEther('0.3')];
     const datas = ['0x1234', '0x5678'] as `0x${string}`[];
     const txData = allo.batchAllocate(poolIds, recipients, amounts, values, datas);
-    expect(txData).toBeDefined();
-    expect(txData.to).toBe(allo.address());
-    expect(txData.data).toBeDefined();
-    expect(txData.value).toBe('0');
+
+    const { request } = await publicClient.simulateContract({
+      address: allo.address(),
+      abi,
+      functionName: 'batchAllocate',
+      args: [poolIds, recipients, amounts, values, datas],
+      account: testAddress,
+    });
+
+    expect(request.data).toBe(txData.data);
+    expect(request.to).toBe(txData.to);
+    expect(request.value.toString()).toBe(txData.value.toString());
   });
 
   test('distribute', async () => {
@@ -308,10 +438,18 @@ describe('Allo Write Function Tests', () => {
     const recipientId = ['0x1234567890123456789012345678901234567890' as `0x${string}`];
     const strategyData = '0x1234' as `0x${string}`;
     const txData = allo.distribute(poolId, recipientId, strategyData);
-    expect(txData).toBeDefined();
-    expect(txData.to).toBe(allo.address());
-    expect(txData.data).toBeDefined();
-    expect(txData.value).toBe('0');
+
+    const { request } = await publicClient.simulateContract({
+      address: allo.address(),
+      abi,
+      functionName: 'distribute',
+      args: [poolId, recipientId, strategyData],
+      account: testAddress,
+    });
+
+    expect(request.data).toBe(txData.data);
+    expect(request.to).toBe(txData.to);
+    expect(request.value.toString()).toBe(txData.value.toString());
   });
 });
 

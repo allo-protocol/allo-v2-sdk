@@ -1,14 +1,6 @@
 import { Chain } from "viem";
 export declare const getAddress: (chain: Chain) => `0x${string}`;
 export declare const abi: readonly [{
-    readonly inputs: readonly [{
-        readonly internalType: "address";
-        readonly name: "_owner";
-        readonly type: "address";
-    }];
-    readonly stateMutability: "nonpayable";
-    readonly type: "constructor";
-}, {
     readonly inputs: readonly [];
     readonly name: "AMOUNT_MISMATCH";
     readonly type: "error";
@@ -28,6 +20,16 @@ export declare const abi: readonly [{
     readonly inputs: readonly [];
     readonly name: "ZERO_ADDRESS";
     readonly type: "error";
+}, {
+    readonly inputs: readonly [];
+    readonly name: "ALLO_OWNER";
+    readonly outputs: readonly [{
+        readonly internalType: "address";
+        readonly name: "";
+        readonly type: "address";
+    }];
+    readonly stateMutability: "view";
+    readonly type: "function";
 }, {
     readonly anonymous: false;
     readonly inputs: readonly [{
@@ -227,14 +229,14 @@ export declare const abi: readonly [{
     readonly stateMutability: "view";
     readonly type: "function";
 }, {
-    readonly inputs: readonly [];
-    readonly name: "NATIVE";
-    readonly outputs: readonly [{
+    readonly inputs: readonly [{
         readonly internalType: "address";
-        readonly name: "";
+        readonly name: "_owner";
         readonly type: "address";
     }];
-    readonly stateMutability: "view";
+    readonly name: "initialize";
+    readonly outputs: readonly [];
+    readonly stateMutability: "nonpayable";
     readonly type: "function";
 }, {
     readonly inputs: readonly [{
@@ -258,59 +260,6 @@ export declare const abi: readonly [{
     }];
     readonly name: "addMembers";
     readonly outputs: readonly [];
-    readonly stateMutability: "nonpayable";
-    readonly type: "function";
-}, {
-    readonly inputs: readonly [{
-        readonly internalType: "address";
-        readonly name: "";
-        readonly type: "address";
-    }];
-    readonly name: "anchorToProfileId";
-    readonly outputs: readonly [{
-        readonly internalType: "bytes32";
-        readonly name: "";
-        readonly type: "bytes32";
-    }];
-    readonly stateMutability: "view";
-    readonly type: "function";
-}, {
-    readonly inputs: readonly [{
-        readonly internalType: "uint256";
-        readonly name: "_nonce";
-        readonly type: "uint256";
-    }, {
-        readonly internalType: "string";
-        readonly name: "_name";
-        readonly type: "string";
-    }, {
-        readonly components: readonly [{
-            readonly internalType: "uint256";
-            readonly name: "protocol";
-            readonly type: "uint256";
-        }, {
-            readonly internalType: "string";
-            readonly name: "pointer";
-            readonly type: "string";
-        }];
-        readonly internalType: "struct Metadata";
-        readonly name: "_metadata";
-        readonly type: "tuple";
-    }, {
-        readonly internalType: "address";
-        readonly name: "_owner";
-        readonly type: "address";
-    }, {
-        readonly internalType: "address[]";
-        readonly name: "_members";
-        readonly type: "address[]";
-    }];
-    readonly name: "createProfile";
-    readonly outputs: readonly [{
-        readonly internalType: "bytes32";
-        readonly name: "";
-        readonly type: "bytes32";
-    }];
     readonly stateMutability: "nonpayable";
     readonly type: "function";
 }, {
@@ -411,6 +360,45 @@ export declare const abi: readonly [{
     readonly type: "function";
 }, {
     readonly inputs: readonly [{
+        readonly internalType: "uint256";
+        readonly name: "_nonce";
+        readonly type: "uint256";
+    }, {
+        readonly internalType: "string";
+        readonly name: "_name";
+        readonly type: "string";
+    }, {
+        readonly components: readonly [{
+            readonly internalType: "uint256";
+            readonly name: "protocol";
+            readonly type: "uint256";
+        }, {
+            readonly internalType: "string";
+            readonly name: "pointer";
+            readonly type: "string";
+        }];
+        readonly internalType: "struct Metadata";
+        readonly name: "_metadata";
+        readonly type: "tuple";
+    }, {
+        readonly internalType: "address";
+        readonly name: "_owner";
+        readonly type: "address";
+    }, {
+        readonly internalType: "address[]";
+        readonly name: "_members";
+        readonly type: "address[]";
+    }];
+    readonly name: "createProfile";
+    readonly outputs: readonly [{
+        readonly internalType: "bytes32";
+        readonly name: "profileId";
+        readonly type: "bytes32";
+    }];
+    readonly stateMutability: "nonpayable";
+    readonly type: "function";
+}, {
+    readonly inputs: readonly [{
         readonly internalType: "bytes32";
         readonly name: "role";
         readonly type: "bytes32";
@@ -462,10 +450,10 @@ export declare const abi: readonly [{
         readonly type: "bytes32";
     }, {
         readonly internalType: "address";
-        readonly name: "_member";
+        readonly name: "_account";
         readonly type: "address";
     }];
-    readonly name: "isMemberOfProfile";
+    readonly name: "isOwnerOrMemberOfProfile";
     readonly outputs: readonly [{
         readonly internalType: "bool";
         readonly name: "";
@@ -498,10 +486,10 @@ export declare const abi: readonly [{
         readonly type: "bytes32";
     }, {
         readonly internalType: "address";
-        readonly name: "_account";
+        readonly name: "_member";
         readonly type: "address";
     }];
-    readonly name: "isOwnerOrMemberOfProfile";
+    readonly name: "isMemberOfProfile";
     readonly outputs: readonly [{
         readonly internalType: "bool";
         readonly name: "";
@@ -512,36 +500,40 @@ export declare const abi: readonly [{
 }, {
     readonly inputs: readonly [{
         readonly internalType: "bytes32";
-        readonly name: "";
+        readonly name: "_profileId";
         readonly type: "bytes32";
+    }, {
+        readonly internalType: "address";
+        readonly name: "_pendingOwner";
+        readonly type: "address";
     }];
-    readonly name: "profileIdToPendingOwner";
+    readonly name: "updateProfilePendingOwner";
+    readonly outputs: readonly [];
+    readonly stateMutability: "nonpayable";
+    readonly type: "function";
+}, {
+    readonly inputs: readonly [{
+        readonly internalType: "bytes32";
+        readonly name: "_profileId";
+        readonly type: "bytes32";
+    }, {
+        readonly internalType: "string";
+        readonly name: "_name";
+        readonly type: "string";
+    }];
+    readonly name: "updateProfileName";
     readonly outputs: readonly [{
         readonly internalType: "address";
         readonly name: "";
         readonly type: "address";
     }];
-    readonly stateMutability: "view";
+    readonly stateMutability: "nonpayable";
     readonly type: "function";
 }, {
     readonly inputs: readonly [{
         readonly internalType: "bytes32";
-        readonly name: "";
+        readonly name: "_profileId";
         readonly type: "bytes32";
-    }];
-    readonly name: "profilesById";
-    readonly outputs: readonly [{
-        readonly internalType: "bytes32";
-        readonly name: "id";
-        readonly type: "bytes32";
-    }, {
-        readonly internalType: "uint256";
-        readonly name: "nonce";
-        readonly type: "uint256";
-    }, {
-        readonly internalType: "string";
-        readonly name: "name";
-        readonly type: "string";
     }, {
         readonly components: readonly [{
             readonly internalType: "uint256";
@@ -553,18 +545,64 @@ export declare const abi: readonly [{
             readonly type: "string";
         }];
         readonly internalType: "struct Metadata";
-        readonly name: "metadata";
+        readonly name: "_metadata";
         readonly type: "tuple";
-    }, {
-        readonly internalType: "address";
-        readonly name: "owner";
-        readonly type: "address";
-    }, {
-        readonly internalType: "address";
-        readonly name: "anchor";
-        readonly type: "address";
     }];
-    readonly stateMutability: "view";
+    readonly name: "updateProfileMetadata";
+    readonly outputs: readonly [];
+    readonly stateMutability: "nonpayable";
+    readonly type: "function";
+}, {
+    readonly inputs: readonly [{
+        readonly internalType: "bytes32";
+        readonly name: "_profileId";
+        readonly type: "bytes32";
+    }, {
+        readonly internalType: "address[]";
+        readonly name: "_members";
+        readonly type: "address[]";
+    }];
+    readonly name: "removeMembers";
+    readonly outputs: readonly [];
+    readonly stateMutability: "nonpayable";
+    readonly type: "function";
+}, {
+    readonly inputs: readonly [{
+        readonly internalType: "bytes32";
+        readonly name: "_profileId";
+        readonly type: "bytes32";
+    }];
+    readonly name: "acceptProfileOwnership";
+    readonly outputs: readonly [];
+    readonly stateMutability: "nonpayable";
+    readonly type: "function";
+}, {
+    readonly inputs: readonly [{
+        readonly internalType: "bytes32";
+        readonly name: "_profileId";
+        readonly type: "bytes32";
+    }, {
+        readonly internalType: "address[]";
+        readonly name: "_members";
+        readonly type: "address[]";
+    }];
+    readonly name: "addMembers";
+    readonly outputs: readonly [];
+    readonly stateMutability: "nonpayable";
+    readonly type: "function";
+}, {
+    readonly inputs: readonly [{
+        readonly internalType: "bytes32";
+        readonly name: "_profileId";
+        readonly type: "bytes32";
+    }, {
+        readonly internalType: "address[]";
+        readonly name: "_members";
+        readonly type: "address[]";
+    }];
+    readonly name: "removeMembers";
+    readonly outputs: readonly [];
+    readonly stateMutability: "nonpayable";
     readonly type: "function";
 }, {
     readonly inputs: readonly [{
@@ -583,16 +621,48 @@ export declare const abi: readonly [{
 }, {
     readonly inputs: readonly [{
         readonly internalType: "bytes32";
-        readonly name: "_profileId";
+        readonly name: "role";
+        readonly type: "bytes32";
+    }];
+    readonly name: "getRoleAdmin";
+    readonly outputs: readonly [{
+        readonly internalType: "bytes32";
+        readonly name: "";
+        readonly type: "bytes32";
+    }];
+    readonly stateMutability: "view";
+    readonly type: "function";
+}, {
+    readonly inputs: readonly [{
+        readonly internalType: "bytes32";
+        readonly name: "role";
         readonly type: "bytes32";
     }, {
-        readonly internalType: "address[]";
-        readonly name: "_members";
-        readonly type: "address[]";
+        readonly internalType: "address";
+        readonly name: "account";
+        readonly type: "address";
     }];
-    readonly name: "removeMembers";
+    readonly name: "grantRole";
     readonly outputs: readonly [];
     readonly stateMutability: "nonpayable";
+    readonly type: "function";
+}, {
+    readonly inputs: readonly [{
+        readonly internalType: "bytes32";
+        readonly name: "role";
+        readonly type: "bytes32";
+    }, {
+        readonly internalType: "address";
+        readonly name: "account";
+        readonly type: "address";
+    }];
+    readonly name: "hasRole";
+    readonly outputs: readonly [{
+        readonly internalType: "bool";
+        readonly name: "";
+        readonly type: "bool";
+    }];
+    readonly stateMutability: "view";
     readonly type: "function";
 }, {
     readonly inputs: readonly [{
@@ -635,60 +705,5 @@ export declare const abi: readonly [{
         readonly type: "bool";
     }];
     readonly stateMutability: "view";
-    readonly type: "function";
-}, {
-    readonly inputs: readonly [{
-        readonly internalType: "bytes32";
-        readonly name: "_profileId";
-        readonly type: "bytes32";
-    }, {
-        readonly components: readonly [{
-            readonly internalType: "uint256";
-            readonly name: "protocol";
-            readonly type: "uint256";
-        }, {
-            readonly internalType: "string";
-            readonly name: "pointer";
-            readonly type: "string";
-        }];
-        readonly internalType: "struct Metadata";
-        readonly name: "_metadata";
-        readonly type: "tuple";
-    }];
-    readonly name: "updateProfileMetadata";
-    readonly outputs: readonly [];
-    readonly stateMutability: "nonpayable";
-    readonly type: "function";
-}, {
-    readonly inputs: readonly [{
-        readonly internalType: "bytes32";
-        readonly name: "_profileId";
-        readonly type: "bytes32";
-    }, {
-        readonly internalType: "string";
-        readonly name: "_name";
-        readonly type: "string";
-    }];
-    readonly name: "updateProfileName";
-    readonly outputs: readonly [{
-        readonly internalType: "address";
-        readonly name: "";
-        readonly type: "address";
-    }];
-    readonly stateMutability: "nonpayable";
-    readonly type: "function";
-}, {
-    readonly inputs: readonly [{
-        readonly internalType: "bytes32";
-        readonly name: "_profileId";
-        readonly type: "bytes32";
-    }, {
-        readonly internalType: "address";
-        readonly name: "_pendingOwner";
-        readonly type: "address";
-    }];
-    readonly name: "updateProfilePendingOwner";
-    readonly outputs: readonly [];
-    readonly stateMutability: "nonpayable";
     readonly type: "function";
 }];

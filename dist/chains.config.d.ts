@@ -27,8 +27,8 @@ export declare const sei: {
     sourceId?: number | undefined;
     testnet?: boolean | undefined;
     custom?: Record<string, unknown> | undefined;
-    formatters?: undefined;
-    serializers?: import("viem").ChainSerializers<undefined> | undefined;
     fees?: import("viem").ChainFees<undefined> | undefined;
+    formatters?: undefined;
+    serializers?: import("viem").ChainSerializers<undefined, import("viem").TransactionSerializable> | undefined;
 };
 export declare const supportedChains: Chain[];

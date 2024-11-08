@@ -2,7 +2,6 @@ export { CreatePoolArgs, Pool, UpdateMetaDataArgs } from "./Allo/types";
 export { ConstructorArgs, DeployParams, FunctionDataParams, Metadata, TransactionData, ZERO_ADDRESS } from "./Common/types";
 export { CreateProfileArgs, HasRoleArgs, MemberArgs, Profile, ProfileAndAddressArgs, ProfileMetadataArgs, ProfileNameArgs } from "./Registry/types";
 export { PayoutSummary, Status } from "./strategies/types";
-export { Allocation, InitializeParams, Recipient, RegisterData, SetAllocatorData } from "./strategies/MicroGrantsStrategy/types";
 export declare const StrategyType: {
     MicroGrants: string;
     Hats: string;

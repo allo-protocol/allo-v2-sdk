@@ -8,7 +8,6 @@ export declare class Registry {
     address(): `0x${string}`;
     getAlloOwner(): Promise<`0x${string}`>;
     getDefaultAdminRole(): Promise<`0x${string}`>;
-    getNative(): Promise<`0x${string}`>;
     getAnchorToProfileId(anchor: `0x${string}`): Promise<`0x${string}`>;
     getProfileByAnchor(anchor: `0x${string}`): Promise<Profile>;
     getProfileById(profileId: `0x${string}`): Promise<Profile>;
@@ -19,6 +18,8 @@ export declare class Registry {
     isOwnerOrMemberOfProfile({ profileId, account, }: ProfileAndAddressArgs): Promise<boolean>;
     profileIdToPendingOwner(profileId: `0x${string}`): Promise<`0x${string}`>;
     profilesById(profileId: `0x${string}`): Promise<any>;
+    DEFAULT_ADMIN_ROLE(): Promise<`0x${string}`>;
+    supportsInterface(interfaceId: `0x${string}`): Promise<boolean>;
     createProfile({ nonce, name, metadata, owner, members, }: CreateProfileArgs): TransactionData;
     acceptProfileOwnership(profileId: `0x${string}`): TransactionData;
     addMembers({ profileId, members }: MemberArgs): TransactionData;
@@ -26,4 +27,8 @@ export declare class Registry {
     updateProfileMetadata({ profileId, metadata, }: ProfileMetadataArgs): TransactionData;
     updateProfileName({ profileId, name, }: ProfileNameArgs): TransactionData;
     updateProfilePendingOwner({ profileId, account, }: ProfileAndAddressArgs): TransactionData;
+    grantRole(role: `0x${string}`, account: `0x${string}`): TransactionData;
+    renounceRole(role: `0x${string}`, account: `0x${string}`): TransactionData;
+    revokeRole(role: `0x${string}`, account: `0x${string}`): TransactionData;
+    recoverFunds(token: `0x${string}`, recipient: `0x${string}`): TransactionData;
 }

@@ -418,73 +418,89 @@ export declare const abi: readonly [{
     readonly type: "function";
 }, {
     readonly inputs: readonly [{
-        readonly internalType: "uint256";
-        readonly name: "_poolId";
-        readonly type: "uint256";
+        readonly internalType: "bytes32";
+        readonly name: "role";
+        readonly type: "bytes32";
     }, {
         readonly internalType: "address";
-        readonly name: "_manager";
+        readonly name: "account";
         readonly type: "address";
     }];
-    readonly name: "addPoolManager";
+    readonly name: "grantRole";
+    readonly outputs: readonly [];
+    readonly stateMutability: "nonpayable";
+    readonly type: "function";
+}, {
+    readonly inputs: readonly [{
+        readonly internalType: "bytes32";
+        readonly name: "role";
+        readonly type: "bytes32";
+    }, {
+        readonly internalType: "address";
+        readonly name: "account";
+        readonly type: "address";
+    }];
+    readonly name: "hasRole";
+    readonly outputs: readonly [{
+        readonly internalType: "bool";
+        readonly name: "";
+        readonly type: "bool";
+    }];
+    readonly stateMutability: "view";
+    readonly type: "function";
+}, {
+    readonly inputs: readonly [{
+        readonly internalType: "bytes32";
+        readonly name: "role";
+        readonly type: "bytes32";
+    }, {
+        readonly internalType: "address";
+        readonly name: "account";
+        readonly type: "address";
+    }];
+    readonly name: "renounceRole";
+    readonly outputs: readonly [];
+    readonly stateMutability: "nonpayable";
+    readonly type: "function";
+}, {
+    readonly inputs: readonly [{
+        readonly internalType: "bytes32";
+        readonly name: "role";
+        readonly type: "bytes32";
+    }, {
+        readonly internalType: "address";
+        readonly name: "account";
+        readonly type: "address";
+    }];
+    readonly name: "revokeRole";
     readonly outputs: readonly [];
     readonly stateMutability: "nonpayable";
     readonly type: "function";
 }, {
     readonly inputs: readonly [{
         readonly internalType: "address";
-        readonly name: "_strategy";
+        readonly name: "newOwner";
         readonly type: "address";
     }];
-    readonly name: "addToCloneableStrategies";
+    readonly name: "transferOwnership";
     readonly outputs: readonly [];
-    readonly stateMutability: "nonpayable";
+    readonly stateMutability: "payable";
     readonly type: "function";
 }, {
-    readonly inputs: readonly [{
-        readonly internalType: "uint256";
-        readonly name: "_poolId";
-        readonly type: "uint256";
-    }, {
-        readonly internalType: "bytes";
-        readonly name: "_data";
-        readonly type: "bytes";
-    }];
-    readonly name: "allocate";
+    readonly inputs: readonly [];
+    readonly name: "renounceOwnership";
     readonly outputs: readonly [];
     readonly stateMutability: "payable";
     readonly type: "function";
 }, {
     readonly inputs: readonly [{
-        readonly internalType: "uint256[]";
-        readonly name: "_poolIds";
-        readonly type: "uint256[]";
-    }, {
-        readonly internalType: "bytes[]";
-        readonly name: "_datas";
-        readonly type: "bytes[]";
+        readonly internalType: "address";
+        readonly name: "pendingOwner";
+        readonly type: "address";
     }];
-    readonly name: "batchAllocate";
+    readonly name: "completeOwnershipHandover";
     readonly outputs: readonly [];
-    readonly stateMutability: "nonpayable";
-    readonly type: "function";
-}, {
-    readonly inputs: readonly [{
-        readonly internalType: "uint256[]";
-        readonly name: "_poolIds";
-        readonly type: "uint256[]";
-    }, {
-        readonly internalType: "bytes[]";
-        readonly name: "_data";
-        readonly type: "bytes[]";
-    }];
-    readonly name: "batchRegisterRecipient";
-    readonly outputs: readonly [{
-        readonly internalType: "address[]";
-        readonly name: "recipientIds";
-        readonly type: "address[]";
-    }];
-    readonly stateMutability: "nonpayable";
+    readonly stateMutability: "payable";
     readonly type: "function";
 }, {
     readonly inputs: readonly [];
@@ -498,9 +514,113 @@ export declare const abi: readonly [{
         readonly name: "pendingOwner";
         readonly type: "address";
     }];
-    readonly name: "completeOwnershipHandover";
+    readonly name: "ownershipHandoverExpiresAt";
+    readonly outputs: readonly [{
+        readonly internalType: "uint256";
+        readonly name: "result";
+        readonly type: "uint256";
+    }];
+    readonly stateMutability: "view";
+    readonly type: "function";
+}, {
+    readonly inputs: readonly [];
+    readonly name: "owner";
+    readonly outputs: readonly [{
+        readonly internalType: "address";
+        readonly name: "result";
+        readonly type: "address";
+    }];
+    readonly stateMutability: "view";
+    readonly type: "function";
+}, {
+    readonly inputs: readonly [{
+        readonly internalType: "address";
+        readonly name: "_strategy";
+        readonly type: "address";
+    }];
+    readonly name: "addToCloneableStrategies";
     readonly outputs: readonly [];
-    readonly stateMutability: "payable";
+    readonly stateMutability: "nonpayable";
+    readonly type: "function";
+}, {
+    readonly inputs: readonly [{
+        readonly internalType: "address";
+        readonly name: "_strategy";
+        readonly type: "address";
+    }];
+    readonly name: "isCloneableStrategy";
+    readonly outputs: readonly [{
+        readonly internalType: "bool";
+        readonly name: "";
+        readonly type: "bool";
+    }];
+    readonly stateMutability: "view";
+    readonly type: "function";
+}, {
+    readonly inputs: readonly [{
+        readonly internalType: "address";
+        readonly name: "_strategy";
+        readonly type: "address";
+    }];
+    readonly name: "removeFromCloneableStrategies";
+    readonly outputs: readonly [];
+    readonly stateMutability: "nonpayable";
+    readonly type: "function";
+}, {
+    readonly inputs: readonly [{
+        readonly internalType: "uint256";
+        readonly name: "_poolId";
+        readonly type: "uint256";
+    }, {
+        readonly internalType: "address[]";
+        readonly name: "_managers";
+        readonly type: "address[]";
+    }];
+    readonly name: "addPoolManagers";
+    readonly outputs: readonly [];
+    readonly stateMutability: "nonpayable";
+    readonly type: "function";
+}, {
+    readonly inputs: readonly [{
+        readonly internalType: "uint256";
+        readonly name: "_poolId";
+        readonly type: "uint256";
+    }, {
+        readonly internalType: "address[]";
+        readonly name: "_managers";
+        readonly type: "address[]";
+    }];
+    readonly name: "removePoolManagers";
+    readonly outputs: readonly [];
+    readonly stateMutability: "nonpayable";
+    readonly type: "function";
+}, {
+    readonly inputs: readonly [{
+        readonly internalType: "uint256[]";
+        readonly name: "_poolIds";
+        readonly type: "uint256[]";
+    }, {
+        readonly internalType: "address[]";
+        readonly name: "_managers";
+        readonly type: "address[]";
+    }];
+    readonly name: "addPoolManagersInMultiplePools";
+    readonly outputs: readonly [];
+    readonly stateMutability: "nonpayable";
+    readonly type: "function";
+}, {
+    readonly inputs: readonly [{
+        readonly internalType: "uint256[]";
+        readonly name: "_poolIds";
+        readonly type: "uint256[]";
+    }, {
+        readonly internalType: "address[]";
+        readonly name: "_managers";
+        readonly type: "address[]";
+    }];
+    readonly name: "removePoolManagersInMultiplePools";
+    readonly outputs: readonly [];
+    readonly stateMutability: "nonpayable";
     readonly type: "function";
 }, {
     readonly inputs: readonly [{
@@ -602,15 +722,61 @@ export declare const abi: readonly [{
         readonly name: "_poolId";
         readonly type: "uint256";
     }, {
-        readonly internalType: "address[]";
-        readonly name: "_recipientIds";
-        readonly type: "address[]";
-    }, {
-        readonly internalType: "bytes";
-        readonly name: "_data";
-        readonly type: "bytes";
+        readonly internalType: "struct Metadata";
+        readonly name: "_metadata";
+        readonly type: "tuple";
     }];
-    readonly name: "distribute";
+    readonly name: "updatePoolMetadata";
+    readonly outputs: readonly [];
+    readonly stateMutability: "nonpayable";
+    readonly type: "function";
+}, {
+    readonly inputs: readonly [{
+        readonly internalType: "uint256";
+        readonly name: "_percentFee";
+        readonly type: "uint256";
+    }];
+    readonly name: "updatePercentFee";
+    readonly outputs: readonly [];
+    readonly stateMutability: "nonpayable";
+    readonly type: "function";
+}, {
+    readonly inputs: readonly [{
+        readonly internalType: "uint256";
+        readonly name: "_baseFee";
+        readonly type: "uint256";
+    }];
+    readonly name: "updateBaseFee";
+    readonly outputs: readonly [];
+    readonly stateMutability: "nonpayable";
+    readonly type: "function";
+}, {
+    readonly inputs: readonly [{
+        readonly internalType: "address";
+        readonly name: "_registry";
+        readonly type: "address";
+    }];
+    readonly name: "updateRegistry";
+    readonly outputs: readonly [];
+    readonly stateMutability: "nonpayable";
+    readonly type: "function";
+}, {
+    readonly inputs: readonly [{
+        readonly internalType: "address payable";
+        readonly name: "_treasury";
+        readonly type: "address";
+    }];
+    readonly name: "updateTreasury";
+    readonly outputs: readonly [];
+    readonly stateMutability: "nonpayable";
+    readonly type: "function";
+}, {
+    readonly inputs: readonly [{
+        readonly internalType: "address";
+        readonly name: "__trustedForwarder";
+        readonly type: "address";
+    }];
+    readonly name: "updateTrustedForwarder";
     readonly outputs: readonly [];
     readonly stateMutability: "nonpayable";
     readonly type: "function";
@@ -629,34 +795,128 @@ export declare const abi: readonly [{
     readonly stateMutability: "payable";
     readonly type: "function";
 }, {
-    readonly inputs: readonly [];
-    readonly name: "getBaseFee";
-    readonly outputs: readonly [{
+    readonly inputs: readonly [{
         readonly internalType: "uint256";
-        readonly name: "";
+        readonly name: "_poolId";
         readonly type: "uint256";
+    }, {
+        readonly internalType: "address[]";
+        readonly name: "_recipients";
+        readonly type: "address[]";
+    }, {
+        readonly internalType: "uint256[]";
+        readonly name: "_amounts";
+        readonly type: "uint256[]";
+    }, {
+        readonly internalType: "bytes";
+        readonly name: "_data";
+        readonly type: "bytes";
     }];
-    readonly stateMutability: "view";
+    readonly name: "allocate";
+    readonly outputs: readonly [];
+    readonly stateMutability: "payable";
     readonly type: "function";
 }, {
-    readonly inputs: readonly [];
-    readonly name: "getFeeDenominator";
-    readonly outputs: readonly [{
+    readonly inputs: readonly [{
         readonly internalType: "uint256";
-        readonly name: "FEE_DENOMINATOR";
+        readonly name: "_poolId";
         readonly type: "uint256";
+    }, {
+        readonly internalType: "address[]";
+        readonly name: "_recipientIds";
+        readonly type: "address[]";
+    }, {
+        readonly internalType: "bytes";
+        readonly name: "_data";
+        readonly type: "bytes";
     }];
-    readonly stateMutability: "pure";
+    readonly name: "distribute";
+    readonly outputs: readonly [];
+    readonly stateMutability: "nonpayable";
     readonly type: "function";
 }, {
-    readonly inputs: readonly [];
-    readonly name: "getPercentFee";
-    readonly outputs: readonly [{
-        readonly internalType: "uint256";
-        readonly name: "";
-        readonly type: "uint256";
+    readonly inputs: readonly [{
+        readonly internalType: "uint256[]";
+        readonly name: "_poolIds";
+        readonly type: "uint256[]";
+    }, {
+        readonly internalType: "address[][]";
+        readonly name: "_recipients";
+        readonly type: "address[][]";
+    }, {
+        readonly internalType: "uint256[][]";
+        readonly name: "_amounts";
+        readonly type: "uint256[][]";
+    }, {
+        readonly internalType: "uint256[]";
+        readonly name: "_values";
+        readonly type: "uint256[]";
+    }, {
+        readonly internalType: "bytes[]";
+        readonly name: "_datas";
+        readonly type: "bytes[]";
     }];
-    readonly stateMutability: "view";
+    readonly name: "batchAllocate";
+    readonly outputs: readonly [];
+    readonly stateMutability: "payable";
+    readonly type: "function";
+}, {
+    readonly inputs: readonly [{
+        readonly internalType: "uint256";
+        readonly name: "_poolId";
+        readonly type: "uint256";
+    }, {
+        readonly internalType: "address[]";
+        readonly name: "_recipientAddresses";
+        readonly type: "address[]";
+    }, {
+        readonly internalType: "bytes";
+        readonly name: "_data";
+        readonly type: "bytes";
+    }];
+    readonly name: "registerRecipient";
+    readonly outputs: readonly [{
+        readonly internalType: "address[]";
+        readonly name: "";
+        readonly type: "address[]";
+    }];
+    readonly stateMutability: "payable";
+    readonly type: "function";
+}, {
+    readonly inputs: readonly [{
+        readonly internalType: "uint256[]";
+        readonly name: "_poolIds";
+        readonly type: "uint256[]";
+    }, {
+        readonly internalType: "address[][]";
+        readonly name: "_recipientAddresses";
+        readonly type: "address[][]";
+    }, {
+        readonly internalType: "bytes[]";
+        readonly name: "_data";
+        readonly type: "bytes[]";
+    }];
+    readonly name: "batchRegisterRecipient";
+    readonly outputs: readonly [{
+        readonly internalType: "address[][]";
+        readonly name: "_recipientIds";
+        readonly type: "address[][]";
+    }];
+    readonly stateMutability: "nonpayable";
+    readonly type: "function";
+}, {
+    readonly inputs: readonly [{
+        readonly internalType: "address";
+        readonly name: "_token";
+        readonly type: "address";
+    }, {
+        readonly internalType: "address";
+        readonly name: "_recipient";
+        readonly type: "address";
+    }];
+    readonly name: "recoverFunds";
+    readonly outputs: readonly [];
+    readonly stateMutability: "nonpayable";
     readonly type: "function";
 }, {
     readonly inputs: readonly [{
@@ -671,7 +931,7 @@ export declare const abi: readonly [{
             readonly name: "profileId";
             readonly type: "bytes32";
         }, {
-            readonly internalType: "contract IStrategy";
+            readonly internalType: "contract IBaseStrategy";
             readonly name: "strategy";
             readonly type: "address";
         }, {
@@ -707,26 +967,56 @@ export declare const abi: readonly [{
     readonly stateMutability: "view";
     readonly type: "function";
 }, {
+    readonly inputs: readonly [{
+        readonly internalType: "bytes32";
+        readonly name: "_profileId";
+        readonly type: "bytes32";
+    }];
+    readonly name: "getProfile";
+    readonly outputs: readonly [{
+        readonly internalType: "struct IRegistry.Profile";
+        readonly name: "";
+        readonly type: "tuple";
+    }];
+    readonly stateMutability: "view";
+    readonly type: "function";
+}, {
+    readonly inputs: readonly [];
+    readonly name: "getBaseFee";
+    readonly outputs: readonly [{
+        readonly internalType: "uint256";
+        readonly name: "";
+        readonly type: "uint256";
+    }];
+    readonly stateMutability: "view";
+    readonly type: "function";
+}, {
+    readonly inputs: readonly [];
+    readonly name: "getFeeDenominator";
+    readonly outputs: readonly [{
+        readonly internalType: "uint256";
+        readonly name: "FEE_DENOMINATOR";
+        readonly type: "uint256";
+    }];
+    readonly stateMutability: "pure";
+    readonly type: "function";
+}, {
+    readonly inputs: readonly [];
+    readonly name: "getPercentFee";
+    readonly outputs: readonly [{
+        readonly internalType: "uint256";
+        readonly name: "";
+        readonly type: "uint256";
+    }];
+    readonly stateMutability: "view";
+    readonly type: "function";
+}, {
     readonly inputs: readonly [];
     readonly name: "getRegistry";
     readonly outputs: readonly [{
         readonly internalType: "contract IRegistry";
         readonly name: "";
         readonly type: "address";
-    }];
-    readonly stateMutability: "view";
-    readonly type: "function";
-}, {
-    readonly inputs: readonly [{
-        readonly internalType: "bytes32";
-        readonly name: "role";
-        readonly type: "bytes32";
-    }];
-    readonly name: "getRoleAdmin";
-    readonly outputs: readonly [{
-        readonly internalType: "bytes32";
-        readonly name: "";
-        readonly type: "bytes32";
     }];
     readonly stateMutability: "view";
     readonly type: "function";
@@ -755,30 +1045,8 @@ export declare const abi: readonly [{
     readonly stateMutability: "view";
     readonly type: "function";
 }, {
-    readonly inputs: readonly [{
-        readonly internalType: "bytes32";
-        readonly name: "role";
-        readonly type: "bytes32";
-    }, {
-        readonly internalType: "address";
-        readonly name: "account";
-        readonly type: "address";
-    }];
-    readonly name: "grantRole";
-    readonly outputs: readonly [];
-    readonly stateMutability: "nonpayable";
-    readonly type: "function";
-}, {
-    readonly inputs: readonly [{
-        readonly internalType: "bytes32";
-        readonly name: "role";
-        readonly type: "bytes32";
-    }, {
-        readonly internalType: "address";
-        readonly name: "account";
-        readonly type: "address";
-    }];
-    readonly name: "hasRole";
+    readonly inputs: readonly [];
+    readonly name: "supportsInterface";
     readonly outputs: readonly [{
         readonly internalType: "bool";
         readonly name: "";
@@ -789,36 +1057,10 @@ export declare const abi: readonly [{
 }, {
     readonly inputs: readonly [{
         readonly internalType: "address";
-        readonly name: "_owner";
-        readonly type: "address";
-    }, {
-        readonly internalType: "address";
-        readonly name: "_registry";
-        readonly type: "address";
-    }, {
-        readonly internalType: "address payable";
-        readonly name: "_treasury";
-        readonly type: "address";
-    }, {
-        readonly internalType: "uint256";
-        readonly name: "_percentFee";
-        readonly type: "uint256";
-    }, {
-        readonly internalType: "uint256";
-        readonly name: "_baseFee";
-        readonly type: "uint256";
-    }];
-    readonly name: "initialize";
-    readonly outputs: readonly [];
-    readonly stateMutability: "nonpayable";
-    readonly type: "function";
-}, {
-    readonly inputs: readonly [{
-        readonly internalType: "address";
-        readonly name: "_strategy";
+        readonly name: "_forwarder";
         readonly type: "address";
     }];
-    readonly name: "isCloneableStrategy";
+    readonly name: "isTrustedForwarder";
     readonly outputs: readonly [{
         readonly internalType: "bool";
         readonly name: "";
@@ -864,10 +1106,10 @@ export declare const abi: readonly [{
     readonly type: "function";
 }, {
     readonly inputs: readonly [];
-    readonly name: "owner";
+    readonly name: "getAllo";
     readonly outputs: readonly [{
-        readonly internalType: "address";
-        readonly name: "result";
+        readonly internalType: "contract IAllo";
+        readonly name: "_allo";
         readonly type: "address";
     }];
     readonly stateMutability: "view";
@@ -875,197 +1117,40 @@ export declare const abi: readonly [{
 }, {
     readonly inputs: readonly [{
         readonly internalType: "address";
-        readonly name: "pendingOwner";
-        readonly type: "address";
-    }];
-    readonly name: "ownershipHandoverExpiresAt";
-    readonly outputs: readonly [{
-        readonly internalType: "uint256";
-        readonly name: "result";
-        readonly type: "uint256";
-    }];
-    readonly stateMutability: "view";
-    readonly type: "function";
-}, {
-    readonly inputs: readonly [{
-        readonly internalType: "address";
-        readonly name: "_token";
+        readonly name: "_owner";
         readonly type: "address";
     }, {
-        readonly internalType: "address";
-        readonly name: "_recipient";
-        readonly type: "address";
-    }];
-    readonly name: "recoverFunds";
-    readonly outputs: readonly [];
-    readonly stateMutability: "nonpayable";
-    readonly type: "function";
-}, {
-    readonly inputs: readonly [{
-        readonly internalType: "uint256";
-        readonly name: "_poolId";
-        readonly type: "uint256";
-    }, {
-        readonly internalType: "bytes";
-        readonly name: "_data";
-        readonly type: "bytes";
-    }];
-    readonly name: "registerRecipient";
-    readonly outputs: readonly [{
-        readonly internalType: "address";
-        readonly name: "";
-        readonly type: "address";
-    }];
-    readonly stateMutability: "payable";
-    readonly type: "function";
-}, {
-    readonly inputs: readonly [{
-        readonly internalType: "address";
-        readonly name: "_strategy";
-        readonly type: "address";
-    }];
-    readonly name: "removeFromCloneableStrategies";
-    readonly outputs: readonly [];
-    readonly stateMutability: "nonpayable";
-    readonly type: "function";
-}, {
-    readonly inputs: readonly [{
-        readonly internalType: "uint256";
-        readonly name: "_poolId";
-        readonly type: "uint256";
-    }, {
-        readonly internalType: "address";
-        readonly name: "_manager";
-        readonly type: "address";
-    }];
-    readonly name: "removePoolManager";
-    readonly outputs: readonly [];
-    readonly stateMutability: "nonpayable";
-    readonly type: "function";
-}, {
-    readonly inputs: readonly [];
-    readonly name: "renounceOwnership";
-    readonly outputs: readonly [];
-    readonly stateMutability: "payable";
-    readonly type: "function";
-}, {
-    readonly inputs: readonly [{
-        readonly internalType: "bytes32";
-        readonly name: "role";
-        readonly type: "bytes32";
-    }, {
-        readonly internalType: "address";
-        readonly name: "account";
-        readonly type: "address";
-    }];
-    readonly name: "renounceRole";
-    readonly outputs: readonly [];
-    readonly stateMutability: "nonpayable";
-    readonly type: "function";
-}, {
-    readonly inputs: readonly [];
-    readonly name: "requestOwnershipHandover";
-    readonly outputs: readonly [];
-    readonly stateMutability: "payable";
-    readonly type: "function";
-}, {
-    readonly inputs: readonly [{
-        readonly internalType: "bytes32";
-        readonly name: "role";
-        readonly type: "bytes32";
-    }, {
-        readonly internalType: "address";
-        readonly name: "account";
-        readonly type: "address";
-    }];
-    readonly name: "revokeRole";
-    readonly outputs: readonly [];
-    readonly stateMutability: "nonpayable";
-    readonly type: "function";
-}, {
-    readonly inputs: readonly [{
-        readonly internalType: "bytes4";
-        readonly name: "interfaceId";
-        readonly type: "bytes4";
-    }];
-    readonly name: "supportsInterface";
-    readonly outputs: readonly [{
-        readonly internalType: "bool";
-        readonly name: "";
-        readonly type: "bool";
-    }];
-    readonly stateMutability: "view";
-    readonly type: "function";
-}, {
-    readonly inputs: readonly [{
-        readonly internalType: "address";
-        readonly name: "newOwner";
-        readonly type: "address";
-    }];
-    readonly name: "transferOwnership";
-    readonly outputs: readonly [];
-    readonly stateMutability: "payable";
-    readonly type: "function";
-}, {
-    readonly inputs: readonly [{
-        readonly internalType: "uint256";
-        readonly name: "_baseFee";
-        readonly type: "uint256";
-    }];
-    readonly name: "updateBaseFee";
-    readonly outputs: readonly [];
-    readonly stateMutability: "nonpayable";
-    readonly type: "function";
-}, {
-    readonly inputs: readonly [{
-        readonly internalType: "uint256";
-        readonly name: "_percentFee";
-        readonly type: "uint256";
-    }];
-    readonly name: "updatePercentFee";
-    readonly outputs: readonly [];
-    readonly stateMutability: "nonpayable";
-    readonly type: "function";
-}, {
-    readonly inputs: readonly [{
-        readonly internalType: "uint256";
-        readonly name: "_poolId";
-        readonly type: "uint256";
-    }, {
-        readonly components: readonly [{
-            readonly internalType: "uint256";
-            readonly name: "protocol";
-            readonly type: "uint256";
-        }, {
-            readonly internalType: "string";
-            readonly name: "pointer";
-            readonly type: "string";
-        }];
-        readonly internalType: "struct Metadata";
-        readonly name: "_metadata";
-        readonly type: "tuple";
-    }];
-    readonly name: "updatePoolMetadata";
-    readonly outputs: readonly [];
-    readonly stateMutability: "nonpayable";
-    readonly type: "function";
-}, {
-    readonly inputs: readonly [{
         readonly internalType: "address";
         readonly name: "_registry";
         readonly type: "address";
+    }, {
+        readonly internalType: "address payable";
+        readonly name: "_treasury";
+        readonly type: "address";
+    }, {
+        readonly internalType: "uint256";
+        readonly name: "_percentFee";
+        readonly type: "uint256";
+    }, {
+        readonly internalType: "uint256";
+        readonly name: "_baseFee";
+        readonly type: "uint256";
+    }, {
+        readonly internalType: "address";
+        readonly name: "_trustedForwarder";
+        readonly type: "address";
     }];
-    readonly name: "updateRegistry";
+    readonly name: "initialize";
     readonly outputs: readonly [];
     readonly stateMutability: "nonpayable";
     readonly type: "function";
 }, {
     readonly inputs: readonly [{
-        readonly internalType: "address payable";
-        readonly name: "_treasury";
+        readonly internalType: "address";
+        readonly name: "__trustedForwarder";
         readonly type: "address";
     }];
-    readonly name: "updateTreasury";
+    readonly name: "updateTrustedForwarder";
     readonly outputs: readonly [];
     readonly stateMutability: "nonpayable";
     readonly type: "function";

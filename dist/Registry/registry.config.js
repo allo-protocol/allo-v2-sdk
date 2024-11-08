@@ -1,9 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.abi = exports.getAddress = void 0;
+// TODO: update default address and mainnet addresses
 const DEFAULT_ADDRESS = "0x4AAcca72145e1dF2aeC137E1f3C5E3D75DB8b5f3";
 const getAddress = (chain) => {
     switch (chain.id) {
+        case 11155111: // Sepolia (should this be updated?)
+            return "0x4AAcca72145e1dF2aeC137E1f3C5E3D75DB8b5f3";
         case 300: // ZkSync Era Testnet
         case 324: // ZkSync Era Mainnet
             return "0xaa376Ef759c1f5A8b0B5a1e2FEC5C23f3bF30246";
@@ -15,17 +18,9 @@ const getAddress = (chain) => {
 };
 exports.getAddress = getAddress;
 exports.abi = [
-    {
-        inputs: [
-            {
-                internalType: "address",
-                name: "_owner",
-                type: "address",
-            },
-        ],
-        stateMutability: "nonpayable",
-        type: "constructor",
-    },
+    // ======================
+    // ======== Errors =======
+    // ======================
     {
         inputs: [],
         name: "AMOUNT_MISMATCH",
@@ -51,6 +46,25 @@ exports.abi = [
         name: "ZERO_ADDRESS",
         type: "error",
     },
+    // ======================
+    // ======== View Functions =======
+    // ======================
+    {
+        inputs: [],
+        name: "ALLO_OWNER",
+        outputs: [
+            {
+                internalType: "address",
+                name: "",
+                type: "address"
+            }
+        ],
+        stateMutability: "view",
+        type: "function"
+    },
+    // ======================
+    // ======== Events =======
+    // ======================
     {
         anonymous: false,
         inputs: [
@@ -275,6 +289,9 @@ exports.abi = [
         name: "RoleRevoked",
         type: "event",
     },
+    // ======================
+    // ======= Constants =====
+    // ======================
     {
         inputs: [],
         name: "ALLO_OWNER",
@@ -301,17 +318,24 @@ exports.abi = [
         stateMutability: "view",
         type: "function",
     },
+    // ======================
+    // ====== Constructor =====
+    // ======================
+    // **Removed**: The constructor is replaced by the `initialize` function in upgradeable contracts.
+    // ======================
+    // ===== External/Public Functions =====
+    // ======================
     {
-        inputs: [],
-        name: "NATIVE",
-        outputs: [
+        inputs: [
             {
                 internalType: "address",
-                name: "",
+                name: "_owner",
                 type: "address",
             },
         ],
-        stateMutability: "view",
+        name: "initialize",
+        outputs: [],
+        stateMutability: "nonpayable",
         type: "function",
     },
     {
@@ -342,76 +366,6 @@ exports.abi = [
         ],
         name: "addMembers",
         outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-    },
-    {
-        inputs: [
-            {
-                internalType: "address",
-                name: "",
-                type: "address",
-            },
-        ],
-        name: "anchorToProfileId",
-        outputs: [
-            {
-                internalType: "bytes32",
-                name: "",
-                type: "bytes32",
-            },
-        ],
-        stateMutability: "view",
-        type: "function",
-    },
-    {
-        inputs: [
-            {
-                internalType: "uint256",
-                name: "_nonce",
-                type: "uint256",
-            },
-            {
-                internalType: "string",
-                name: "_name",
-                type: "string",
-            },
-            {
-                components: [
-                    {
-                        internalType: "uint256",
-                        name: "protocol",
-                        type: "uint256",
-                    },
-                    {
-                        internalType: "string",
-                        name: "pointer",
-                        type: "string",
-                    },
-                ],
-                internalType: "struct Metadata",
-                name: "_metadata",
-                type: "tuple",
-            },
-            {
-                internalType: "address",
-                name: "_owner",
-                type: "address",
-            },
-            {
-                internalType: "address[]",
-                name: "_members",
-                type: "address[]",
-            },
-        ],
-        name: "createProfile",
-        outputs: [
-            {
-                internalType: "bytes32",
-                name: "",
-                type: "bytes32",
-            },
-        ],
         stateMutability: "nonpayable",
         type: "function",
     },
@@ -544,6 +498,57 @@ exports.abi = [
     {
         inputs: [
             {
+                internalType: "uint256",
+                name: "_nonce",
+                type: "uint256",
+            },
+            {
+                internalType: "string",
+                name: "_name",
+                type: "string",
+            },
+            {
+                components: [
+                    {
+                        internalType: "uint256",
+                        name: "protocol",
+                        type: "uint256",
+                    },
+                    {
+                        internalType: "string",
+                        name: "pointer",
+                        type: "string",
+                    },
+                ],
+                internalType: "struct Metadata",
+                name: "_metadata",
+                type: "tuple",
+            },
+            {
+                internalType: "address",
+                name: "_owner",
+                type: "address",
+            },
+            {
+                internalType: "address[]",
+                name: "_members",
+                type: "address[]",
+            },
+        ],
+        name: "createProfile",
+        outputs: [
+            {
+                internalType: "bytes32",
+                name: "profileId",
+                type: "bytes32",
+            },
+        ],
+        stateMutability: "nonpayable",
+        type: "function",
+    },
+    {
+        inputs: [
+            {
                 internalType: "bytes32",
                 name: "role",
                 type: "bytes32",
@@ -611,11 +616,11 @@ exports.abi = [
             },
             {
                 internalType: "address",
-                name: "_member",
+                name: "_account",
                 type: "address",
             },
         ],
-        name: "isMemberOfProfile",
+        name: "isOwnerOrMemberOfProfile",
         outputs: [
             {
                 internalType: "bool",
@@ -659,11 +664,11 @@ exports.abi = [
             },
             {
                 internalType: "address",
-                name: "_account",
+                name: "_member",
                 type: "address",
             },
         ],
-        name: "isOwnerOrMemberOfProfile",
+        name: "isMemberOfProfile",
         outputs: [
             {
                 internalType: "bool",
@@ -678,91 +683,16 @@ exports.abi = [
         inputs: [
             {
                 internalType: "bytes32",
-                name: "",
-                type: "bytes32",
-            },
-        ],
-        name: "profileIdToPendingOwner",
-        outputs: [
-            {
-                internalType: "address",
-                name: "",
-                type: "address",
-            },
-        ],
-        stateMutability: "view",
-        type: "function",
-    },
-    {
-        inputs: [
-            {
-                internalType: "bytes32",
-                name: "",
-                type: "bytes32",
-            },
-        ],
-        name: "profilesById",
-        outputs: [
-            {
-                internalType: "bytes32",
-                name: "id",
+                name: "_profileId",
                 type: "bytes32",
             },
             {
-                internalType: "uint256",
-                name: "nonce",
-                type: "uint256",
-            },
-            {
-                internalType: "string",
-                name: "name",
-                type: "string",
-            },
-            {
-                components: [
-                    {
-                        internalType: "uint256",
-                        name: "protocol",
-                        type: "uint256",
-                    },
-                    {
-                        internalType: "string",
-                        name: "pointer",
-                        type: "string",
-                    },
-                ],
-                internalType: "struct Metadata",
-                name: "metadata",
-                type: "tuple",
-            },
-            {
                 internalType: "address",
-                name: "owner",
-                type: "address",
-            },
-            {
-                internalType: "address",
-                name: "anchor",
+                name: "_pendingOwner",
                 type: "address",
             },
         ],
-        stateMutability: "view",
-        type: "function",
-    },
-    {
-        inputs: [
-            {
-                internalType: "address",
-                name: "_token",
-                type: "address",
-            },
-            {
-                internalType: "address",
-                name: "_recipient",
-                type: "address",
-            },
-        ],
-        name: "recoverFunds",
+        name: "updateProfilePendingOwner",
         outputs: [],
         stateMutability: "nonpayable",
         type: "function",
@@ -775,69 +705,20 @@ exports.abi = [
                 type: "bytes32",
             },
             {
-                internalType: "address[]",
-                name: "_members",
-                type: "address[]",
+                internalType: "string",
+                name: "_name",
+                type: "string",
             },
         ],
-        name: "removeMembers",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-    },
-    {
-        inputs: [
-            {
-                internalType: "bytes32",
-                name: "role",
-                type: "bytes32",
-            },
-            {
-                internalType: "address",
-                name: "account",
-                type: "address",
-            },
-        ],
-        name: "renounceRole",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-    },
-    {
-        inputs: [
-            {
-                internalType: "bytes32",
-                name: "role",
-                type: "bytes32",
-            },
-            {
-                internalType: "address",
-                name: "account",
-                type: "address",
-            },
-        ],
-        name: "revokeRole",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-    },
-    {
-        inputs: [
-            {
-                internalType: "bytes4",
-                name: "interfaceId",
-                type: "bytes4",
-            },
-        ],
-        name: "supportsInterface",
+        name: "updateProfileName",
         outputs: [
             {
-                internalType: "bool",
+                internalType: "address",
                 name: "",
-                type: "bool",
+                type: "address",
             },
         ],
-        stateMutability: "view",
+        stateMutability: "nonpayable",
         type: "function",
     },
     {
@@ -878,19 +759,26 @@ exports.abi = [
                 type: "bytes32",
             },
             {
-                internalType: "string",
-                name: "_name",
-                type: "string",
+                internalType: "address[]",
+                name: "_members",
+                type: "address[]",
             },
         ],
-        name: "updateProfileName",
-        outputs: [
+        name: "removeMembers",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+    },
+    {
+        inputs: [
             {
-                internalType: "address",
-                name: "",
-                type: "address",
+                internalType: "bytes32",
+                name: "_profileId",
+                type: "bytes32",
             },
         ],
+        name: "acceptProfileOwnership",
+        outputs: [],
         stateMutability: "nonpayable",
         type: "function",
     },
@@ -902,14 +790,172 @@ exports.abi = [
                 type: "bytes32",
             },
             {
+                internalType: "address[]",
+                name: "_members",
+                type: "address[]",
+            },
+        ],
+        name: "addMembers",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+    },
+    {
+        inputs: [
+            {
+                internalType: "bytes32",
+                name: "_profileId",
+                type: "bytes32",
+            },
+            {
+                internalType: "address[]",
+                name: "_members",
+                type: "address[]",
+            },
+        ],
+        name: "removeMembers",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+    },
+    {
+        inputs: [
+            {
                 internalType: "address",
-                name: "_pendingOwner",
+                name: "_token",
+                type: "address",
+            },
+            {
+                internalType: "address",
+                name: "_recipient",
                 type: "address",
             },
         ],
-        name: "updateProfilePendingOwner",
+        name: "recoverFunds",
         outputs: [],
         stateMutability: "nonpayable",
+        type: "function",
+    },
+    // ======================
+    // ===== AccessControlUpgradeable Functions =====
+    // ======================
+    {
+        inputs: [
+            {
+                internalType: "bytes32",
+                name: "role",
+                type: "bytes32",
+            },
+        ],
+        name: "getRoleAdmin",
+        outputs: [
+            {
+                internalType: "bytes32",
+                name: "",
+                type: "bytes32",
+            },
+        ],
+        stateMutability: "view",
+        type: "function",
+    },
+    {
+        inputs: [
+            {
+                internalType: "bytes32",
+                name: "role",
+                type: "bytes32",
+            },
+            {
+                internalType: "address",
+                name: "account",
+                type: "address",
+            },
+        ],
+        name: "grantRole",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+    },
+    {
+        inputs: [
+            {
+                internalType: "bytes32",
+                name: "role",
+                type: "bytes32",
+            },
+            {
+                internalType: "address",
+                name: "account",
+                type: "address",
+            },
+        ],
+        name: "hasRole",
+        outputs: [
+            {
+                internalType: "bool",
+                name: "",
+                type: "bool",
+            },
+        ],
+        stateMutability: "view",
+        type: "function",
+    },
+    {
+        inputs: [
+            {
+                internalType: "bytes32",
+                name: "role",
+                type: "bytes32",
+            },
+            {
+                internalType: "address",
+                name: "account",
+                type: "address",
+            },
+        ],
+        name: "renounceRole",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+    },
+    {
+        inputs: [
+            {
+                internalType: "bytes32",
+                name: "role",
+                type: "bytes32",
+            },
+            {
+                internalType: "address",
+                name: "account",
+                type: "address",
+            },
+        ],
+        name: "revokeRole",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+    },
+    // ======================
+    // ===== ERC165 Function =====
+    // ======================
+    {
+        inputs: [
+            {
+                internalType: "bytes4",
+                name: "interfaceId",
+                type: "bytes4",
+            },
+        ],
+        name: "supportsInterface",
+        outputs: [
+            {
+                internalType: "bool",
+                name: "",
+                type: "bool",
+            },
+        ],
+        stateMutability: "view",
         type: "function",
     },
 ];
