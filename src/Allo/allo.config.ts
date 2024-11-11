@@ -961,6 +961,18 @@ export const abi = [
         type: "uint256",
       },
       {
+        components: [
+          {
+            internalType: "uint256",
+            name: "protocol",
+            type: "uint256",
+          },
+          {
+            internalType: "string",
+            name: "pointer",
+            type: "string",
+          },
+        ],
         internalType: "struct Metadata",
         name: "_metadata",
         type: "tuple",

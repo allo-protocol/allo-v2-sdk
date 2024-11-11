@@ -202,7 +202,7 @@ export class Allo {
     const data = encodeFunctionData({
       abi: abi,
       functionName: "updatePoolMetadata",
-      args: [poolId, [metadata.protocol, metadata.pointer]],
+      args: [poolId, { protocol: metadata.protocol, pointer: metadata.pointer }],
     });
 
     return {
