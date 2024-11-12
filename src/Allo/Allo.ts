@@ -40,7 +40,7 @@ export class Allo {
     return this.addr;
   }
 
-  // Read only funcitons
+  // Read-only functions
 
   public async getFeeDenominator(): Promise<bigint> {
     const denominator = await this.contract.read.getFeeDenominator();
@@ -64,45 +64,60 @@ export class Allo {
   }
 
   public async getStrategy(poolId: bigint): Promise<string> {
-    const strategyAddress = this.contract.read.getStrategy([poolId]);
+    const strategyAddress = await this.contract.read.getStrategy([poolId]);
 
     return strategyAddress;
   }
 
   public async getPercentFee(): Promise<bigint> {
-    const percentage = this.contract.read.getPercentFee();
+    const percentage = await this.contract.read.getPercentFee();
 
     return percentage;
   }
 
   public async getBaseFee(): Promise<bigint> {
-    const baseFee = this.contract.read.getBaseFee();
+    const baseFee = await this.contract.read.getBaseFee();
 
     return baseFee;
   }
 
   public async getTreasury(): Promise<string> {
-    const treasuryAddress = this.contract.read.getTreasury();
+    const treasuryAddress = await this.contract.read.getTreasury();
 
     return treasuryAddress;
   }
 
   public async getRegistry(): Promise<string> {
-    const registryAddress = this.contract.read.getRegistry();
+    const registryAddress = await this.contract.read.getRegistry();
 
     return registryAddress;
   }
 
-  public async isCloneableStrategy(): Promise<boolean> {
-    const isCloneable = this.contract.read.isCloneableStrategy();
-
+  public async isCloneableStrategy(strategy: `0x${string}`): Promise<boolean> {
+    const isCloneable = await this.contract.read.isCloneableStrategy([strategy]);
+  
     return isCloneable;
   }
 
   public async getPool(poolId: bigint): Promise<Pool> {
-    const pool = this.contract.read.getPool([poolId]);
+    const pool = await this.contract.read.getPool([poolId]);
 
     return pool;
+  }
+
+  public async isTrustedForwarder(forwarder: `0x${string}`): Promise<boolean> {
+    const isTrusted = await this.contract.read.isTrustedForwarder([forwarder]);
+    return isTrusted;
+  }
+
+  public async getOwner(): Promise<`0x${string}`> {
+    const owner = await this.contract.read.owner();
+    return owner;
+  }
+
+  public async getAllo(): Promise<`0x${string}`> {
+    const alloAddress = await this.contract.read.getAllo();
+    return alloAddress;
   }
 
   // Write functions
@@ -187,7 +202,7 @@ export class Allo {
     const data = encodeFunctionData({
       abi: abi,
       functionName: "updatePoolMetadata",
-      args: [poolId, metadata],
+      args: [poolId, { protocol: metadata.protocol, pointer: metadata.pointer }],
     });
 
     return {
@@ -211,11 +226,11 @@ export class Allo {
     };
   }
 
-  public updateTreasury(registry: `0x${string}`): TransactionData {
+  public updateTreasury(treasury: `0x${string}`): TransactionData {
     const data = encodeFunctionData({
       abi: abi,
-      functionName: "updateRegistry",
-      args: [registry],
+      functionName: "updateTreasury",
+      args: [treasury],
     });
 
     return {
@@ -283,16 +298,16 @@ export class Allo {
     };
   }
 
-  public addPoolManager(
+  public addPoolManagers(
     poolId: bigint,
-    manager: `0x${string}`,
+    managers: `0x${string}`[],
   ): TransactionData {
     const data = encodeFunctionData({
       abi: abi,
-      functionName: "addPoolManager",
-      args: [poolId, manager],
+      functionName: "addPoolManagers",
+      args: [poolId, managers],
     });
-
+  
     return {
       to: this.addr,
       data: data,
@@ -300,16 +315,50 @@ export class Allo {
     };
   }
 
-  public removePoolManager(
+  public removePoolManagers(
     poolId: bigint,
-    manager: `0x${string}`,
+    managers: `0x${string}`[],
   ): TransactionData {
     const data = encodeFunctionData({
       abi: abi,
-      functionName: "removePoolManager",
-      args: [poolId, manager],
+      functionName: "removePoolManagers",
+      args: [poolId, managers],
     });
+  
+    return {
+      to: this.addr,
+      data: data,
+      value: "0",
+    };
+  }
 
+  public addPoolManagersInMultiplePools(
+    poolIds: bigint[],
+    managers: `0x${string}`[],
+  ): TransactionData {
+    const data = encodeFunctionData({
+      abi: abi,
+      functionName: "addPoolManagersInMultiplePools",
+      args: [poolIds, managers],
+    });
+  
+    return {
+      to: this.addr,
+      data: data,
+      value: "0",
+    };
+  }
+
+  public removePoolManagersInMultiplePools(
+    poolIds: bigint[],
+    managers: `0x${string}`[],
+  ): TransactionData {
+    const data = encodeFunctionData({
+      abi: abi,
+      functionName: "removePoolManagersInMultiplePools",
+      args: [poolIds, managers],
+    });
+  
     return {
       to: this.addr,
       data: data,
@@ -337,34 +386,36 @@ export class Allo {
   // Strategy functions
   public registerRecipient(
     poolId: bigint,
-    strategyData: `0x${string}`,
+    recipientAddresses: `0x${string}`[],
+    data: `0x${string}`, // question: is this strategyData (old name)? and how is it generated / encoded?
   ): TransactionData {
-    const data = encodeFunctionData({
+    const encodedData = encodeFunctionData({
       abi: abi,
       functionName: "registerRecipient",
-      args: [poolId, strategyData],
+      args: [poolId, recipientAddresses, data],
     });
 
     return {
       to: this.addr,
-      data: data,
+      data: encodedData,
       value: "0",
     };
   }
 
   public batchRegisterRecipient(
     poolIds: bigint[],
-    strategyData: `0x${string}`[],
+    recipientAddresses: `0x${string}` [][], // question: should this be updated to be an array of objects, one per pool?
+    data: `0x${string}`[],
   ): TransactionData {
-    const data = encodeFunctionData({
+    const encodedData = encodeFunctionData({
       abi: abi,
       functionName: "batchRegisterRecipient",
-      args: [poolIds, strategyData],
+      args: [poolIds, recipientAddresses, data],
     });
 
     return {
       to: this.addr,
-      data: data,
+      data: encodedData,
       value: "0",
     };
   }
@@ -385,34 +436,39 @@ export class Allo {
 
   public allocate(
     poolId: bigint,
-    strategyData: `0x${string}`,
+    recipients: `0x${string}`[],
+    amounts: bigint[],
+    data: `0x${string}`, // question: is this strategyData (old name)? and how is it generated / encoded?
   ): TransactionData {
-    const data = encodeFunctionData({
+    const encodedData = encodeFunctionData({
       abi: abi,
       functionName: "allocate",
-      args: [poolId, strategyData],
+      args: [poolId, recipients, amounts, data],
     });
 
     return {
       to: this.addr,
-      data: data,
+      data: encodedData,
       value: "0",
     };
   }
 
   public batchAllocate(
     poolIds: bigint[],
-    strategyData: `0x${string}`[],
+    recipients: `0x${string}`[][], // question: should this be updated to be an array of objects, one per pool?
+    amounts: bigint[][],
+    values: bigint[],
+    datas: `0x${string}`[],
   ): TransactionData {
-    const data = encodeFunctionData({
+    const encodedData = encodeFunctionData({
       abi: abi,
       functionName: "batchAllocate",
-      args: [poolIds, strategyData],
+      args: [poolIds, recipients, amounts, values, datas],
     });
 
     return {
       to: this.addr,
-      data: data,
+      data: encodedData,
       value: "0",
     };
   }

@@ -44,3 +44,6 @@ bun.lockb
 # Ignore Hardhat
 /cache
 /out
+
+# Ignore build files
+dist/

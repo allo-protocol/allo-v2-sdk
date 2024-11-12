@@ -12,11 +12,6 @@ export {
 
 export { PayoutSummary, Status } from "./strategies/types";
 
-export {
-  Allocation, InitializeParams, Recipient,
-  RegisterData, SetAllocatorData
-} from "./strategies/MicroGrantsStrategy/types";
-
 export const StrategyType = {
   MicroGrants: "MicroGrantsv1",
   Hats: "MicroGrantsHatsv1",

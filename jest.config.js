@@ -2,11 +2,13 @@
 module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
+  testMatch: ["<rootDir>/tests/**/*.test.ts"],
   testPathIgnorePatterns: [
-    "<rootDir>/dist/__tests__/*",
-    "<rootDir>/src/__tests__/utils/",
-    "<rootDir>/src/__tests__/Allo",
-    "<rootDir>/src/__tests__/Registry",
-    "<rootDir>/src/__tests__/Strategy",
+    "<rootDir>/artifacts",
+    "<rootDir>/dist",
+    "<rootDir>/docs",
+    "<rootDir>/src",
+    "<rootDir>/node_modules",
   ],
+  setupFiles: ["<rootDir>/jest.setup.js"],
 };
