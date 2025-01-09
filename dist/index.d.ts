@@ -7,6 +7,7 @@ import { DirectGrantsStrategy } from "./strategies/DirectGrants/DirectGrantsStra
 import { DirectGrantsLiteStrategy } from "./strategies/DirectGrantsLiteStrategy/DirectGrantsLite";
 import { DirectAllocationStrategy } from "./strategies/DirectAllocationStrategy/DirectAllocationStrategy";
 import { StrategyFactory } from "./strategies/StrategyFactory/StrategyFactory";
+import { EasyRetroFundingStrategy } from "./strategies/EasyRetroFunding/EasyRetroFunding";
 export * from "./types";
 export * from "./strategies/types";
 export * from "./Registry/types";
@@ -16,6 +17,7 @@ export * as MicroGrantsStrategyTypes from "./strategies/MicroGrantsStrategy/type
 export * as SQFSuperFluidStrategyTypes from "./strategies/SuperFluidStrategy/types";
 export * as DirectGrantsStrategyTypes from "./strategies/DirectGrants/types";
 export * as DirectGrantsLiteStrategyTypes from "./strategies/DirectGrantsLiteStrategy/types";
+export * as EasyRetroFundingStrategyTypes from "./strategies/EasyRetroFunding/types";
 export { StrategyFactoryType } from "./strategies/StrategyFactory/StrategyFactory";
 export { abi as AlloAbi } from "./Allo/allo.config";
 export { abi as RegistryAbi } from "./Registry/registry.config";
@@ -28,4 +30,5 @@ export { abi as DirectGrantsLiteStrategyAbi } from "./strategies/DirectGrantsLit
 export { abi as StrategyFactoryDGLAbi } from "./strategies/StrategyFactory/strategyFactory.DGL.config";
 export { abi as StrategyFactoryDVMDTAbi } from "./strategies/StrategyFactory/strategyFactory.DVMDT.config";
 export { abi as DirectAllocationStrategyAbi } from "./strategies/DirectAllocationStrategy/directAllocation.config";
-export { Allo, Registry, MicroGrantsStrategy, SQFSuperFluidStrategy, DonationVotingMerkleDistributionStrategy, DirectGrantsStrategy, DirectGrantsLiteStrategy, StrategyFactory, DirectAllocationStrategy, };
+export { abi as EasyRetroFundingStrategyAbi } from "./strategies/EasyRetroFunding/easyRetroFunding.config";
+export { Allo, Registry, MicroGrantsStrategy, SQFSuperFluidStrategy, DonationVotingMerkleDistributionStrategy, DirectGrantsStrategy, DirectGrantsLiteStrategy, StrategyFactory, DirectAllocationStrategy, EasyRetroFundingStrategy, };
