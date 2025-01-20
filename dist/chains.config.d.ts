@@ -24,11 +24,11 @@ export declare const sei: {
             readonly webSocket: readonly ["wss://evm-ws.sei-apis.com/"];
         };
     };
-    sourceId?: number | undefined;
-    testnet?: boolean | undefined;
+    sourceId?: number | undefined | undefined;
+    testnet?: boolean | undefined | undefined;
     custom?: Record<string, unknown> | undefined;
-    formatters?: undefined;
-    serializers?: import("viem").ChainSerializers<undefined> | undefined;
     fees?: import("viem").ChainFees<undefined> | undefined;
+    formatters?: undefined;
+    serializers?: import("viem").ChainSerializers<undefined, import("viem").TransactionSerializable> | undefined;
 };
 export declare const supportedChains: Chain[];
