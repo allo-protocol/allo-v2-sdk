@@ -24,6 +24,7 @@ import {
   fantomTestnet,
   zkSync,
   zkSyncSepoliaTestnet,
+  hedera
 } from "viem/chains";
 
 export const sei = /*#__PURE__*/ defineChain({
@@ -75,4 +76,5 @@ export const supportedChains: Chain[] = [
   fantomTestnet,
   zkSync,
   zkSyncSepoliaTestnet,
+  hedera,
 ];

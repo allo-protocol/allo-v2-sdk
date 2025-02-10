@@ -51,4 +51,5 @@ exports.supportedChains = [
     chains_1.fantomTestnet,
     chains_1.zkSync,
     chains_1.zkSyncSepoliaTestnet,
+    chains_1.hedera,
 ];
